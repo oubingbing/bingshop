@@ -17,6 +17,7 @@ class CreateCategoriesTable extends Migration
             $table->increments('id');
 
             $table->string("name")->default("")->comment("分类名称");
+            $table->jsonb("attachments")->nullable()->comment("分类图片");
 
             $table->timestamp('created_at')->nullable()->index();
             $table->timestamp('updated_at')->nullable();
