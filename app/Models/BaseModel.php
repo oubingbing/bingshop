@@ -19,6 +19,9 @@ class BaseModel extends Model
 {
     use SoftDeletes;
 
+    /** Field id **/
+    const FIELD_ID = 'id';
+
     /** field created_at */
     const FIELD_CREATED_AT = 'created_at';
 
