@@ -9,7 +9,17 @@
 namespace App\Http\Service;
 
 
+use App\Models\CategoryModel as Model;
+
 class CategoryService
 {
+    public function store(Model $category)
+    {
+        $result = Model::create([
+            Model::FIELD_NAME=>$category->{Model::FIELD_NAME},
+            Model::FIELD_ATTACHMENTS=>$category->{Model::FIELD_ATTACHMENTS}
+        ]);
+        return $result;
+    }
 
 }

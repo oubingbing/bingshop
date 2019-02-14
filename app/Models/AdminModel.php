@@ -1,21 +1,16 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: bingbing
- * Date: 2018/5/26
- * Time: 17:08
+ * User: Administrator
+ * Date: 2018/11/28 0028
+ * Time: 14:27
  */
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
-class Admin extends Authenticatable
+class AdminModel extends BaseModel
 {
-    use Notifiable,SoftDeletes;
-
     const TABLE_NAME = 'admins';
     protected $table = self::TABLE_NAME;
 
@@ -28,8 +23,8 @@ class Admin extends Authenticatable
     /** Field avatar 头像 */
     const FIELD_AVATAR = 'avatar';
 
-    /** Field phone */
-    const FIELD_PHONE = 'phone';
+    /** Field email */
+    const FIELD_EMAIL = 'email';
 
     /** Field password 密码 */
     const FIELD_PASSWORD = 'password';
@@ -38,26 +33,19 @@ class Admin extends Authenticatable
 
     const FIELD_REMEMBER_TOKEN = 'remember_token';
 
-    const FIELD_DONATION_QR_CODE = 'donation_qr_code';
-
-    /** field created_at */
-    const FIELD_CREATED_AT = 'created_at';
-
-    /** field updated_at */
-    const FIELD_UPDATED_AT = 'updated_at';
-
-    /** field deleted_at */
-    const FIELD_DELETED_AT = 'deleted_at';
+    /** field remember_token_expire token过期时间 */
+    const FIELD_TOKEN_EXPIRE_AT = 'remember_token_expire';
 
     const USER_AVATAR = 'http://image.kucaroom.com/boy.png';
 
     protected $fillable = [
         self::FIELD_ID,
         self::FIELD_NICKNAME,
-        self::FIELD_PHONE,
+        self::FIELD_EMAIL,
         self::FIELD_PASSWORD,
         self::FIELD_SALT,
         self::FIELD_REMEMBER_TOKEN,
-        self::FIELD_DONATION_QR_CODE
+        self::FIELD_TOKEN_EXPIRE_AT
     ];
+
 }

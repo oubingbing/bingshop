@@ -24,9 +24,9 @@ class IndexController extends Controller
     {
         $customer = request()->get('user');
 
-        $token = app(QiNiuService::class)->getToken();
+        dd("test");
 
-        return view('admin.index',["token"=>$token,"nickname"=>$customer->{Customer::FIELD_NICKNAME}]);
+        return view('admin.index',["nickname"=>'叶子']);
     }
 
     public function setDonationQrCode()

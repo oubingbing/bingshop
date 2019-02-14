@@ -7,9 +7,6 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin','middleware'=>['web']],
 
     Route::group(['middleware'=>['authUser']], function () {
 
-        /** 首页 **/
-        Route::get("/","IndexController@index");
-
         /** 创建笔记类别 **/
         Route::post("note_category/create","NoteCategoryController@create");
 
