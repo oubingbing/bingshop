@@ -201,14 +201,17 @@
                                 <tr>
                                     <th><small>颜色</small></th>
                                     <th><small>尺寸</small></th>
+                                    <th><small>大小</small></th>
                                     <th><small>售格</small></th>
                                     <th><small>成本格</small></th>
                                     <th><small>库存</small></th>
                                 </thead>
                                 <tbody>
+
                                 <tr>
-                                    <td rowspan="2">1</td>
-                                    <td >1寸</td>
+                                    <td rowspan="4">红色</td>
+                                    <td rowspan="2">1寸</td>
+                                    <td rowspan="1">大</td>
                                     <td>
                                         <input type="text"
                                                class="standard-input"
@@ -231,10 +234,10 @@
                                                autocomplete="off" class="layui-input">
                                     </td>
                                 </tr>
+
+
                                 <tr>
-                                    <td>
-                                        2寸
-                                    </td>
+                                    <td> 小</td>
                                     <td>
                                         <input type="text"
                                                class="standard-input"
@@ -257,6 +260,58 @@
                                                autocomplete="off" class="layui-input">
                                     </td>
                                 </tr>
+
+                                <tr>
+                                    <td rowspan="2"> 2寸</td>
+                                    <td> 小</td>
+                                    <td>
+                                        <input type="text"
+                                               class="standard-input"
+                                               required=""
+                                               lay-verify="required"
+                                               autocomplete="off" class="layui-input">
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="standard-input"
+                                               required=""
+                                               lay-verify="required"
+                                               autocomplete="off" class="layui-input">
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="standard-input"
+                                               required=""
+                                               lay-verify="required"
+                                               autocomplete="off" class="layui-input">
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td> 小</td>
+                                    <td>
+                                        <input type="text"
+                                               class="standard-input"
+                                               required=""
+                                               lay-verify="required"
+                                               autocomplete="off" class="layui-input">
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="standard-input"
+                                               required=""
+                                               lay-verify="required"
+                                               autocomplete="off" class="layui-input">
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               class="standard-input"
+                                               required=""
+                                               lay-verify="required"
+                                               autocomplete="off" class="layui-input">
+                                    </td>
+                                </tr>
+
                                 </tbody>
                             </table>
 
