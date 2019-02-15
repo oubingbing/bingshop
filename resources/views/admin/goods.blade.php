@@ -5,7 +5,7 @@
     }
 
     .standard-container{
-        width: 60%;
+        width: 70%;
         display: flex;
         flex-direction: column;
         border-style:solid;
@@ -34,7 +34,7 @@
     }
 
     .standard-item input{
-        width: 50%;
+        width: 30%;
     }
 
     .standard-item img{
@@ -48,12 +48,12 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        width: 30%;
+        width: 20%;
         color: #4169E1;
     }
 
     .standard-title{
-        width: 20%;
+        width: 10%;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -82,7 +82,8 @@
     }
 
     .standard-input{
-        width: 40px;
+        width: 50px;
+        padding: 5px 5px;
     }
 
 </style>
@@ -115,7 +116,7 @@
 
         <!-- 添加银行的页面 -->
         <div class="add_activity" style="margin-top: -50px" v-show="showBankForm">
-            <form class="activity-form" style="width: 80%;margin-top: -100px;overflow: scroll;height: 600px">
+            <form class="activity-form" style="width: 70%;margin-top: -100px;overflow: scroll;height: 600px">
                 <div class="close-view">
                     <img class="close-button" v-on:click="closeBankForm" src="{{asset('images/close.png')}}" alt="">
                 </div>
@@ -163,9 +164,7 @@
                             </el-checkbox-group>
                         </div>
                     </div>
-                </div>
 
-                <div class="activity-form-right">
                     <div class="" style="width: 100%;">
                         <label for="L_pass" class="layui-form-label">
                             <span class="x-red">*</span>商品规格
@@ -200,16 +199,12 @@
                                 <thead>
                                 <tr>
                                     <th><small>颜色</small></th>
-                                    <th><small>颜色</small></th>
-                                    <th><small>颜色</small></th>
                                     <th><small>售格</small></th>
                                     <th><small>成本格</small></th>
                                     <th><small>库存</small></th>
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>1</td>
-                                    <td>1</td>
                                     <td>1</td>
                                     <td>
                                         <input type="text"
@@ -247,8 +242,8 @@
                             <el-switch
                                     v-model="notLimit"
                                     active-color="#13ce66"
-                                    @change="switchLimit"
-                                    inactive-color="#ff4949">
+                            @change="switchLimit"
+                            inactive-color="#ff4949">
                             </el-switch>
 
                         </div>
@@ -295,6 +290,11 @@
                             保存
                         </div>
                     </div>
+
+                </div>
+
+                <div class="activity-form-right">
+
                 </div>
 
             </form>
