@@ -54,7 +54,7 @@
                             </a>
                         </li >
                         <li>
-                            <a _href="{{ asset('admin/activity/index') }}">
+                            <a _href="{{ asset('admin/goods/index') }}">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>商品</cite>
                             </a>

@@ -63,15 +63,15 @@
         <table class="layui-table">
             <thead>
             <tr>
-                <th>ID</th>
+                <th>序号</th>
                 <th>名称</th>
                 <th>排序</th>
                 <th>创建时间</th>
                 <th>操作</th>
             </thead>
             <tbody>
-            <tr v-for="category in categories">
-                <td>@{{ category.id }}</td>
+            <tr v-for="(category,index) in categories">
+                <td>@{{ index+1 }}</td>
                 <td>@{{ category.name }}</td>
                 <td>@{{ category.sort }}</td>
                 <td>@{{ category.created_at }}</td>

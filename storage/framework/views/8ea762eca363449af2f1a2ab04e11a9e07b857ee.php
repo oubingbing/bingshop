@@ -52,7 +52,7 @@
                             </a>
                         </li >
                         <li>
-                            <a _href="<?php echo e(asset('admin/activity/index')); ?>">
+                            <a _href="<?php echo e(asset('admin/goods/index')); ?>">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>商品</cite>
                             </a>
