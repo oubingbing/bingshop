@@ -38,7 +38,7 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin','middleware'=>['web']],
         Route::get("/category_list","CategoryController@categoryList");
 
         /** 商品视图 **/
-        Route::get("/goods/index","CategoryController@index");
+        Route::get("/goods/index","GoodsController@index");
     });
 });
 

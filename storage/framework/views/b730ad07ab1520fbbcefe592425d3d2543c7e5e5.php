@@ -1,4 +1,3 @@
-@extends('layouts/admin')
 <style>
     [v-cloak] {
         display: none;
@@ -86,9 +85,9 @@
     }
 
 </style>
-@section('content')
+<?php $__env->startSection('content'); ?>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-    <link rel="stylesheet" href="{{asset('css/shop.css')}}">
+    <link rel="stylesheet" href="<?php echo e(asset('css/shop.css')); ?>">
     <div class="x-nav">
       <span class="layui-breadcrumb">
         <a href="">首页</a>
@@ -110,14 +109,14 @@
 
         <xblock>
             <button class="layui-btn" v-on:click="showBankView"><i class="layui-icon"></i>添加</button>
-            <span class="x-right" style="line-height:40px">共有数据：@{{total}} 条</span>
+            <span class="x-right" style="line-height:40px">共有数据：{{total}} 条</span>
         </xblock>
 
         <!-- 添加银行的页面 -->
         <div class="add_activity" style="margin-top: -50px" v-show="showBankForm">
             <form class="activity-form" style="width: 80%;margin-top: -100px;overflow: scroll;height: 600px">
                 <div class="close-view">
-                    <img class="close-button" v-on:click="closeBankForm" src="{{asset('images/close.png')}}" alt="">
+                    <img class="close-button" v-on:click="closeBankForm" src="<?php echo e(asset('images/close.png')); ?>" alt="">
                 </div>
                 <div class="activity-form-left">
                     <div class="layui-form-item">
@@ -151,7 +150,7 @@
                         </label>
                         <div class="layui-input-inline">
                             <img class="bank-image" v-bind:src="attachments[0]" v-if="attachments.length>=1" alt="">
-                            <img class="upload-buttong" src="{{asset('images/upload_img.png')}}" onclick="javascript:$('#cover-picture').click()" alt="">
+                            <img class="upload-buttong" src="<?php echo e(asset('images/upload_img.png')); ?>" onclick="javascript:$('#cover-picture').click()" alt="">
                         </div>
                         <input type="file" id="cover-picture" style="display: none" class="layui-input" @change="selectBankImage($event)"/>
                     </div>
@@ -159,7 +158,7 @@
                         <label class="layui-form-label"><span class="x-red">*</span>商品类目</label>
                         <div class="layui-input-block">
                             <el-checkbox-group v-model="checkedCategory" @change="handleCheckedCategoryChange">
-                            <el-checkbox v-for="category in categories" :label="category.id" :key="category.id">@{{category.name}}</el-checkbox>
+                            <el-checkbox v-for="category in categories" :label="category.id" :key="category.id">{{category.name}}</el-checkbox>
                             </el-checkbox-group>
                         </div>
                     </div>
@@ -319,21 +318,21 @@
             </thead>
             <tbody>
             <tr v-for="activity in activities">
-                <td>@{{ activity.id }}</td>
-                <td>@{{ activity.title }}</td>
-                <td>@{{ activity.content }}</td>
+                <td>{{ activity.id }}</td>
+                <td>{{ activity.title }}</td>
+                <td>{{ activity.content }}</td>
                 <td><img class="bank-image" style="width: 50px;height: 50px;" v-bind:src="activity.attachments[0]" alt=""></td>
                 <td>
-                    <span v-for="category in activity.categories">【@{{ category.name }}】</span>
+                    <span v-for="category in activity.categories">【{{ category.name }}】</span>
                 </td>
                 <td>
-                    <span v-for="bank in activity.banks">【@{{ bank.name }}】</span>
+                    <span v-for="bank in activity.banks">【{{ bank.name }}】</span>
                 </td>
-                <td>@{{ activity.start_at }}</td>
-                <td>@{{ activity.end_at }}</td>
-                <td>@{{ activity.limit_type==1?'限制':'无限' }}</td>
-                <td>@{{ activity.number }}</td>
-                <td>@{{ activity.created_at }}</td>
+                <td>{{ activity.start_at }}</td>
+                <td>{{ activity.end_at }}</td>
+                <td>{{ activity.limit_type==1?'限制':'无限' }}</td>
+                <td>{{ activity.number }}</td>
+                <td>{{ activity.created_at }}</td>
                 <td>
                     <a title="编辑"  v-on:click="edit(activity.id)" href="javascript:;">
                         <i class="layui-icon">&#xe642;</i>
@@ -358,13 +357,13 @@
     </div>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <script type="text/javascript" src="https://unpkg.com/qiniu-js@2.0/dist/qiniu.min.js"></script>
-    <script type="text/javascript" src="{{asset('js/upload.js')}}"></script>
+    <script type="text/javascript" src="<?php echo e(asset('js/upload.js')); ?>"></script>
     <script>
         "use strict";
         const start = new Date();
         let token = '';
-        const IMAGE_URL = "{{env('QI_NIU_DOMAIN')}}";
-        const ZONE = "{{env('QI_NIU_ZONE')}}";
+        const IMAGE_URL = "<?php echo e(env('QI_NIU_DOMAIN')); ?>";
+        const ZONE = "<?php echo e(env('QI_NIU_ZONE')); ?>";
         new Vue({
             el: '#app',
             data: {
@@ -494,7 +493,7 @@
                     }
                 },
                 getActivityList:function () {
-                    var url = "{{ asset("admin/activity_list") }}";
+                    var url = "<?php echo e(asset("admin/activity_list")); ?>";
                     axios.get(url+"?page_size="+this.page_size+'&page_number='+this.current_page+'&order_by=created_at&sort_by=desc&type=1&filter='+this.filter)
                         .then( response=> {
                             var res = response.data;
@@ -687,7 +686,7 @@
                 /**
                  * 选择图片并且上传到七牛
                  *
-                 * @param event
+                 * @param  event
                  */
                 selectBankImage:function (event) {
                     let file = event.target.files[0];
@@ -715,4 +714,5 @@
         })
     </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts/admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

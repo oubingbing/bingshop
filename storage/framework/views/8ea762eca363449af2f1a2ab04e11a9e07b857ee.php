@@ -48,7 +48,7 @@
                         <li>
                             <a _href="<?php echo e(asset('admin/category/index')); ?>">
                                 <i class="iconfont">&#xe6a7;</i>
-                                <cite>分类</cite>
+                                <cite>类目</cite>
                             </a>
                         </li >
                         <li>

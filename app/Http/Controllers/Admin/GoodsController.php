@@ -8,29 +8,24 @@
 
 namespace App\Http\Controllers\Admin;
 
-
-use App\Exceptions\ApiException;
 use App\Exceptions\WebException;
 use App\Http\Controllers\Controller;
-use App\Http\Service\ActivityService;
-use App\Models\ActivityCategoryModel;
-use App\Models\ActivityModel;
-use App\Models\BankModel;
+use App\Http\Service\GoodsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class GoodsController extends Controller
 {
-    private $activityService;
+    private $goodsService;
 
-    function __construct(ActivityService $activityService)
+    function __construct(GoodsService $activityService)
     {
-        $this->activityService = $activityService;
+        $this->goodsService = $activityService;
     }
 
     public function index()
     {
-        return view("admin.activity");
+        return view("admin.goods");
     }
 
     public function shareIndex()
@@ -52,7 +47,7 @@ class GoodsController extends Controller
         $endAt = request()->input('end_at');
         $number = $request->input("number");
 
-        $valid = $this->activityService->validRegister($request);
+        $valid = $this->goodsService->validRegister($request);
         if(!$valid['status']){
             throw new WebException($valid['message']);
         }
