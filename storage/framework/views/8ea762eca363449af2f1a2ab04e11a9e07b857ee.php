@@ -1,6 +1,4 @@
-@extends('layouts/admin')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
     <body>
     <!-- 顶部开始 -->
     <div class="container">
@@ -10,9 +8,9 @@
         </div>
         <ul class="layui-nav right" lay-filter="">
             <li class="layui-nav-item">
-                <a href="javascript:;">{{$user->nickname}}</a>
+                <a href="javascript:;"><?php echo e($user->nickname); ?></a>
                 <dl class="layui-nav-child"> <!-- 二级菜单 -->
-                    <dd><a href="{{asset('logout')}}">退出</a></dd>
+                    <dd><a href="<?php echo e(asset('logout')); ?>">退出</a></dd>
                 </dl>
             </li>
         </ul>
@@ -32,7 +30,7 @@
                     </a>
                     <ul class="sub-menu">
                         <li>
-                            <a _href="{{ asset('admin/user/index') }}">
+                            <a _href="<?php echo e(asset('admin/user/index')); ?>">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>用户列表</cite>
 
@@ -48,19 +46,19 @@
                     </a>
                     <ul class="sub-menu">
                         <li>
-                            <a _href="{{ asset('admin/category/index') }}">
+                            <a _href="<?php echo e(asset('admin/category/index')); ?>">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>分类</cite>
                             </a>
                         </li >
                         <li>
-                            <a _href="{{ asset('admin/activity/index') }}">
+                            <a _href="<?php echo e(asset('admin/activity/index')); ?>">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>商品</cite>
                             </a>
                         </li >
                         <li>
-                            <a _href="{{ asset('admin/activity/share') }}">
+                            <a _href="<?php echo e(asset('admin/activity/share')); ?>">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>共享活动</cite>
                             </a>
@@ -75,7 +73,7 @@
                     </a>
                     <ul class="sub-menu">
                         <li>
-                            <a _href="{{ asset('admin/strategy/official') }}">
+                            <a _href="<?php echo e(asset('admin/strategy/official')); ?>">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>订单列表</cite>
 
@@ -96,7 +94,7 @@
             </ul>
             <div class="layui-tab-content">
                 <div class="layui-tab-item layui-show">
-                    <iframe src='{{ asset('admin/dashboard') }}' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+                    <iframe src='<?php echo e(asset('admin/dashboard')); ?>' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
                 </div>
             </div>
         </div>
@@ -113,4 +111,5 @@
     <script>
         "use strict";
     </script>
-@stop
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts/admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

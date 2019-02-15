@@ -45,15 +45,22 @@ class UserService
      *
      * @author yezi
      *
-     * @param $appId
      * @return $this
      */
-    public function queryBuilder($appId)
+    public function queryBuilder()
     {
-        $builder = User::query()->where(User::FIELD_ID_APP,$appId);
+        $builder = User::query();
 
         $this->builder = $builder;
 
+        return $this;
+    }
+
+    public function filter($username)
+    {
+        if($username){
+            $this->builder->where(User::FIELD_NICKNAME,'like',"%$username%");
+        }
         return $this;
     }
 

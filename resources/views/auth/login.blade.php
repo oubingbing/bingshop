@@ -9,7 +9,7 @@
 
         <form method="post" class="layui-form">
             {{ csrf_field() }}
-            <input name="phone" placeholder="手机"  type="text" lay-verify="required" class="layui-input" >
+            <input name="phone" placeholder="邮箱"  type="text" lay-verify="required" class="layui-input" >
             <hr class="hr15">
             <input name="password" lay-verify="required" placeholder="密码"  type="password" class="layui-input">
             <hr class="hr15">

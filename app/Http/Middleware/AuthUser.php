@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Http\Service\AuthService;
+use App\Models\AdminModel;
 use App\Models\Customer;
 use Closure;
 
@@ -22,17 +23,16 @@ class AuthUser
             return redirect('/login');
         }
 
-        $customer = Customer::query()
-            ->where(Customer::FIELD_ID,$authService->authUser())
+        $admin = AdminModel::query()
+            ->where(AdminModel::FIELD_ID,$authService->authUser())
             ->select([
-                Customer::FIELD_ID,
-                Customer::FIELD_NICKNAME,
-                Customer::FIELD_PHONE,
-                Customer::FIELD_AVATAR
+                AdminModel::FIELD_ID,
+                AdminModel::FIELD_NICKNAME,
+                AdminModel::FIELD_EMAIL,
+                AdminModel::FIELD_AVATAR
             ])
             ->first();
-
-        $request->offsetSet('user',$customer);
+        $request->offsetSet('user',$admin);
 
         return $next($request);
     }

@@ -32,13 +32,13 @@ class AddPaginationLinksToResponse
             return;
         $response = array();
         $data = $event->content;
-        if(isset($data['error_code'])){
+        if(isset($data['code'])){
             foreach ($data as $key => $item){
                 $response[$key] = $item;
             }
         }else{
-            $response['error_code'] = 0;
-            $response['error_message'] = 'success';
+            $response['code'] = 0;
+            $response['message'] = 'success';
             $response['data'] = $data;
         }
         $response['json_api'] = [

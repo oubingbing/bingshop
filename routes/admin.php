@@ -7,40 +7,35 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin','middleware'=>['web']],
 
     Route::group(['middleware'=>['authUser']], function () {
 
-        /** 创建笔记类别 **/
-        Route::post("note_category/create","NoteCategoryController@create");
+        /** 首页 **/
+        Route::get("/","IndexController@index");
 
-        /** 笔记簿列表 **/
-        Route::get("note_category/list","NoteCategoryController@categories");
+        /** 后台主页 */
+        Route::get('/dashboard','IndexController@dashboard');
 
-        /** 创建笔记 **/
-        Route::post("note/create","NoteController@createNote");
+        /** 用户列表视图 **/
+        Route::get("/user/index","UserController@index");
 
-        /** 获取日志详情 **/
-        Route::get("note/{categoryId}/{noteId}","NoteController@detail");
+        /** 获取用户列表 **/
+        Route::get("/users","UserController@userList");
 
-        /** 编辑日志 **/
-        Route::post("note/update/{id}","NoteController@edit");
+        /** 类型视图 **/
+        Route::get("/category/index","CategoryController@index");
 
-        /** 删除日志类目 **/
-        Route::post("note_category/{id}/delete","NoteCategoryController@deleteCategory");
+        /** 新建优惠类型 **/
+        Route::post("/category/create","CategoryController@createCategory");
 
-        /** 删除日志 **/
-        Route::post("note/{id}/delete","NoteController@deleteNote");
+        /** 编辑优惠类型 **/
+        Route::patch("/category/edit","CategoryController@edit");
 
-        /** 文章上传图片 **/
-        Route::post('note/image_upload',"NoteController@uploadImage");
+        /** 删除优惠类型 **/
+        Route::delete("/category/{id}/delete","CategoryController@delete");
 
-        /** 重命名日志本 **/
-        Route::post("note_category/{id}/rename","NoteCategoryController@rename");
+        /** 新建优惠类型 **/
+        Route::get("/categories","CategoryController@categories");
 
-        /** 重命名日志 **/
-        Route::post("note/{id}/rename","NoteController@editTitle");
-
-        Route::post("setting_donation","IndexController@setDonationQrCode");
-
-        Route::get("donation_qr_code","IndexController@getDonationQrCode");
+        /** 获取类型的分页列表 **/
+        Route::get("/category_list","CategoryController@categoryList");
     });
 });
-
 

@@ -20,6 +20,18 @@ class CategoryModel extends BaseModel
     /** Field attachments 图片等资源 **/
     const FIELD_ATTACHMENTS = 'attachments';
 
+    /** Field admin_id 创建人 **/
+    const FIELD_ID_ADMIN = 'admin_id';
+
+    /** Field status **/
+    const FIELD_STATUS = 'status';
+
+    /** Field type **/
+    const FIELD_TYPE = 'type';
+
+    /** Field sort 排序 **/
+    const FIELD_SORT = 'sort';
+
     protected $casts = [
         'attachments'=>'array'
     ];
@@ -27,6 +39,9 @@ class CategoryModel extends BaseModel
     protected $fillable = [
         self::FIELD_ID,
         self::FIELD_NAME,
-        self::FIELD_ATTACHMENTS
+        self::FIELD_ID_ADMIN,
+        self::FIELD_STATUS,
+        self::FIELD_TYPE,
+        self::FIELD_SORT
     ];
 }

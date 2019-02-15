@@ -22,32 +22,22 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $customer = request()->get('user');
+        $admin = request()->get('user');
 
-        dd("test");
-
-        return view('admin.index',["nickname"=>'叶子']);
+        return view('admin.index',["user"=>$admin]);
     }
 
-    public function setDonationQrCode()
+    /**
+     * 后台主页
+     *
+     * @author yezi
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function dashboard()
     {
-        $user = request()->get("user");
-        $url = request()->input("url");
+        $user = request()->get('user');
 
-        if(empty($url)){
-            throw new WebException("赞赏码不能为空");
-        }
-
-        $result = app(CustomerService::class)->updateDonationQrCode($user->id,$url);
-
-        return (string)$result;
-    }
-
-    public function getDonationQrCode()
-    {
-        $user = request()->get("user");
-        $customer = app(CustomerService::class)->getCustomerById($user->id);
-        return $customer->{Customer::FIELD_DONATION_QR_CODE};
+        return view('admin.dashboard',['user'=>$user]);
     }
 
 }
