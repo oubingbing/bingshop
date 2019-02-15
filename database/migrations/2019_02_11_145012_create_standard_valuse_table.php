@@ -16,6 +16,7 @@ class CreateStandardValuseTable extends Migration
         Schema::create('standard_values', function (Blueprint $table) {
             $table->bigIncrements('id');
 
+            //有可能有一些是没有规格的名称，只有规格值的情况，在手机端新建的时候可能没有规格名称，只有规格值
             $table->bigInteger("standard_id")->index()->comment("所属规格");
             $table->string("value")->default("")->comment("规格值，如红色，绿色，32G，64G");
 
