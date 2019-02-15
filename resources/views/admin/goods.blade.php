@@ -195,6 +195,7 @@
                             <span class="x-red">*</span>商品明细
                         </label>
                         <div class="layui-input-inline standard-container-table">
+                            <!-- https://blog.csdn.net/qq_35415600/article/details/70237433 -->
                             <table class="layui-table standard-detail">
                                 <thead>
                                 <tr>
