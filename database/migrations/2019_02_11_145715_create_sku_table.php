@@ -19,6 +19,7 @@ class CreateSkuTable extends Migration
             $table->bigInteger("goods_id")->index()->comment("所属商品");
             $table->decimal("price",10,4)->default(0)->comment("商品价格");
             $table->decimal("vip_price",10,4)->default(0)->comment("会员价格");
+            $table->decimal("chalk_line_price",10,4)->default(0)->comment("划线价格");
             $table->decimal("cost_price",10,4)->default(0)->comment("商品的成本价格");
             $table->float("stock",10,4)->default(0)->comment("商品库存");
 

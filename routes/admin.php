@@ -39,6 +39,9 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin','middleware'=>['web']],
 
         /** 商品视图 **/
         Route::get("/goods/index","GoodsController@index");
+
+        /** 获取七牛token **/
+        Route::get("/qiniu/token","QiNiuController@token");
     });
 });
 

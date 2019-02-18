@@ -86,6 +86,40 @@
         padding: 5px 5px;
     }
 
+    .sale-time-model{
+        width: 100%;
+        height: 100px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sale-time-item{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+    }
+
+    .standard-list{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+        background: #F2F2F2;
+        padding: 10px 10px;
+    }
+
+    .standard-close{
+        position: absolute;
+        z-index: 10;
+        right: 0px;
+        margin-right: 10px;
+    }
+
+    .standard-close img{
+        width: 30px;
+        height: 30px;
+    }
+
 </style>
 @section('content')
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
@@ -126,7 +160,7 @@
                             <span class="x-red">*</span>商品名
                         </label>
                         <div class="layui-input-inline">
-                            <input type="text" v-model="title" required="" lay-verify="required"
+                            <input type="text" v-model="goodsName" required="" lay-verify="required"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
@@ -135,7 +169,7 @@
                             <span class="x-red">*</span>商品买点
                         </label>
                         <div class="layui-input-inline">
-                            <textarea placeholder="请输入内容" v-model="content" class="layui-textarea"></textarea>
+                            <textarea placeholder="请输入内容" v-model="goodsDescribe" class="layui-textarea"></textarea>
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -143,7 +177,7 @@
                             <span class="x-red">*</span>分享描述
                         </label>
                         <div class="layui-input-inline">
-                            <textarea placeholder="请输入内容" v-model="content" class="layui-textarea"></textarea>
+                            <textarea placeholder="请输入内容" v-model="goodsShareDescribe" class="layui-textarea"></textarea>
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -156,7 +190,7 @@
                         </div>
                         <input type="file" id="cover-picture" style="display: none" class="layui-input" @change="selectBankImage($event)"/>
                     </div>
-                    <div class="layui-form-item">
+                    <div class="">
                         <label class="layui-form-label"><span class="x-red">*</span>商品类目</label>
                         <div class="layui-input-block">
                             <el-checkbox-group v-model="checkedCategory" @change="handleCheckedCategoryChange">
@@ -170,27 +204,74 @@
                             <span class="x-red">*</span>商品规格
                         </label>
                         <div class="layui-input-inline standard-container">
-                            <div class="standard">
-                                <div class="standard-item">
-                                    <div class="standard-title">规格名：</div>
-                                    <input type="text" v-model="title" required="" lay-verify="required"
-                                           autocomplete="off" class="layui-input">
+                            <div class="standard" v-if="showStandardAddButton">
+                                <div class="standard-list">
+                                    <div class="standard-item">
+                                        <div class="standard-title">规格名：</div>
+                                        <input type="text"
+                                               v-model="standards"
+                                               required=""
+                                               lay-verify="required"
+                                               autocomplete="off"
+                                               style="width: 100px"
+                                               class="layui-input">
+                                    </div>
+                                    <div class="standard-item">
+                                        <div class="standard-title">规格值：</div>
+                                        <input type="text"
+                                               v-model="standards"
+                                               required=""
+                                               lay-verify="required"
+                                               autocomplete="off"
+                                               style="width: 100px"
+                                               class="layui-input">
+                                        <div class="add-world">添加规格值</div>
+                                    </div>
+                                    <div class="standard-close">
+                                        <img src="{{asset('/images/cancel.png')}}" alt="">
+                                    </div>
                                 </div>
-                                <div class="standard-item">
-                                    <div class="standard-title">规格值：</div>
-                                    <input type="text" v-model="title" required="" lay-verify="required"
-                                           autocomplete="off" class="layui-input">
-                                    <div class="add-world">添加规格值</div>
+                                <div class="standard-list">
+                                    <div class="standard-item">
+                                        <div class="standard-title">规格名：</div>
+                                        <input type="text"
+                                               v-model="standards"
+                                               required=""
+                                               lay-verify="required"
+                                               autocomplete="off"
+                                               style="width: 100px"
+                                               class="layui-input">
+                                    </div>
+                                    <div class="standard-item">
+                                        <div class="standard-title">规格值：</div>
+                                        <input type="text"
+                                               v-model="standards"
+                                               required=""
+                                               lay-verify="required"
+                                               autocomplete="off"
+                                               style="width: 100px"
+                                               class="layui-input">
+                                        <div class="add-world">添加规格值</div>
+                                    </div>
+                                    <div class="standard-close">
+                                        <img src="{{asset('/images/cancel.png')}}" alt="">
+                                    </div>
                                 </div>
+                                <div class="add-standard-button">添加规格项</div>
+                                <small class="standard-tips">如有颜色、尺码等多种规格，请添加商品规格</small>
                             </div>
 
-                            <div class="add-standard-button">添加规格项</div>
-                            <small class="standard-tips">如有颜色、尺码等多种规格，请添加商品规格</small>
+                            <div class="add-standard-button"
+                                 style="cursor:pointer"
+                                 v-on:click="showStandardAdd"
+                                 v-if="!showStandardAddButton">
+                                添加规格项
+                            </div>
 
                         </div>
                     </div>
 
-                    <div class="" style="width: 100%;">
+                    <div class="" style="width: 100%;" v-if="showStandard">
                         <label for="L_pass" class="layui-form-label">
                             <span class="x-red">*</span>商品明细
                         </label>
@@ -319,54 +400,101 @@
                     </div>
 
                     <div class="layui-form-item">
-                        <label for="L_pass" class="layui-form-label">
-                            <span class="x-red">*</span>数量限制
+                        <label for="username" class="layui-form-label">
+                            <span class="x-red">*</span>价格
                         </label>
                         <div class="layui-input-inline">
-                            <el-switch
-                                    v-model="notLimit"
-                                    active-color="#13ce66"
-                            @change="switchLimit"
-                            inactive-color="#ff4949">
-                            </el-switch>
-
-                        </div>
-                    </div>
-                    <div class="layui-form-item" v-show="showNumberInput">
-                        <label for="L_pass" class="layui-form-label">
-                            <span class="x-red">*</span>数量
-                        </label>
-                        <div class="layui-input-inline">
-                            <input type="text" v-model="number" required="" lay-verify="pass"
+                            <input type="text" v-model="goodsPrice" required="" lay-verify="required"
                                    autocomplete="off" class="layui-input">
                         </div>
                     </div>
+
                     <div class="layui-form-item">
-                        <label for="L_pass" class="layui-form-label">
-                            <span class="x-red">*</span>开始日期
+                        <label for="username" class="layui-form-label">
+                            <span class="x-red">*</span>划线价
                         </label>
                         <div class="layui-input-inline">
-                            <el-date-picker
-                                    v-model="start_date"
-                                    type="datetime"
-                                    value-format="yyyy-MM-dd HH:mm:ss"
-                                    placeholder="选择日期时间">
-                            </el-date-picker>
+                            <input type="text" v-model="chalkLinePrice" required="" lay-verify="required"
+                                   autocomplete="off" class="layui-input">
                         </div>
                     </div>
+
                     <div class="layui-form-item">
-                        <label for="L_pass" class="layui-form-label">
-                            <span class="x-red">*</span>截止日期
+                        <label for="username" class="layui-form-label">
+                            <span class="x-red">*</span>库存
                         </label>
                         <div class="layui-input-inline">
-                            <el-date-picker
-                                    v-model="end_date"
-                                    type="datetime"
-                                    value-format="yyyy-MM-dd HH:mm:ss"
-                                    placeholder="选择日期时间">
-                            </el-date-picker>
+                            <input type="text" v-model="goodsStock" required="" lay-verify="required"
+                                   autocomplete="off" class="layui-input">
                         </div>
                     </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><span class="x-red">*</span>上架时间</label>
+                        <div class="layui-input-block layui-form sale-time-model">
+                            <input type="radio" name="saleStartModel" lay-skin="primary" title="立即上架售卖" checked="">
+                            <div class="sale-time-item">
+                                <input type="radio" name="saleStartModel" lay-skin="primary" title="自定义上架时间">
+                                <el-date-picker
+                                        v-model="startSaleDate"
+                                        type="datetime"
+                                        value-format="yyyy-MM-dd HH:mm:ss"
+                                        placeholder="选择日期时间">
+                                </el-date-picker>
+                            </div>
+                            <input type="radio" name="saleStartModel" lay-skin="primary" title="暂不售卖，放入仓库" >
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><span class="x-red">*</span>下架时间</label>
+                        <div class="layui-input-block layui-form sale-time-model">
+                            <input type="radio" name="stopStartModel" lay-skin="primary" title="售完即可下架" checked="">
+                            <div class="sale-time-item">
+                                <input type="radio" name="stopStartModel" lay-skin="primary" title="自定义下架时间">
+                                <el-date-picker
+                                        v-model="stopSaleDate"
+                                        type="datetime"
+                                        value-format="yyyy-MM-dd HH:mm:ss"
+                                        placeholder="选择日期时间">
+                                </el-date-picker>
+                            </div>
+                            <input type="radio" name="stopStartModel" lay-skin="primary" title="售完不下架" >
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><span class="x-red">*</span>限购</label>
+                        <div class="layui-input-block layui-form sale-time-model">
+                            <input type="radio" name="limitSaleModel" lay-skin="primary" title="无限购买" checked="">
+                            <div class="sale-time-item">
+                                <input type="radio" name="limitSaleModel" lay-skin="primary" title="限制数量">
+                                <input type="text" required="" style="width: 100px" lay-verify="required"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><span class="x-red">*</span>配送方式</label>
+                        <div class="layui-input-block layui-form">
+                            <input type="radio" name="postType" lay-skin="primary" title="快递发货" checked="">
+                            <input type="radio" name="postType" lay-skin="primary" title="同城配送" checked="">
+                            <input type="radio" name="postType" lay-skin="primary" title="到点自取" checked="">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><span class="x-red">*</span>快递运费</label>
+                        <div class="layui-input-block layui-form">
+                            <div class="sale-time-item">
+                                <input type="radio" name="postCost" lay-skin="primary" title="统一邮费">
+                                <input type="text" required="" style="width: 100px" value="0" lay-verify="required"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="layui-form-item">
                         <label for="L_repass" class="layui-form-label">
                         </label>
@@ -374,60 +502,10 @@
                             保存
                         </div>
                     </div>
-
                 </div>
-
-                <div class="activity-form-right">
-
-                </div>
-
             </form>
 
         </div>
-
-        <table class="layui-table">
-            <thead>
-            <tr>
-                <th>序号</th>
-                <th>标题</th>
-                <th>内容</th>
-                <th>图片</th>
-                <th>类型</th>
-                <th>银行</th>
-                <th>开始日期</th>
-                <th>截止日期</th>
-                <th>类型</th>
-                <th>数量</th>
-                <th>创建时间</th>
-                <th>操作</th>
-            </thead>
-            <tbody>
-            <tr v-for="activity in activities">
-                <td>@{{ activity.id }}</td>
-                <td>@{{ activity.title }}</td>
-                <td>@{{ activity.content }}</td>
-                <td><img class="bank-image" style="width: 50px;height: 50px;" v-bind:src="activity.attachments[0]" alt=""></td>
-                <td>
-                    <span v-for="category in activity.categories">【@{{ category.name }}】</span>
-                </td>
-                <td>
-                    <span v-for="bank in activity.banks">【@{{ bank.name }}】</span>
-                </td>
-                <td>@{{ activity.start_at }}</td>
-                <td>@{{ activity.end_at }}</td>
-                <td>@{{ activity.limit_type==1?'限制':'无限' }}</td>
-                <td>@{{ activity.number }}</td>
-                <td>@{{ activity.created_at }}</td>
-                <td>
-                    <a title="编辑"  v-on:click="edit(activity.id)" href="javascript:;">
-                        <i class="layui-icon">&#xe642;</i>
-                    </a>
-                    <a title="删除" v-on:click="deleteActivity(activity.id)" href="javascript:;">
-                        <i class="layui-icon">&#xe640;</i>
-                </td>
-            </tr>
-            </tbody>
-        </table>
 
         <div class="page">
             <el-pagination
@@ -452,116 +530,53 @@
         new Vue({
             el: '#app',
             data: {
-                banks:[],
-                activities:[],
                 categories:[],
-                form:[],
                 checkedCategory: [],
-                checkedBank: [],
                 total:0,
                 page_size:20,
                 current_page:1,
                 categoryName:'',
                 showBankForm:false,
-                showNumberInput:false,
-                colleges:[],
-                attachments:[],
-                notLimit:1,
-                date:'',
                 imageUrl:IMAGE_URL,
-                title:'',
-                url:'',
-                content:'',
-                bankId:'',
-                number:0,
-                start_date:'',
-                end_date:'',
                 startLimit:start.getTime(),
-                operateType:'create',
-                activityId:'',
-                filter:''
+                filter:'',
+
+                showStandard:false,
+                showStandardAddButton:false,
+
+                goodsName:'',
+                goodsDescribe:'',
+                goodsShareDescribe:'',
+                attachments:[],
+                standards:[],
+                goodsNumber:0,
+                goodsPrice:0,
+                chalkLinePrice:0,
+                goodsStock:0,
+                startSaleDate:'',
+                saleStartModel:1,
+                stopStartModel:1,
+                stopSaleDate:'',
+                limitSaleModel:1,
+                postType:1,
+                postCost:0
             },
             created:function () {
-                this.getBanks();
                 this.getCategories();
                 this.getQiNiuToken();
-                this.getActivityList();
             },
             methods:{
+                showStandardAdd:function () {
+                    this.showStandardAddButton = true;
+                },
                 search:function () {
                     this.current_page = 1;
                     this.activities = [];
-                    this.getActivityList();
                 },
                 edit:function (id) {
-                    this.activityId = id;
-                    this.operateType = 'edit';
-                    let activity = '';
-                    this.activities.map(item=>{
-                        if(item.id == id){
-                            activity = item;
-                        }
-                    });
 
-                    let theBankIds = [];
-                    activity.banks.map(item=>{
-                        theBankIds.push(item.pivot.bank_id);
-                    });
-
-                    let theCategoryIds = [];
-                    activity.categories.map(item=>{
-                        theCategoryIds.push(item.pivot.activity_category_id);
-                    });
-
-                    this.title = activity.title;
-                    this.attachments = activity.attachments;
-                    this.url = activity.url;
-                    this.content = activity.content;
-                    this.checkedBank = theBankIds;
-                    this.checkedCategory = theCategoryIds;
-                    this.start_date = activity.start_at;
-                    this.end_date = activity.end_at;
-                    this.notLimit = activity.limit_type==1?true:false;
-                    this.number = activity.number;
-                    this.showBankForm = true;
-
-                    if(this.notLimit){
-                        this.showNumberInput = true;
-                    }else{
-                        this.showNumberInput = false;
-                    }
                 },
 
-                deleteActivity:function (id) {
-                    console.log(id);
-                    this.$confirm('此操作将永久删除该活动, 是否继续?', '警告', {
-                        confirmButtonText: '确定',
-                        cancelButtonText: '取消',
-                        type: 'warning'
-                    }).then(() => {
-                        axios.delete(`/admin/activity/${id}/delete`,{}).then( response=> {
-                            let ResData = response.data;
-                            if(ResData.code == 500){
-                                layer.msg(ResData.message);
-                            }else{
-                                layer.msg(ResData.message);
-                                let tempActivities = this.activities;
-                                this.activities = tempActivities.filter(item=>{
-                                    if(item.id !== id){
-                                        return item;
-                                    }
-                                });
-                            }
-                        }).catch(function (error) {
-                            console.log(error);
-                        });
-                    }).catch(() => {
-                        this.$message({
-                            type: 'info',
-                            message: '已取消删除'
-                        });
-                    });
-                },
                 handleCheckedBankChange:function (val) {
                     this.checkedBank = val;
                     console.log(val)
@@ -569,44 +584,7 @@
                 handleCheckedCategoryChange:function (val) {
                     this.checkedCategory = val;
                 },
-                switchLimit:function () {
-                  console.log(this.notLimit);
-                    if(this.notLimit){
-                      this.showNumberInput = true;
-                    }else{
-                        this.showNumberInput = false;
-                    }
-                },
-                getActivityList:function () {
-                    var url = "{{ asset("admin/activity_list") }}";
-                    axios.get(url+"?page_size="+this.page_size+'&page_number='+this.current_page+'&order_by=created_at&sort_by=desc&type=1&filter='+this.filter)
-                        .then( response=> {
-                            var res = response.data;
-                            if(res.code === 0){
-                                let tempActivities = this.activities;
-                                 res.data.page_data.map(item=>{
-                                     tempActivities.push(item);
-                                 });
-                                 this.activities = tempActivities;
-                                this.total = res.data.page.total_items;
-                            }else{
-                                console.log('error:'+res);
-                            }
-                        }).catch(function (error) {
-                        console.log(error);
-                    });
-                },
-                getBanks:function () {
-                    axios.get(`/admin/banks`,{}).then( response=> {
-                        let resData = response.data;
-                        if(resData.code == 0){
-                            this.banks = resData.data;
-                        }
 
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                },
                 getCategories:function () {
                     axios.get(`/admin/categories`,{}).then( response=> {
                         let resData = response.data;
@@ -624,134 +602,11 @@
                 },
                 closeBankForm:function () {
                     this.showBankForm = false;
-                    this.title = '';
-                    this.attachments = [];
-                    this.url = '';
-                    this.content = '';
-                    this.checkedBank = [];
-                    this.checkedCategory = [];
-                    this.number = 0;
-                    this.notLimit = 1;
-                    this.start_date = '';
-                    this.end_date = '';
                 },
                 submitActivityInfo:function () {
-                    let title = this.title;
-                    let attachments = this.attachments;
-                    let url = this.url;
-                    let content = this.content;
-                    let bank = this.checkedBank;
-                    let categoryArray = this.checkedCategory;
-                    let startDate = this.start_date;
-                    let endDate = this.end_date;
-                    let limitNumber = this.notLimit;
-                    let number = this.number;
-
-                    if(!title){
+                    if(true){
                         layer.msg("标题不能为空");
                         return false;
-                    }
-
-                    if(attachments.length<=0){
-                        layer.msg("图片不能为空");
-                        return false;
-                    }
-
-                    if(!url){
-                        layer.msg("链接不能为空");
-                        return false;
-                    }
-
-                    if(!content){
-                        layer.msg("详情不能为空");
-                        return false;
-                    }
-
-                    if(!bank){
-                        layer.msg("银行不能为空");
-                        return false;
-                    }
-
-                    if(!startDate){
-                        layer.msg("开始日期不能为空");
-                        return false;
-                    }
-
-                    if(!endDate){
-                        layer.msg("截止日期不能为空");
-                        return false;
-                    }
-
-                    if(this.operateType == 'create'){
-                        axios.post(`/admin/activity/create`,{
-                            title:title,
-                            attachments:attachments,
-                            url:url,
-                            content:content,
-                            bank_id:bank,
-                            categories:categoryArray,
-                            number:number,
-                            limit_type:limitNumber,
-                            start_at:startDate,
-                            end_at:endDate
-                        }).then( response=> {
-                            let ResData = response.data;
-                            if(ResData.code == 500){
-                                layer.msg(ResData.message);
-                            }else{
-                                this.getActivityList();
-                                layer.msg(ResData.message);
-                                this.categoryName = '';
-                                this.showBankForm = false;
-                                this.title = '';
-                                this.attachments = [];
-                                this.url = '';
-                                this.content = '';
-                                this.checkedBank = [];
-                                this.checkedCategory = [];
-                                this.number = 0;
-                                this.notLimit = 1;
-                                this.start_date = '';
-                                this.end_date = '';
-                            }
-                        }).catch(function (error) {
-                            console.log(error);
-                        });
-                    }else{
-                        axios.post(`/admin/activity/${this.activityId}/edit`,{
-                            title:title,
-                            attachments:attachments,
-                            url:url,
-                            content:content,
-                            bank_id:bank,
-                            categories:categoryArray,
-                            number:number,
-                            limit_type:limitNumber,
-                            start_at:startDate,
-                            end_at:endDate
-                        }).then( response=> {
-                            let ResData = response.data;
-                            if(ResData.code == 500){
-                                layer.msg(ResData.message);
-                            }else{
-                                this.getActivityList();
-                                layer.msg(ResData.message);
-                                this.categoryName = '';
-                                this.showBankForm = false;
-                                this.title = '';
-                                this.attachments = [];
-                                this.url = '';
-                                this.content = '';
-                                this.checkedBank = [];
-                                this.checkedCategory = [];
-                                this.number = 0;
-                                this.notLimit = 1;
-                                this.start_date = '';
-                                this.end_date = '';
-                            }
-                        }).catch(function (error) {
-                            console.log(error);
-                        });
                     }
                 },
                 /**
