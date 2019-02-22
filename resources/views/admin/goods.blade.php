@@ -31,6 +31,7 @@
         display: flex;
         flex-direction: row;
         padding-bottom:10px;
+        flex-wrap:wrap;
     }
 
     .standard-item input{
@@ -120,10 +121,30 @@
         height: 30px;
     }
 
+    .standard-value-close{
+        position: absolute;
+        z-index: 100;
+        top:0px;
+        right: 0px;
+    }
+
+    .standard-item-input{
+        width: 100px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+    .goods-form-label{
+        width: 100px;
+    }
+
 </style>
 @section('content')
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <link rel="stylesheet" href="{{asset('css/shop.css')}}">
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/vue-easytable/umd/css/index.css">
     <div class="x-nav">
       <span class="layui-breadcrumb">
         <a href="">首页</a>
@@ -156,7 +177,7 @@
                 </div>
                 <div class="activity-form-left">
                     <div class="layui-form-item">
-                        <label for="username" class="layui-form-label">
+                        <label for="username" class="layui-form-label goods-form-label" style="width: 100px">
                             <span class="x-red">*</span>商品名
                         </label>
                         <div class="layui-input-inline">
@@ -165,7 +186,7 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label for="phone" class="layui-form-label">
+                        <label for="phone" class="layui-form-label goods-form-label" style="width: 100px">
                             <span class="x-red">*</span>商品买点
                         </label>
                         <div class="layui-input-inline">
@@ -173,7 +194,7 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label for="L_email" class="layui-form-label">
+                        <label for="L_email" class="layui-form-label goods-form-label" style="width: 100px">
                             <span class="x-red">*</span>分享描述
                         </label>
                         <div class="layui-input-inline">
@@ -181,7 +202,7 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label for="username" class="layui-form-label">
+                        <label for="username" class="layui-form-label goods-form-label" style="width: 100px">
                             <span class="x-red">*</span>商品图片
                         </label>
                         <div class="layui-input-inline">
@@ -191,7 +212,7 @@
                         <input type="file" id="cover-picture" style="display: none" class="layui-input" @change="selectBankImage($event)"/>
                     </div>
                     <div class="">
-                        <label class="layui-form-label"><span class="x-red">*</span>商品类目</label>
+                        <label class="layui-form-label goods-form-label" style="width: 100px"><span class="x-red">*</span>商品类目</label>
                         <div class="layui-input-block">
                             <el-checkbox-group v-model="checkedCategory" @change="handleCheckedCategoryChange">
                             <el-checkbox v-for="category in categories" :label="category.id" :key="category.id">@{{category.name}}</el-checkbox>
@@ -200,64 +221,46 @@
                     </div>
 
                     <div class="" style="width: 100%;">
-                        <label for="L_pass" class="layui-form-label">
+                        <label for="L_pass" class="layui-form-label goods-form-label" style="width: 100px">
                             <span class="x-red">*</span>商品规格
                         </label>
                         <div class="layui-input-inline standard-container">
                             <div class="standard" v-if="showStandardAddButton">
-                                <div class="standard-list">
+                                <div class="standard-list" v-for="(standardItem,index) in standardItems">
                                     <div class="standard-item">
                                         <div class="standard-title">规格名：</div>
                                         <input type="text"
-                                               v-model="standards"
+                                               v-model="standardItem.name"
                                                required=""
                                                lay-verify="required"
+                                               v-on:input="watchInputName(value,index,i)"
                                                autocomplete="off"
                                                style="width: 100px"
                                                class="layui-input">
                                     </div>
                                     <div class="standard-item">
                                         <div class="standard-title">规格值：</div>
-                                        <input type="text"
-                                               v-model="standards"
-                                               required=""
-                                               lay-verify="required"
-                                               autocomplete="off"
-                                               style="width: 100px"
-                                               class="layui-input">
-                                        <div class="add-world">添加规格值</div>
+                                        <div class="standard-item-input"
+                                             v-for="(value,i) in standardItem.values">
+                                            <input type="text"
+                                                   v-model="value"
+                                                   style="width: 100%;"
+                                                   required=""
+                                                   lay-verify="required"
+                                                   v-on:input="watchInputValue(value,index,i)"
+                                                   autocomplete="off"
+                                                   class="layui-input">
+                                            <div class="standard-value-close" v-on:click="closeStandardValue(index,i)">
+                                                <img src="{{asset('/images/cancel.png')}}" alt="">
+                                            </div>
+                                        </div>
+                                        <div class="add-world" style="cursor:pointer" v-on:click="addStandardValue(index)">添加规格值</div>
                                     </div>
-                                    <div class="standard-close">
+                                    <div class="standard-close" v-on:click="closeStandard(index)">
                                         <img src="{{asset('/images/cancel.png')}}" alt="">
                                     </div>
                                 </div>
-                                <div class="standard-list">
-                                    <div class="standard-item">
-                                        <div class="standard-title">规格名：</div>
-                                        <input type="text"
-                                               v-model="standards"
-                                               required=""
-                                               lay-verify="required"
-                                               autocomplete="off"
-                                               style="width: 100px"
-                                               class="layui-input">
-                                    </div>
-                                    <div class="standard-item">
-                                        <div class="standard-title">规格值：</div>
-                                        <input type="text"
-                                               v-model="standards"
-                                               required=""
-                                               lay-verify="required"
-                                               autocomplete="off"
-                                               style="width: 100px"
-                                               class="layui-input">
-                                        <div class="add-world">添加规格值</div>
-                                    </div>
-                                    <div class="standard-close">
-                                        <img src="{{asset('/images/cancel.png')}}" alt="">
-                                    </div>
-                                </div>
-                                <div class="add-standard-button">添加规格项</div>
+                                <div class="add-standard-button" style="cursor:pointer" v-on:click="addStandardItem()">添加规格项</div>
                                 <small class="standard-tips">如有颜色、尺码等多种规格，请添加商品规格</small>
                             </div>
 
@@ -272,30 +275,27 @@
                     </div>
 
                     <div class="" style="width: 100%;" v-if="showStandard">
-                        <label for="L_pass" class="layui-form-label">
+                        <label for="L_pass" class="layui-form-label goods-form-label" style="width: 100px">
                             <span class="x-red">*</span>商品明细
                         </label>
                         <div class="layui-input-inline standard-container-table">
-                            <!-- https://blog.csdn.net/qq_35415600/article/details/70237433 -->
                             <table class="layui-table standard-detail">
                                 <thead>
                                 <tr>
-                                    <th><small>颜色</small></th>
-                                    <th><small>尺寸</small></th>
-                                    <th><small>大小</small></th>
+                                    <th v-for="standardItem in standardItems"><small>@{{ standardItem.name }}</small></th>
                                     <th><small>售格</small></th>
                                     <th><small>成本格</small></th>
                                     <th><small>库存</small></th>
                                 </thead>
                                 <tbody>
-
-                                <tr>
-                                    <td rowspan="4">红色</td>
-                                    <td rowspan="2">1寸</td>
-                                    <td rowspan="1">大</td>
+                                <tr v-for="(standard,index) in standardArray">
+                                    <td :rowspan="Math.ceil(standardArray.length/standardItems[0].values.length)" v-if="(index)%(standardArray.length/standardItems[0].values.length)==0 || index==0">@{{ standard.level_one.value }}</td>
+                                    <td :rowspan="Math.ceil(standardArray.length/standardItems[1].values.length/standardItems[0].values.length)" v-if="standard.level_two && ((index)%(standardArray.length/standardItems[1].values.length/standardItems[0].values.length)==0 || index==0)">@{{ standard.level_two.value }}</td>
+                                    <td rowspan="1" v-if="standard.level_three">@{{ standard.level_three.value }}</td>
                                     <td>
                                         <input type="text"
                                                class="standard-input"
+                                               v-model="standard.price"
                                                required=""
                                                lay-verify="required"
                                                autocomplete="off" class="layui-input">
@@ -303,6 +303,7 @@
                                     <td>
                                         <input type="text"
                                                class="standard-input"
+                                               v-model="standard.cost_price"
                                                required=""
                                                lay-verify="required"
                                                autocomplete="off" class="layui-input">
@@ -310,97 +311,19 @@
                                     <td>
                                         <input type="text"
                                                class="standard-input"
-                                               required=""
-                                               lay-verify="required"
-                                               autocomplete="off" class="layui-input">
-                                    </td>
-                                </tr>
-
-
-                                <tr>
-                                    <td> 小</td>
-                                    <td>
-                                        <input type="text"
-                                               class="standard-input"
-                                               required=""
-                                               lay-verify="required"
-                                               autocomplete="off" class="layui-input">
-                                    </td>
-                                    <td>
-                                        <input type="text"
-                                               class="standard-input"
-                                               required=""
-                                               lay-verify="required"
-                                               autocomplete="off" class="layui-input">
-                                    </td>
-                                    <td>
-                                        <input type="text"
-                                               class="standard-input"
+                                               v-model="standard.stock"
                                                required=""
                                                lay-verify="required"
                                                autocomplete="off" class="layui-input">
                                     </td>
                                 </tr>
-
-                                <tr>
-                                    <td rowspan="2"> 2寸</td>
-                                    <td> 小</td>
-                                    <td>
-                                        <input type="text"
-                                               class="standard-input"
-                                               required=""
-                                               lay-verify="required"
-                                               autocomplete="off" class="layui-input">
-                                    </td>
-                                    <td>
-                                        <input type="text"
-                                               class="standard-input"
-                                               required=""
-                                               lay-verify="required"
-                                               autocomplete="off" class="layui-input">
-                                    </td>
-                                    <td>
-                                        <input type="text"
-                                               class="standard-input"
-                                               required=""
-                                               lay-verify="required"
-                                               autocomplete="off" class="layui-input">
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td> 小</td>
-                                    <td>
-                                        <input type="text"
-                                               class="standard-input"
-                                               required=""
-                                               lay-verify="required"
-                                               autocomplete="off" class="layui-input">
-                                    </td>
-                                    <td>
-                                        <input type="text"
-                                               class="standard-input"
-                                               required=""
-                                               lay-verify="required"
-                                               autocomplete="off" class="layui-input">
-                                    </td>
-                                    <td>
-                                        <input type="text"
-                                               class="standard-input"
-                                               required=""
-                                               lay-verify="required"
-                                               autocomplete="off" class="layui-input">
-                                    </td>
-                                </tr>
-
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
 
                     <div class="layui-form-item">
-                        <label for="username" class="layui-form-label">
+                        <label for="username" class="layui-form-label goods-form-label" style="width: 100px">
                             <span class="x-red">*</span>价格
                         </label>
                         <div class="layui-input-inline">
@@ -410,7 +333,7 @@
                     </div>
 
                     <div class="layui-form-item">
-                        <label for="username" class="layui-form-label">
+                        <label for="username" class="layui-form-label goods-form-label" style="width: 100px">
                             <span class="x-red">*</span>划线价
                         </label>
                         <div class="layui-input-inline">
@@ -420,7 +343,7 @@
                     </div>
 
                     <div class="layui-form-item">
-                        <label for="username" class="layui-form-label">
+                        <label for="username" class="layui-form-label goods-form-label" style="width: 100px">
                             <span class="x-red">*</span>库存
                         </label>
                         <div class="layui-input-inline">
@@ -430,7 +353,7 @@
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label"><span class="x-red">*</span>上架时间</label>
+                        <label class="layui-form-label goods-form-label" style="width: 100px"><span class="x-red">*</span>上架时间</label>
                         <div class="layui-input-block layui-form sale-time-model">
                             <input type="radio" name="saleStartModel" lay-skin="primary" title="立即上架售卖" checked="">
                             <div class="sale-time-item">
@@ -447,7 +370,7 @@
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label"><span class="x-red">*</span>下架时间</label>
+                        <label class="layui-form-label goods-form-label" style="width: 100px"><span class="x-red">*</span>下架时间</label>
                         <div class="layui-input-block layui-form sale-time-model">
                             <input type="radio" name="stopStartModel" lay-skin="primary" title="售完即可下架" checked="">
                             <div class="sale-time-item">
@@ -464,7 +387,7 @@
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label"><span class="x-red">*</span>限购</label>
+                        <label class="layui-form-label goods-form-label" style="width: 100px"><span class="x-red">*</span>限购</label>
                         <div class="layui-input-block layui-form sale-time-model">
                             <input type="radio" name="limitSaleModel" lay-skin="primary" title="无限购买" checked="">
                             <div class="sale-time-item">
@@ -476,7 +399,7 @@
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label"><span class="x-red">*</span>配送方式</label>
+                        <label class="layui-form-label goods-form-label" style="width: 100px"><span class="x-red">*</span>配送方式</label>
                         <div class="layui-input-block layui-form">
                             <input type="radio" name="postType" lay-skin="primary" title="快递发货" checked="">
                             <input type="radio" name="postType" lay-skin="primary" title="同城配送" checked="">
@@ -485,7 +408,7 @@
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label"><span class="x-red">*</span>快递运费</label>
+                        <label class="layui-form-label goods-form-label" style="width: 100px"><span class="x-red">*</span>快递运费</label>
                         <div class="layui-input-block layui-form">
                             <div class="sale-time-item">
                                 <input type="radio" name="postCost" lay-skin="primary" title="统一邮费">
@@ -496,9 +419,9 @@
                     </div>
 
                     <div class="layui-form-item">
-                        <label for="L_repass" class="layui-form-label">
+                        <label for="L_repass" class="layui-form-label goods-form-label" style="width: 100px">
                         </label>
-                        <div  class="layui-btn" lay-filter="add" lay-submit="" v-on:click="submitActivityInfo">
+                        <div  class="layui-btn" lay-filter="add" lay-submit="" v-on:click="submitActivityInfo" style="margin-top: 20px">
                             保存
                         </div>
                     </div>
@@ -521,6 +444,7 @@
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <script type="text/javascript" src="https://unpkg.com/qiniu-js@2.0/dist/qiniu.min.js"></script>
     <script type="text/javascript" src="{{asset('js/upload.js')}}"></script>
+    <script src="https://unpkg.com/vue-easytable/umd/js/index.js"></script>
     <script>
         "use strict";
         const start = new Date();
@@ -543,12 +467,13 @@
 
                 showStandard:false,
                 showStandardAddButton:false,
+                standardItems:[],
+                tableStandards:[],
 
                 goodsName:'',
                 goodsDescribe:'',
                 goodsShareDescribe:'',
                 attachments:[],
-                standards:[],
                 goodsNumber:0,
                 goodsPrice:0,
                 chalkLinePrice:0,
@@ -559,15 +484,286 @@
                 stopSaleDate:'',
                 limitSaleModel:1,
                 postType:1,
-                postCost:0
+                postCost:0,
+
+                standardArray:[],
+                standardTable:[]
             },
             created:function () {
                 this.getCategories();
                 this.getQiNiuToken();
             },
             methods:{
+                watchInputValue:function(value,index,i){
+                    console.log(index);
+                  this.showStandard = true;
+                    this.standardArray.map(item=>{
+                        switch (index){
+                            case 0:
+                                item.level_one.value = value;
+                                break;
+                            case 1:
+                                item.level_two.value = value;
+                                break;
+                            case 2:
+                                item.level_three.value = value;
+                                break;
+                        }
+                    })
+                },
+                watchInputName:function (value,index,i) {
+                    this.standardArray.map(item=>{
+                        switch (index){
+                            case 0:
+                                item.level_one.name = value;
+                                break;
+                            case 1:
+                                item.level_two.name = value;
+                                break;
+                            case 2:
+                                item.level_three.name = value;
+                                break;
+                        }
+                    })
+                },
+
+                resetStandardArray:function () {
+                    this.standardArray = [];
+
+                    switch (this.standardItems.length){
+                        case 1:
+                            this.standardItems[0].values.map(one=>{
+                                this.standardArray.push({
+                                    level_one:{name:this.standardItems[0].name,value:one},
+                                    level_two:'',
+                                    level_three:'',
+                                    price:1,
+                                    cost_price:1,
+                                    stock:100
+                                });
+                                return one;
+                            });
+                            break;
+                        case 2:
+                            this.standardItems[0].values.map(one=>{
+                                this.standardItems[1].values.map(two=>{
+                                    this.standardArray.push({
+                                        level_one:{name:this.standardItems[0].name,value:one},
+                                        level_two:{name:this.standardItems[1].name,value:two},
+                                        level_three:'',
+                                        price:1,
+                                        cost_price:1,
+                                        stock:100
+                                    });
+                                    return two;
+                                });
+                                return one;
+                            });
+                            break;
+                        case 3:
+                            this.standardItems[0].values.map(one=>{
+                                this.standardItems[1].values.map(two=>{
+                                    this.standardItems[2].values.map(three=>{
+                                        console.log("three");
+                                        this.standardArray.push({
+                                            level_one:{name:this.standardItems[0].name,value:one},
+                                            level_two:{name:this.standardItems[1].name,value:two},
+                                            level_three:{name:this.standardItems[2].name,value:three},
+                                            price:1,
+                                            cost_price:1,
+                                            stock:100
+                                        });
+                                    });
+                                    return two;
+                                });
+                                return one;
+                            });
+                            break;
+                    }
+
+                     console.log(this.standardArray);
+                },
+
+                /**
+                 * 点击添加规格项
+                 **/
                 showStandardAdd:function () {
                     this.showStandardAddButton = true;
+                    this.standardItems.push({level:1,name:'一级规格',values:['']});
+                    this.resetStandardArray();
+                },
+
+                /**
+                 * 添加规格值
+                 **/
+                addStandardValue:function (index) {
+                    this.standardItems.map((item,i)=>{
+                        if(i == index){
+                            item.values.push('');
+                        }
+                        return item;
+                    });
+
+                    switch (index){
+                        case 0:
+                            switch (this.standardItems.length){
+                                case 1:
+                                    this.standardArray.push({
+                                        level_one:{name:this.standardItems[0].name,value:''},
+                                        level_two:'',
+                                        level_three:'',
+                                        price:1,
+                                        cost_price:1,
+                                        stock:100
+                                    });
+                                    break;
+                                case 2:
+                                    this.standardItems[1].values.map(two=>{
+                                        this.standardArray.push({
+                                            level_one:{name:this.standardItems[0].name,value:''},
+                                            level_two:{name:this.standardItems[1].name,value:''},
+                                            level_three:'',
+                                            price:1,
+                                            cost_price:1,
+                                            stock:100
+                                        });
+                                        return two;
+                                    });
+                                    break;
+                                case 3:
+                                    this.standardItems[1].values.map(two=>{
+                                        this.standardItems[2].values.map(three=>{
+                                            this.standardArray.push({
+                                                level_one:{name:this.standardItems[0].name,value:''},
+                                                level_two:{name:this.standardItems[1].name,value:''},
+                                                level_three:{name:this.standardItems[2].name,value:''},
+                                                price:1,
+                                                cost_price:1,
+                                                stock:100
+                                            });
+                                        });
+                                        return two;
+                                    });
+                                    break;
+                            }
+                            break;
+                        case 1:
+                            if(this.standardItems.length == 3){
+                                this.standardItems[0].values.map(one=>{
+                                    this.standardItems[2].values.map(one=>{
+                                        this.standardArray.push({
+                                            level_one:{name:this.standardItems[0].name,value:''},
+                                            level_two:{name:this.standardItems[1].name,value:''},
+                                            level_three:{name:this.standardItems[2].name,value:''},
+                                            price:1,
+                                            cost_price:1,
+                                            stock:100
+                                        });
+                                        return one;
+                                    });
+                                });
+                            }else{
+                                this.standardItems[0].values.map(one=>{
+                                    this.standardArray.push({
+                                        level_one:{name:this.standardItems[0].name,value:''},
+                                        level_two:{name:this.standardItems[1].name,value:''},
+                                        level_three:'',
+                                        price:1,
+                                        cost_price:1,
+                                        stock:100
+                                    });
+                                    return one;
+                                });
+                            }
+                            break;
+                        case 2:
+                            this.standardItems[0].values.map(one=>{
+                                this.standardItems[1].values.map(two=>{
+                                    this.standardArray.push({
+                                        level_one:{name:this.standardItems[0].name,value:''},
+                                        level_two:{name:this.standardItems[1].name,value:''},
+                                        level_three:{name:this.standardItems[2].name,value:''},
+                                        price:1,
+                                        cost_price:1,
+                                        stock:100
+                                    });
+                                    return two;
+                                });
+                                return one;
+                            });
+                            break;
+                    }
+
+                    //this.resetStandardArray();
+                },
+
+                /**
+                 * 继续添加规格项
+                 **/
+                addStandardItem:function () {
+                    this.standardItems.push({name:'次级规格项',values:['']});
+                    //this.resetStandardArray();
+
+                    this.standardItems[0].values.map(one=>{
+                        if(this.standardItems.length >= 2){
+                            this.standardItems[1].values.map(two=>{
+                                if(this.standardItems.length >= 3){
+                                    this.standardItems[2].values.map(three=>{
+                                        this.standardArray.map(item=>{
+                                            item.level_three = {name:this.standardItems[2].name,value:three};
+                                            return item;
+                                        });
+                                    });
+                                }else{
+                                    this.standardArray.map(item=>{
+                                        item.level_two = {name:this.standardItems[1].name,value:two};
+                                        return item;
+                                    });
+                                }
+                            });
+                        }else{
+                            this.standardArray.map(item=>{
+                                item.level_one = {name:this.standardItems[1].name,value:one};
+                                return item;
+                            });
+                        }
+                    });
+
+                    let length = this.tableStandards.length-1;
+                },
+
+                /**
+                 * 取消添加当前规格项
+                 **/
+                closeStandard:function (index) {
+                    let tempStandards = this.standardItems.filter((item,i)=>{
+                        if(i!=index){
+                           return item;
+                        }
+                    });
+                    this.standardItems = tempStandards;
+                    if(tempStandards.length == 0){
+                        this.showStandardAddButton = false;
+                    }
+                },
+
+                /**
+                 * 删除规格值
+                 **/
+                closeStandardValue:function (index,i) {
+                    let tempData = this.standardItems.map((item,j)=>{
+                        if(index == j){
+                            let tempValues = [];
+                            item.values.map((subItem,k)=>{
+                                if(k != i){
+                                    tempValues.push(subItem);
+                                }
+                            });
+                            item.values = tempValues;
+                        }
+                        return item;
+                    });
+                    this.standardItems = tempData;
                 },
                 search:function () {
                     this.current_page = 1;
