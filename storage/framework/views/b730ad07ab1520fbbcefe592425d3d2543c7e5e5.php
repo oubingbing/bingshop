@@ -170,7 +170,7 @@
 
         <!-- 添加银行的页面 -->
         <div class="add_activity" style="margin-top: -50px" v-show="showBankForm">
-            <form class="activity-form" style="width: 70%;margin-top: -100px;overflow: scroll;height: 600px">
+            <form class="activity-form" style="width: 80%;margin-top: -100px;overflow: scroll;height: 900px">
                 <div class="close-view">
                     <img class="close-button" v-on:click="closeBankForm" src="<?php echo e(asset('images/close.png')); ?>" alt="">
                 </div>
@@ -232,7 +232,7 @@
                                                v-model="standardItem.name"
                                                required=""
                                                lay-verify="required"
-                                               v-on:input="watchInputName(value,index,i)"
+                                               v-on:input="watchInputName(standardItem.name,index)"
                                                autocomplete="off"
                                                style="width: 100px"
                                                class="layui-input">
@@ -494,23 +494,41 @@
             },
             methods:{
                 watchInputValue:function(value,index,i){
-                    console.log(index);
-                  this.showStandard = true;
+                    this.showStandard = true;
+
+                    this.standardItems.map((itemValue,itemValueIndex)=>{
+                        if(itemValueIndex == index){
+                            itemValue.values[i] = value;
+                        }
+                        return itemValue;
+                    });
+
                     this.standardArray.map(item=>{
                         switch (index){
                             case 0:
-                                item.level_one.value = value;
+                                if(item.level_one.index == i){
+                                    item.level_one.value = value;
+                                }
                                 break;
                             case 1:
-                                item.level_two.value = value;
+                                if(item.level_two.index == i){
+                                    console.log("第二个");
+                                    item.level_two.value = value;
+                                }
                                 break;
                             case 2:
-                                item.level_three.value = value;
+                                if(item.level_three.index == i){
+                                    item.level_three.value = value;
+                                }
                                 break;
                         }
-                    })
+                        return item;
+                    });
+
+                    console.log(this.standardArray);
                 },
-                watchInputName:function (value,index,i) {
+
+                watchInputName:function (value,index) {
                     this.standardArray.map(item=>{
                         switch (index){
                             case 0:
@@ -523,7 +541,7 @@
                                 item.level_three.name = value;
                                 break;
                         }
-                    })
+                    });
                 },
 
                 resetStandardArray:function () {
@@ -589,7 +607,15 @@
                 showStandardAdd:function () {
                     this.showStandardAddButton = true;
                     this.standardItems.push({level:1,name:'一级规格',values:['']});
-                    this.resetStandardArray();
+                    this.standardArray.push({
+                        level_one:{name:this.standardItems[0].name,value:'',index:0},
+                        level_two:'',
+                        level_three:'',
+                        price:1,
+                        cost_price:1,
+                        stock:100
+                    });
+                    //this.resetStandardArray();
                 },
 
                 /**
@@ -603,12 +629,14 @@
                         return item;
                     });
 
+                    let theIndex = this.standardItems[index].values.length - 1;
+
                     switch (index){
                         case 0:
                             switch (this.standardItems.length){
                                 case 1:
                                     this.standardArray.push({
-                                        level_one:{name:this.standardItems[0].name,value:''},
+                                        level_one:{name:this.standardItems[0].name,value:'',index:theIndex},
                                         level_two:'',
                                         level_three:'',
                                         price:1,
@@ -617,10 +645,10 @@
                                     });
                                     break;
                                 case 2:
-                                    this.standardItems[1].values.map(two=>{
+                                    this.standardItems[1].values.map((two,two_index)=>{
                                         this.standardArray.push({
-                                            level_one:{name:this.standardItems[0].name,value:''},
-                                            level_two:{name:this.standardItems[1].name,value:''},
+                                            level_one:{name:this.standardItems[0].name,value:'',index:theIndex},
+                                            level_two:{name:this.standardItems[1].name,value:'',index:two_index},
                                             level_three:'',
                                             price:1,
                                             cost_price:1,
@@ -630,12 +658,12 @@
                                     });
                                     break;
                                 case 3:
-                                    this.standardItems[1].values.map(two=>{
-                                        this.standardItems[2].values.map(three=>{
+                                    this.standardItems[1].values.map((two,two_index)=>{
+                                        this.standardItems[2].values.map((three,three_index)=>{
                                             this.standardArray.push({
-                                                level_one:{name:this.standardItems[0].name,value:''},
-                                                level_two:{name:this.standardItems[1].name,value:''},
-                                                level_three:{name:this.standardItems[2].name,value:''},
+                                                level_one:{name:this.standardItems[0].name,value:'',index:theIndex},
+                                                level_two:{name:this.standardItems[1].name,value:'',index:two_index},
+                                                level_three:{name:this.standardItems[2].name,value:'',index:three_index},
                                                 price:1,
                                                 cost_price:1,
                                                 stock:100
@@ -648,12 +676,12 @@
                             break;
                         case 1:
                             if(this.standardItems.length == 3){
-                                this.standardItems[0].values.map(one=>{
-                                    this.standardItems[2].values.map(one=>{
+                                this.standardItems[0].values.map((one,one_index)=>{
+                                    this.standardItems[2].values.map((three,three_index)=>{
                                         this.standardArray.push({
-                                            level_one:{name:this.standardItems[0].name,value:''},
-                                            level_two:{name:this.standardItems[1].name,value:''},
-                                            level_three:{name:this.standardItems[2].name,value:''},
+                                            level_one:{name:this.standardItems[0].name,value:'',index:one_index},
+                                            level_two:{name:this.standardItems[1].name,value:'',index:theIndex},
+                                            level_three:{name:this.standardItems[2].name,value:'',index:three_index},
                                             price:1,
                                             cost_price:1,
                                             stock:100
@@ -662,10 +690,10 @@
                                     });
                                 });
                             }else{
-                                this.standardItems[0].values.map(one=>{
+                                this.standardItems[0].values.map((one,one_index)=>{
                                     this.standardArray.push({
-                                        level_one:{name:this.standardItems[0].name,value:''},
-                                        level_two:{name:this.standardItems[1].name,value:''},
+                                        level_one:{name:this.standardItems[0].name,value:'',index:one_index},
+                                        level_two:{name:this.standardItems[1].name,value:'',index:theIndex},
                                         level_three:'',
                                         price:1,
                                         cost_price:1,
@@ -676,12 +704,12 @@
                             }
                             break;
                         case 2:
-                            this.standardItems[0].values.map(one=>{
-                                this.standardItems[1].values.map(two=>{
+                            this.standardItems[0].values.map((one,one_index)=>{
+                                this.standardItems[1].values.map((two,two_index)=>{
                                     this.standardArray.push({
-                                        level_one:{name:this.standardItems[0].name,value:''},
-                                        level_two:{name:this.standardItems[1].name,value:''},
-                                        level_three:{name:this.standardItems[2].name,value:''},
+                                        level_one:{name:this.standardItems[0].name,value:'',index:one_index},
+                                        level_two:{name:this.standardItems[1].name,value:'',index:two_index},
+                                        level_three:{name:this.standardItems[2].name,value:'',index:theIndex},
                                         price:1,
                                         cost_price:1,
                                         stock:100
@@ -693,7 +721,34 @@
                             break;
                     }
 
+                    console.log("数据排序");
+
+                    this.standardArray = this.sort(this.standardArray,'level_one');
+
+                    if(this.standardItems.length == 2){
+                       // this.standardArray = this.sort(this.standardArray,'level_one');
+                    }else if(this.standardItems.length == 3){
+                      //  this.standardArray = this.sort(this.standardArray,'level_one');
+                    }
+                    console.log(this.standardArray);
+
                     //this.resetStandardArray();
+                },
+
+                /**
+                 * 排序
+                 */
+                sort: function (arr, key) {
+                    for (let i = 0; i < arr.length; i++) {
+                        for (let j = arr.length - 1; i < j; j--) {
+                            if (arr[j][key].index < arr[j - 1][key].index) {
+                                let temp = arr[j - 1];
+                                arr[j - 1] = arr[j];
+                                arr[j] = temp;
+                            }
+                        }
+                    }
+                    return arr;
                 },
 
                 /**
@@ -703,30 +758,32 @@
                     this.standardItems.push({name:'次级规格项',values:['']});
                     //this.resetStandardArray();
 
-                    this.standardItems[0].values.map(one=>{
+                    this.standardItems[0].values.map((one,one_index)=>{
                         if(this.standardItems.length >= 2){
-                            this.standardItems[1].values.map(two=>{
+                            this.standardItems[1].values.map((two,two_index)=>{
                                 if(this.standardItems.length >= 3){
-                                    this.standardItems[2].values.map(three=>{
+                                    this.standardItems[2].values.map((three,three_index)=>{
                                         this.standardArray.map(item=>{
-                                            item.level_three = {name:this.standardItems[2].name,value:three};
+                                            item.level_three = {name:this.standardItems[2].name,value:three,index:three_index};
                                             return item;
                                         });
                                     });
                                 }else{
                                     this.standardArray.map(item=>{
-                                        item.level_two = {name:this.standardItems[1].name,value:two};
+                                        item.level_two = {name:this.standardItems[1].name,value:two,index:two_index};
                                         return item;
                                     });
                                 }
                             });
                         }else{
                             this.standardArray.map(item=>{
-                                item.level_one = {name:this.standardItems[1].name,value:one};
+                                item.level_one = {name:this.standardItems[1].name,value:one,index:one_index};
                                 return item;
                             });
                         }
                     });
+
+                    console.log(this.standardArray);
 
                     let length = this.tableStandards.length-1;
                 },
