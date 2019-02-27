@@ -125,6 +125,12 @@
         z-index: 100;
         top:0px;
         right: 0px;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
     }
 
     .standard-item-input{
@@ -249,8 +255,8 @@
                                                    v-on:input="watchInputValue(value,index,i)"
                                                    autocomplete="off"
                                                    class="layui-input">
-                                            <div class="standard-value-close" v-on:click="closeStandardValue(index,i)">
-                                                <img src="<?php echo e(asset('/images/cancel.png')); ?>" alt="">
+                                            <div class="standard-value-close">
+                                                <img src="<?php echo e(asset('/images/cancel.png')); ?>" alt="" v-on:click="closeStandardValue(index,i)">
                                             </div>
                                         </div>
                                         <div class="add-world" style="cursor:pointer" v-on:click="addStandardValue(index)">添加规格值</div>
@@ -512,7 +518,6 @@
                                 break;
                             case 1:
                                 if(item.level_two.index == i){
-                                    console.log("第二个");
                                     item.level_two.value = value;
                                 }
                                 break;
@@ -525,7 +530,6 @@
                         return item;
                     });
 
-                    console.log(this.standardArray);
                 },
 
                 watchInputName:function (value,index) {
@@ -554,9 +558,9 @@
                                     level_one:{name:this.standardItems[0].name,value:one},
                                     level_two:'',
                                     level_three:'',
-                                    price:1,
-                                    cost_price:1,
-                                    stock:100
+                                    price:'',
+                                    cost_price:'',
+                                    stock:''
                                 });
                                 return one;
                             });
@@ -568,9 +572,9 @@
                                         level_one:{name:this.standardItems[0].name,value:one},
                                         level_two:{name:this.standardItems[1].name,value:two},
                                         level_three:'',
-                                        price:1,
-                                        cost_price:1,
-                                        stock:100
+                                        price:'',
+                                        cost_price:'',
+                                        stock:''
                                     });
                                     return two;
                                 });
@@ -586,9 +590,9 @@
                                             level_one:{name:this.standardItems[0].name,value:one},
                                             level_two:{name:this.standardItems[1].name,value:two},
                                             level_three:{name:this.standardItems[2].name,value:three},
-                                            price:1,
-                                            cost_price:1,
-                                            stock:100
+                                            price:'',
+                                            cost_price:'',
+                                            stock:''
                                         });
                                     });
                                     return two;
@@ -611,9 +615,9 @@
                         level_one:{name:this.standardItems[0].name,value:'',index:0},
                         level_two:'',
                         level_three:'',
-                        price:1,
-                        cost_price:1,
-                        stock:100
+                        price:'',
+                        cost_price:'',
+                        stock:''
                     });
                     //this.resetStandardArray();
                 },
@@ -636,23 +640,23 @@
                             switch (this.standardItems.length){
                                 case 1:
                                     this.standardArray.push({
-                                        level_one:{name:this.standardItems[0].name,value:'',index:theIndex},
+                                        level_one:{name:this.standardItems[0].name,value:this.standardItems[0].values[theIndex],index:theIndex},
                                         level_two:'',
                                         level_three:'',
-                                        price:1,
-                                        cost_price:1,
-                                        stock:100
+                                        price:'',
+                                        cost_price:'',
+                                        stock:''
                                     });
                                     break;
                                 case 2:
                                     this.standardItems[1].values.map((two,two_index)=>{
                                         this.standardArray.push({
-                                            level_one:{name:this.standardItems[0].name,value:'',index:theIndex},
-                                            level_two:{name:this.standardItems[1].name,value:'',index:two_index},
+                                            level_one:{name:this.standardItems[0].name,value:this.standardItems[0].values[theIndex],index:theIndex},
+                                            level_two:{name:this.standardItems[1].name,value:this.standardItems[1].values[two_index],index:two_index},
                                             level_three:'',
-                                            price:1,
-                                            cost_price:1,
-                                            stock:100
+                                            price:'',
+                                            cost_price:'',
+                                            stock:''
                                         });
                                         return two;
                                     });
@@ -661,12 +665,12 @@
                                     this.standardItems[1].values.map((two,two_index)=>{
                                         this.standardItems[2].values.map((three,three_index)=>{
                                             this.standardArray.push({
-                                                level_one:{name:this.standardItems[0].name,value:'',index:theIndex},
-                                                level_two:{name:this.standardItems[1].name,value:'',index:two_index},
-                                                level_three:{name:this.standardItems[2].name,value:'',index:three_index},
-                                                price:1,
-                                                cost_price:1,
-                                                stock:100
+                                                level_one:{name:this.standardItems[0].name,value:this.standardItems[0].values[theIndex],index:theIndex},
+                                                level_two:{name:this.standardItems[1].name,value:this.standardItems[1].values[two_index],index:two_index},
+                                                level_three:{name:this.standardItems[2].name,value:this.standardItems[2].values[three_index],index:three_index},
+                                                price:'',
+                                                cost_price:'',
+                                                stock:''
                                             });
                                         });
                                         return two;
@@ -679,12 +683,12 @@
                                 this.standardItems[0].values.map((one,one_index)=>{
                                     this.standardItems[2].values.map((three,three_index)=>{
                                         this.standardArray.push({
-                                            level_one:{name:this.standardItems[0].name,value:'',index:one_index},
-                                            level_two:{name:this.standardItems[1].name,value:'',index:theIndex},
-                                            level_three:{name:this.standardItems[2].name,value:'',index:three_index},
-                                            price:1,
-                                            cost_price:1,
-                                            stock:100
+                                            level_one:{name:this.standardItems[0].name,value:this.standardItems[0].values[one_index],index:one_index},
+                                            level_two:{name:this.standardItems[1].name,value:this.standardItems[1].values[theIndex],index:theIndex},
+                                            level_three:{name:this.standardItems[2].name,value:this.standardItems[2].values[three_index],index:three_index},
+                                            price:'',
+                                            cost_price:'',
+                                            stock:''
                                         });
                                         return one;
                                     });
@@ -692,12 +696,12 @@
                             }else{
                                 this.standardItems[0].values.map((one,one_index)=>{
                                     this.standardArray.push({
-                                        level_one:{name:this.standardItems[0].name,value:'',index:one_index},
-                                        level_two:{name:this.standardItems[1].name,value:'',index:theIndex},
+                                        level_one:{name:this.standardItems[0].name,value:this.standardItems[0].values[one_index],index:one_index},
+                                        level_two:{name:this.standardItems[1].name,value:this.standardItems[1].values[theIndex],index:theIndex},
                                         level_three:'',
-                                        price:1,
-                                        cost_price:1,
-                                        stock:100
+                                        price:'',
+                                        cost_price:'',
+                                        stock:''
                                     });
                                     return one;
                                 });
@@ -707,12 +711,12 @@
                             this.standardItems[0].values.map((one,one_index)=>{
                                 this.standardItems[1].values.map((two,two_index)=>{
                                     this.standardArray.push({
-                                        level_one:{name:this.standardItems[0].name,value:'',index:one_index},
-                                        level_two:{name:this.standardItems[1].name,value:'',index:two_index},
-                                        level_three:{name:this.standardItems[2].name,value:'',index:theIndex},
-                                        price:1,
-                                        cost_price:1,
-                                        stock:100
+                                        level_one:{name:this.standardItems[0].name,value:this.standardItems[0].values[one_index],index:one_index},
+                                        level_two:{name:this.standardItems[1].name,value:this.standardItems[1].values[two_index],index:two_index},
+                                        level_three:{name:this.standardItems[2].name,value:this.standardItems[1].values[theIndex],index:theIndex},
+                                        price:'',
+                                        cost_price:'',
+                                        stock:''
                                     });
                                     return two;
                                 });
@@ -721,16 +725,14 @@
                             break;
                     }
 
-                    console.log("数据排序");
-
-                    this.standardArray = this.sort(this.standardArray,'level_one');
+                    //this.standardArray = this.sort(this.standardArray,'level_one');
 
                     if(this.standardItems.length == 2){
-                       // this.standardArray = this.sort(this.standardArray,'level_one');
+                        this.standardArray = this.sort(this.standardArray,'level_one');
                     }else if(this.standardItems.length == 3){
-                      //  this.standardArray = this.sort(this.standardArray,'level_one');
+                        this.standardArray = this.sort(this.standardArray,'level_two');
+                        this.standardArray = this.sort(this.standardArray,'level_one');
                     }
-                    console.log(this.standardArray);
 
                     //this.resetStandardArray();
                 },
@@ -755,6 +757,12 @@
                  * 继续添加规格项
                  **/
                 addStandardItem:function () {
+
+                    if(this.standardItems.length >= 3){
+                        layer.msg("只能添加三个规格项");
+                        return false;
+                    }
+
                     this.standardItems.push({name:'次级规格项',values:['']});
                     //this.resetStandardArray();
 
