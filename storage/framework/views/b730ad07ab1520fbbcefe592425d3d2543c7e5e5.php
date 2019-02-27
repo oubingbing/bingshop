@@ -294,9 +294,9 @@
                                 </thead>
                                 <tbody>
                                 <tr v-for="(standard,index) in standardArray">
-                                    <td :rowspan="Math.ceil(standardArray.length/standardItems[0].values.length)" v-if="(index)%(standardArray.length/standardItems[0].values.length)==0 || index==0">{{ standard.level_one.value }}</td>
-                                    <td :rowspan="Math.ceil(standardArray.length/standardItems[1].values.length/standardItems[0].values.length)" v-if="standard.level_two && ((index)%(standardArray.length/standardItems[1].values.length/standardItems[0].values.length)==0 || index==0)">{{ standard.level_two.value }}</td>
-                                    <td rowspan="1" v-if="standard.level_three">{{ standard.level_three.value }}</td>
+                                    <td :rowspan="Math.ceil(standardArray.length/standardItems[0].values.length)" v-if="(index)%(standardArray.length/standardItems[0].values.length)==0 || index==0">{{ standard.levels[0].value }}</td>
+                                    <td :rowspan="Math.ceil(standardArray.length/standardItems[1].values.length/standardItems[0].values.length)" v-if="standard.levels[1] && ((index)%(standardArray.length/standardItems[1].values.length/standardItems[0].values.length)==0 || index==0)">{{ standard.levels[1].value }}</td>
+                                    <td rowspan="1" v-if="standard.levels[2]">{{ standard.levels[2].value }}</td>
                                     <td>
                                         <input type="text"
                                                class="standard-input"
@@ -500,8 +500,10 @@
             },
             methods:{
                 watchInputValue:function(value,index,i){
+                    console.log("value:"+value);
+                    console.log("index:"+index);
+                    console.log("i:"+i);
                     this.showStandard = true;
-
                     this.standardItems.map((itemValue,itemValueIndex)=>{
                         if(itemValueIndex == index){
                             itemValue.values[i] = value;
@@ -509,42 +511,21 @@
                         return itemValue;
                     });
 
-                    this.standardArray.map(item=>{
-                        switch (index){
-                            case 0:
-                                if(item.level_one.index == i){
-                                    item.level_one.value = value;
-                                }
-                                break;
-                            case 1:
-                                if(item.level_two.index == i){
-                                    item.level_two.value = value;
-                                }
-                                break;
-                            case 2:
-                                if(item.level_three.index == i){
-                                    item.level_three.value = value;
-                                }
-                                break;
+                    let temp = this.standardArray.map(item=>{
+                        if(item.levels[index].index == i){
+                            item.levels[index].value = value;
                         }
+
                         return item;
                     });
 
+                    this.standardArray = temp;
                 },
 
                 watchInputName:function (value,index) {
                     this.standardArray.map(item=>{
-                        switch (index){
-                            case 0:
-                                item.level_one.name = value;
-                                break;
-                            case 1:
-                                item.level_two.name = value;
-                                break;
-                            case 2:
-                                item.level_three.name = value;
-                                break;
-                        }
+                        console.log(item);
+                        item.levels[index].name = value;
                     });
                 },
 
@@ -612,14 +593,13 @@
                     this.showStandardAddButton = true;
                     this.standardItems.push({level:1,name:'一级规格',values:['']});
                     this.standardArray.push({
-                        level_one:{name:this.standardItems[0].name,value:'',index:0},
-                        level_two:'',
-                        level_three:'',
+                        levels:[],
                         price:'',
                         cost_price:'',
                         stock:''
                     });
-                    //this.resetStandardArray();
+                    this.standardArray[0].levels.push({name:this.standardItems[0].name,value:'',index:0});
+                    console.log(this.standardArray)
                 },
 
                 /**
@@ -640,9 +620,7 @@
                             switch (this.standardItems.length){
                                 case 1:
                                     this.standardArray.push({
-                                        level_one:{name:this.standardItems[0].name,value:this.standardItems[0].values[theIndex],index:theIndex},
-                                        level_two:'',
-                                        level_three:'',
+                                        levels:[{name:this.standardItems[0].name,value:this.standardItems[0].values[theIndex],index:theIndex}],
                                         price:'',
                                         cost_price:'',
                                         stock:''
@@ -651,9 +629,10 @@
                                 case 2:
                                     this.standardItems[1].values.map((two,two_index)=>{
                                         this.standardArray.push({
-                                            level_one:{name:this.standardItems[0].name,value:this.standardItems[0].values[theIndex],index:theIndex},
-                                            level_two:{name:this.standardItems[1].name,value:this.standardItems[1].values[two_index],index:two_index},
-                                            level_three:'',
+                                            levels:[
+                                                {name:this.standardItems[0].name,value:this.standardItems[0].values[theIndex],index:theIndex},
+                                                {name:this.standardItems[1].name,value:this.standardItems[1].values[two_index],index:two_index}
+                                            ],
                                             price:'',
                                             cost_price:'',
                                             stock:''
@@ -665,9 +644,11 @@
                                     this.standardItems[1].values.map((two,two_index)=>{
                                         this.standardItems[2].values.map((three,three_index)=>{
                                             this.standardArray.push({
-                                                level_one:{name:this.standardItems[0].name,value:this.standardItems[0].values[theIndex],index:theIndex},
-                                                level_two:{name:this.standardItems[1].name,value:this.standardItems[1].values[two_index],index:two_index},
-                                                level_three:{name:this.standardItems[2].name,value:this.standardItems[2].values[three_index],index:three_index},
+                                                levels:[
+                                                    {name:this.standardItems[0].name,value:this.standardItems[0].values[theIndex],index:theIndex},
+                                                    {name:this.standardItems[1].name,value:this.standardItems[1].values[two_index],index:two_index},
+                                                    {name:this.standardItems[2].name,value:this.standardItems[2].values[three_index],index:three_index}
+                                                ],
                                                 price:'',
                                                 cost_price:'',
                                                 stock:''
@@ -683,9 +664,11 @@
                                 this.standardItems[0].values.map((one,one_index)=>{
                                     this.standardItems[2].values.map((three,three_index)=>{
                                         this.standardArray.push({
-                                            level_one:{name:this.standardItems[0].name,value:this.standardItems[0].values[one_index],index:one_index},
-                                            level_two:{name:this.standardItems[1].name,value:this.standardItems[1].values[theIndex],index:theIndex},
-                                            level_three:{name:this.standardItems[2].name,value:this.standardItems[2].values[three_index],index:three_index},
+                                            levels:[
+                                                {name:this.standardItems[0].name,value:this.standardItems[0].values[one_index],index:one_index},
+                                                {name:this.standardItems[1].name,value:this.standardItems[1].values[theIndex],index:theIndex},
+                                                {name:this.standardItems[2].name,value:this.standardItems[2].values[three_index],index:three_index}
+                                            ],
                                             price:'',
                                             cost_price:'',
                                             stock:''
@@ -696,9 +679,10 @@
                             }else{
                                 this.standardItems[0].values.map((one,one_index)=>{
                                     this.standardArray.push({
-                                        level_one:{name:this.standardItems[0].name,value:this.standardItems[0].values[one_index],index:one_index},
-                                        level_two:{name:this.standardItems[1].name,value:this.standardItems[1].values[theIndex],index:theIndex},
-                                        level_three:'',
+                                        levels:[
+                                            {name:this.standardItems[0].name,value:this.standardItems[0].values[one_index],index:one_index},
+                                            {name:this.standardItems[1].name,value:this.standardItems[1].values[theIndex],index:theIndex}
+                                        ],
                                         price:'',
                                         cost_price:'',
                                         stock:''
@@ -711,9 +695,11 @@
                             this.standardItems[0].values.map((one,one_index)=>{
                                 this.standardItems[1].values.map((two,two_index)=>{
                                     this.standardArray.push({
-                                        level_one:{name:this.standardItems[0].name,value:this.standardItems[0].values[one_index],index:one_index},
-                                        level_two:{name:this.standardItems[1].name,value:this.standardItems[1].values[two_index],index:two_index},
-                                        level_three:{name:this.standardItems[2].name,value:this.standardItems[1].values[theIndex],index:theIndex},
+                                        levels:[
+                                            {name:this.standardItems[0].name,value:this.standardItems[0].values[one_index],index:one_index},
+                                            {name:this.standardItems[1].name,value:this.standardItems[1].values[two_index],index:two_index},
+                                            {name:this.standardItems[2].name,value:this.standardItems[1].values[theIndex],index:theIndex}
+                                        ],
                                         price:'',
                                         cost_price:'',
                                         stock:''
@@ -728,10 +714,10 @@
                     //this.standardArray = this.sort(this.standardArray,'level_one');
 
                     if(this.standardItems.length == 2){
-                        this.standardArray = this.sort(this.standardArray,'level_one');
+                        this.standardArray = this.sort(this.standardArray,0);
                     }else if(this.standardItems.length == 3){
-                        this.standardArray = this.sort(this.standardArray,'level_two');
-                        this.standardArray = this.sort(this.standardArray,'level_one');
+                        this.standardArray = this.sort(this.standardArray,1);
+                        this.standardArray = this.sort(this.standardArray,0);
                     }
 
                     //this.resetStandardArray();
@@ -743,7 +729,7 @@
                 sort: function (arr, key) {
                     for (let i = 0; i < arr.length; i++) {
                         for (let j = arr.length - 1; i < j; j--) {
-                            if (arr[j][key].index < arr[j - 1][key].index) {
+                            if (arr[j].levels[key].index < arr[j - 1].levels[key].index) {
                                 let temp = arr[j - 1];
                                 arr[j - 1] = arr[j];
                                 arr[j] = temp;
@@ -772,20 +758,20 @@
                                 if(this.standardItems.length >= 3){
                                     this.standardItems[2].values.map((three,three_index)=>{
                                         this.standardArray.map(item=>{
-                                            item.level_three = {name:this.standardItems[2].name,value:three,index:three_index};
+                                            item.levels[2] = {name:this.standardItems[2].name,value:three,index:three_index};
                                             return item;
                                         });
                                     });
                                 }else{
                                     this.standardArray.map(item=>{
-                                        item.level_two = {name:this.standardItems[1].name,value:two,index:two_index};
+                                        item.levels[1] = {name:this.standardItems[1].name,value:two,index:two_index};
                                         return item;
                                     });
                                 }
                             });
                         }else{
                             this.standardArray.map(item=>{
-                                item.level_one = {name:this.standardItems[1].name,value:one,index:one_index};
+                                item.levels[0] = {name:this.standardItems[1].name,value:one,index:one_index};
                                 return item;
                             });
                         }
@@ -800,14 +786,33 @@
                  * 取消添加当前规格项
                  **/
                 closeStandard:function (index) {
+                    let standardLength = this.standardItems.length;
+                    let temp = '';
+
+                    temp = this.standardArray.map(item=>{
+                        let levels = item.levels;
+                        item.levels = levels.filter((sub,sub_index)=>{
+                            console.log(sub_index);
+                            if(sub_index != index){
+                                return sub;
+                            }
+                        });
+                        return item;
+                    });
+
                     let tempStandards = this.standardItems.filter((item,i)=>{
                         if(i!=index){
-                           return item;
+                            return item;
                         }
                     });
+
+                    console.log(temp);
+
+                    this.standardArray = temp;
                     this.standardItems = tempStandards;
                     if(tempStandards.length == 0){
                         this.showStandardAddButton = false;
+                        this.showStandard = false;
                     }
                 },
 
