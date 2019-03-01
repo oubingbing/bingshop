@@ -501,9 +501,6 @@
             },
             methods:{
                 watchInputValue:function(value,index,i){
-                    console.log("value:"+value);
-                    console.log("index:"+index);
-                    console.log("i:"+i);
                     this.showStandard = true;
                     this.standardItems.map((itemValue,itemValueIndex)=>{
                         if(itemValueIndex == index){
@@ -525,7 +522,6 @@
 
                 watchInputName:function (value,index) {
                     this.standardArray.map(item=>{
-                        console.log(item);
                         item.levels[index].name = value;
                     });
                 },
@@ -535,11 +531,9 @@
 
                     switch (this.standardItems.length){
                         case 1:
-                            this.standardItems[0].values.map(one=>{
+                            this.standardItems[0].values.map((one,one_index)=>{
                                 this.standardArray.push({
-                                    level_one:{name:this.standardItems[0].name,value:one},
-                                    level_two:'',
-                                    level_three:'',
+                                    levels:[{name:this.standardItems[0].name,value:one,index:one_index}],
                                     price:'',
                                     cost_price:'',
                                     stock:''
@@ -548,12 +542,13 @@
                             });
                             break;
                         case 2:
-                            this.standardItems[0].values.map(one=>{
-                                this.standardItems[1].values.map(two=>{
+                            this.standardItems[0].values.map((one,one_index)=>{
+                                this.standardItems[1].values.map((two,two_index)=>{
                                     this.standardArray.push({
-                                        level_one:{name:this.standardItems[0].name,value:one},
-                                        level_two:{name:this.standardItems[1].name,value:two},
-                                        level_three:'',
+                                        levels:[
+                                            {name:this.standardItems[0].name,value:one,index:one_index},
+                                            {name:this.standardItems[1].name,value:two,index:two_index}
+                                        ],
                                         price:'',
                                         cost_price:'',
                                         stock:''
@@ -564,14 +559,15 @@
                             });
                             break;
                         case 3:
-                            this.standardItems[0].values.map(one=>{
-                                this.standardItems[1].values.map(two=>{
-                                    this.standardItems[2].values.map(three=>{
-                                        console.log("three");
+                            this.standardItems[0].values.map((one,one_index)=>{
+                                this.standardItems[1].values.map((two,two_index)=>{
+                                    this.standardItems[2].values.map((three,three_index)=>{
                                         this.standardArray.push({
-                                            level_one:{name:this.standardItems[0].name,value:one},
-                                            level_two:{name:this.standardItems[1].name,value:two},
-                                            level_three:{name:this.standardItems[2].name,value:three},
+                                            levels:[
+                                                {name:this.standardItems[0].name,value:one,index:one_index},
+                                                {name:this.standardItems[1].name,value:two,index:two_index},
+                                                {name:this.standardItems[1].name,value:three,index:three_index}
+                                            ],
                                             price:'',
                                             cost_price:'',
                                             stock:''
@@ -583,8 +579,6 @@
                             });
                             break;
                     }
-
-                     console.log(this.standardArray);
                 },
 
                 /**
@@ -600,7 +594,6 @@
                         stock:''
                     });
                     this.standardArray[0].levels.push({name:this.standardItems[0].name,value:'',index:0});
-                    console.log(this.standardArray)
                 },
 
                 /**
@@ -712,16 +705,12 @@
                             break;
                     }
 
-                    //this.standardArray = this.sort(this.standardArray,'level_one');
-
                     if(this.standardItems.length == 2){
                         this.standardArray = this.sort(this.standardArray,0);
                     }else if(this.standardItems.length == 3){
                         this.standardArray = this.sort(this.standardArray,1);
                         this.standardArray = this.sort(this.standardArray,0);
                     }
-
-                    //this.resetStandardArray();
                 },
 
                 /**
@@ -751,7 +740,6 @@
                     }
 
                     this.standardItems.push({name:'次级规格项',values:['']});
-                    //this.resetStandardArray();
 
                     this.standardItems[0].values.map((one,one_index)=>{
                         if(this.standardItems.length >= 2){
@@ -778,8 +766,6 @@
                         }
                     });
 
-                    console.log(this.standardArray);
-
                     let length = this.tableStandards.length-1;
                 },
 
@@ -788,63 +774,65 @@
                  **/
                 closeStandard:function (index) {
                     let standardLength = this.standardItems.length;
-                    let temp = '';
-
-                    temp = this.standardArray.map(item=>{
-                        let levels = item.levels;
-                        item.levels = levels.filter((sub,sub_index)=>{
-                            console.log(sub_index);
-                            if(sub_index != index){
-                                return sub;
-                            }
-                        });
-
-                        return item;
-                    });
-
-                   /* let item_index = 0;
-                    if(this.standardItems.length == 1){
-                        temp.filter(item=>{
-                            item_index = item.levels[0].index;
-                            if(item_index){
-
-                            }
-                        });
-                    }*/
-
                     let tempStandards = this.standardItems.filter((item,i)=>{
                         if(i!=index){
                             return item;
                         }
                     });
 
-                    console.log(temp);
-
-                    this.standardArray = temp;
                     this.standardItems = tempStandards;
                     if(tempStandards.length == 0){
                         this.showStandardAddButton = false;
                         this.showStandard = false;
                     }
+
+                    this.resetStandardArray();
                 },
 
                 /**
                  * 删除规格值
                  **/
                 closeStandardValue:function (index,i) {
-                    let tempData = this.standardItems.map((item,j)=>{
+                    this.standardItems = this.standardItems.filter((item,j)=>{
                         if(index == j){
-                            let tempValues = [];
-                            item.values.map((subItem,k)=>{
+                            item.values = item.values.filter((subItem,k)=>{
                                 if(k != i){
-                                    tempValues.push(subItem);
+                                    return subItem;
                                 }
                             });
-                            item.values = tempValues;
                         }
-                        return item;
+                        if(item.values.length > 0){
+                            return item;
+                        }
                     });
-                    this.standardItems = tempData;
+
+
+                    this.standardArray = this.standardArray.filter(item=>{
+                        let result = false;
+                        item.levels = item.levels.filter((sub,sub_index)=>{
+                            if(sub_index == index && sub.index == i){
+                                result = true;
+                            }else{
+                                return sub;
+                            }
+                        });
+
+                        if(!result){
+                            return item;
+                        }else{
+                            if(this.standardArray.length == 1 && this.standardItems.length > 0){
+                                return item;
+                            }
+                        }
+                    });
+
+                    if(this.standardArray.length == 0){
+                        this.showStandard = false;
+                    }
+
+                    console.log(this.standardArray);
+                    console.log(this.standardItems);
+
                 },
                 search:function () {
                     this.current_page = 1;
