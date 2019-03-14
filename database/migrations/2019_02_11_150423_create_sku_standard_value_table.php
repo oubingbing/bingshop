@@ -14,12 +14,12 @@ class CreateSkuStandardValueTable extends Migration
     public function up()
     {
         Schema::create('sku_standard_values', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
 
-            $table->bigInteger("sku_id")->index()->comment("所属sku");
-            $table->bigInteger("standard_value_id")->index()->comment("所属规格值");
+            $table->integer("sku_id")->index()->comment("所属sku");
+            $table->integer("standard_value_id")->index()->comment("所属规格值");
 
-            $table->timestamp('created_at')->nullable()->index();
+            $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->softDeletes();
         });

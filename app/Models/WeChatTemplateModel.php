@@ -9,13 +9,10 @@
 namespace App\Models;
 
 
-class WeChatTemplate extends BaseModel
+class WeChatTemplateModel extends BaseModel
 {
     const TABLE_NAME = 'templates';
     protected $table = self::TABLE_NAME;
-
-    /** Field id */
-    const FIELD_ID = 'id';
 
     /** Field app_id */
     const FIELD_ID_APP = 'app_id';

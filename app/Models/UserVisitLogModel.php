@@ -9,30 +9,17 @@
 namespace App\Models;
 
 
-use Illuminate\Database\Eloquent\Model;
-
-class UserVisitLog extends Model
+class UserVisitLogModel extends BaseModel
 {
     const TABLE_NAME = 'user_visit_logs';
     protected $table = self::TABLE_NAME;
 
-    /** Field id */
-    const FIELD_ID = 'id';
 
     /** Field user_id */
     const FIELD_ID_USER = 'user_id';
 
     /** Field nickname */
     const FIELD_NICKNAME = 'nickname';
-
-    /** field created_at */
-    const FIELD_CREATED_AT = 'created_at';
-
-    /** field updated_at */
-    const FIELD_UPDATED_AT = 'updated_at';
-
-    /** field deleted_at */
-    const FIELD_DELETED_AT = 'deleted_at';
 
     const REL_USER = 'user';
 

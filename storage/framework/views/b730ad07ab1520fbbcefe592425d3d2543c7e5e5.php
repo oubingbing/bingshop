@@ -240,6 +240,7 @@
                                                lay-verify="required"
                                                v-on:input="watchInputName(standardItem.name,index)"
                                                autocomplete="off"
+                                               placeholder="规格名"
                                                style="width: 100px"
                                                class="layui-input">
                                     </div>
@@ -252,6 +253,7 @@
                                                    style="width: 100%;"
                                                    required=""
                                                    lay-verify="required"
+                                                   placeholder="规格值"
                                                    v-on:input="watchInputValue(value,index,i)"
                                                    autocomplete="off"
                                                    class="layui-input">
@@ -456,6 +458,7 @@
         let token = '';
         const IMAGE_URL = "<?php echo e(env('QI_NIU_DOMAIN')); ?>";
         const ZONE = "<?php echo e(env('QI_NIU_ZONE')); ?>";
+
         new Vue({
             el: '#app',
             data: {
@@ -585,7 +588,7 @@
                  **/
                 showStandardAdd:function () {
                     this.showStandardAddButton = true;
-                    this.standardItems.push({level:1,name:'一级规格',values:['']});
+                    this.standardItems.push({level:1,name:'',values:['']});
                     this.standardArray.push({
                         levels:[],
                         price:'',
@@ -710,6 +713,8 @@
                         this.standardArray = this.sort(this.standardArray,1);
                         this.standardArray = this.sort(this.standardArray,0);
                     }
+
+                    console.log(this.standardArray);
                 },
 
                 /**
@@ -738,7 +743,7 @@
                         return false;
                     }
 
-                    this.standardItems.push({name:'次级规格项',values:['']});
+                    this.standardItems.push({name:'',values:['']});
 
                     this.standardItems[0].values.map((one,one_index)=>{
                         if(this.standardItems.length >= 2){
@@ -896,12 +901,13 @@
                     let file = event.target.files[0];
 
                     uploadPicture(file,res=> {
-                        this.attachments = [this.imageUrl+res.key]
+                        this.attachments = [this.imageUrl+res.key];
                         console.log(this.attachments)
                     },function (res) {
                         //var total = res.total;
                         console.log(res)
                     },function (res) {
+                        console.log(res);
                         layer.msg("添加图片失败");
                     },ZONE);
 

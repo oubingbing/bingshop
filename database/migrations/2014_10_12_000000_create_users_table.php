@@ -30,8 +30,8 @@ class CreateUsersTable extends Migration
             $table->tinyInteger('type')->default(0)->comment('用户类型');
             $table->tinyInteger('status')->default(0)->comment('用户状态');
 
-            $table->timestamp('created_at')->nullable()->index();
-            $table->timestamp('updated_at')->nullable()->index();
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
             $table->softDeletes();
         });
     }

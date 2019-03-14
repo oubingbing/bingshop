@@ -14,7 +14,7 @@ class CreateSkuTable extends Migration
     public function up()
     {
         Schema::create('skus', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
 
             $table->bigInteger("goods_id")->index()->comment("所属商品");
             $table->decimal("price",10,4)->default(0)->comment("商品价格");
@@ -25,7 +25,7 @@ class CreateSkuTable extends Migration
 
             $table->jsonb("attachments")->nullable()->comment("商品图片信息");
 
-            $table->timestamp('created_at')->nullable()->index();
+            $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->softDeletes();
         });

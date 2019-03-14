@@ -14,7 +14,7 @@ class CreateGoodsTable extends Migration
     public function up()
     {
         Schema::create('goods', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
 
             $table->integer("category_id")->index()->comment("所属分类");
             $table->string("name")->default("")->comment("商品名称");
@@ -38,7 +38,7 @@ class CreateGoodsTable extends Migration
             $table->tinyInteger('distribution_mode')->default(1)->comment("配送方式，1=快递发货，2=同城配送，3=到店自提");
             $table->decimal("postage_cost",10,4)->default(0)->comment("邮费");
 
-            $table->timestamp('created_at')->nullable()->index();
+            $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->softDeletes();
         });

@@ -25,7 +25,7 @@ class CreateCategoriesTable extends Migration
             $table->tinyInteger('type')->default(1)->comment("类型");
             $table->tinyInteger("sort")->default(1)->comment("排序");
 
-            $table->timestamp('created_at')->nullable()->index();
+            $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->softDeletes();
         });

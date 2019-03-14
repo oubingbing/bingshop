@@ -14,9 +14,6 @@ class AdminModel extends BaseModel
     const TABLE_NAME = 'admins';
     protected $table = self::TABLE_NAME;
 
-    /** field id 用户Id */
-    const FIELD_ID = 'id';
-
     /** field nickname 用户昵称 */
     const FIELD_NICKNAME = 'nickname';
 

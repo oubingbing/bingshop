@@ -14,7 +14,7 @@ class CreateCustomerTable extends Migration
     public function up()
     {
         Schema::create('admins', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
 
             $table->string("nickname",64)->default("")->unique()->comment("昵称");
             $table->string("avatar")->default("")->comment("头像");
@@ -27,7 +27,7 @@ class CreateCustomerTable extends Migration
 
             $table->tinyInteger("type")->default(0)->comment("管理员类型，1=超级管理员，2=普通管理员");
 
-            $table->timestamp('created_at')->nullable()->index();
+            $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->nullable();
             $table->softDeletes();
         });
