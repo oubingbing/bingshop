@@ -12,6 +12,7 @@ namespace App\Http\Service;
 use App\Exceptions\WebException;
 use App\Models\StandardModel as Model;
 use App\Models\StandardValueModel;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use League\Flysystem\Exception;
 
@@ -67,8 +68,14 @@ class StandardService
      */
     public function storeStandardValues($standardId,$standardValues)
     {
-        collect($standardValues)->map(function($item)use($standardId){
-                return [StandardValueModel::FIELD_ID_STANDARD=>$standardId,StandardValueModel::FIELD_VALUE=>$item];
+        $now = Carbon::now()->toDateTimeString();
+        collect($standardValues)->map(function($item)use($standardId,$now){
+                return [
+                    StandardValueModel::FIELD_ID_STANDARD=>$standardId,
+                    StandardValueModel::FIELD_VALUE=>$item,
+                    StandardValueModel::FIELD_CREATED_AT=>$now,
+                    StandardValueModel::FIELD_UPDATED_AT=>$now
+                ];
         });
         $insertResult = DB::table(StandardValueModel::TABLE_NAME)->insert($standardValues->toArray());
         return $insertResult;
@@ -80,7 +87,7 @@ class StandardService
      * @author yezi
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
-    public function getStandardInfo()
+    public function getStandardInfo($names)
     {
         $standards = Model::query()
             ->with([Model::REL_STANDARD_VALUE=>function($query){
@@ -94,9 +101,13 @@ class StandardService
             Model::FIELD_ID,
             Model::FIELD_NAME,
             Model::FIELD_ID_ADMIN
-        ])->get();
+        ]);
 
-        return $standards;
+        if($names){
+            $standards->whereIn(Model::FIELD_NAME,collect($names)->toArray());
+        }
+
+        return $standards->get();
     }
 
     /**
@@ -127,6 +138,26 @@ class StandardService
             //提交上来的都是新的规格，需要新增到数据库
             $this->storeBatchStandard($standardItems,$adminId);
         }
+    }
+
+    /**
+     * 查询规格值数据
+     *
+     * @author yezi
+     * @param $standardValue
+     * @param $standardName
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null|static|static[]
+     */
+    public function findStandardValueByValue($standardValue,$standardName)
+    {
+        $standardValueBuilder = StandardValueModel::query()->where(StandardValueModel::FIELD_VALUE,$standardValue);
+        if($standardName){
+            $standardValueBuilder->whereHash(StandardValueModel::REL_STANDARD,function ($query)use($standardName){
+                $query->where(Model::FIELD_NAME,$standardName);
+            });
+        }
+
+        return $standardValueBuilder->find();
     }
 
 }

@@ -9,8 +9,7 @@
 namespace App\Http\Service;
 
 
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+use App\Models\GoodsModel as Model;
 
 class GoodsService
 {
@@ -57,5 +56,11 @@ class GoodsService
             return ['status'=>true,'message'=>'success'];
         }
     }
-    
+
+    public function storeGoods(Model $model)
+    {
+        $result = $model->save();
+        return $result;
+    }
+
 }
