@@ -17,7 +17,7 @@ class CreateStandarsTable extends Migration
             $table->increments('id');
 
             //有可能有一些是没有规格的名称，只有规格值的情况，在手机端新建的时候可能没有规格名称，只有规格值
-            $table->string("name")->default("")->comment("规格名称，如内存、颜色");
+            $table->string("name")->unique()->default("")->comment("规格名称，如内存、颜色");
             $table->integer("admin_id")->index()->comment("规格创建人");
 
             $table->timestamp('created_at')->nullable();

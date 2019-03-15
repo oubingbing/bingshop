@@ -12,16 +12,19 @@ use App\Exceptions\ApiException;
 use App\Exceptions\WebException;
 use App\Http\Controllers\Controller;
 use App\Http\Service\GoodsService;
+use App\Http\Service\StandardService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class GoodsController extends Controller
 {
     private $goodsService;
+    private $standardService;
 
-    function __construct(GoodsService $activityService)
+    function __construct(GoodsService $activityService,StandardService $standardService)
     {
         $this->goodsService = $activityService;
+        $this->standardService = $standardService;
     }
 
     public function index()
@@ -37,6 +40,19 @@ class GoodsController extends Controller
         if(!$standardItems){
             throw new ApiException("规格参数不能为空",500);
         }
+
+        try {
+            \DB::beginTransaction();
+
+            $this->standardService->checkStoreStandardItems($standardItems,$user->id);
+
+            \DB::commit();
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            throw new WebException($e->getMessage());
+        }
+
+        return webResponse('',"编辑成功");
     }
 
 }
