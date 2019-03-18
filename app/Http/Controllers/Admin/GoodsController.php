@@ -104,7 +104,7 @@ class GoodsController extends Controller
             if(!$skuData){
                 $standard = $this->standardService->storeDefault($user->id);
                 //创建默认sku
-                
+
             }
 
 

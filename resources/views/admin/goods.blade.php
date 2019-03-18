@@ -175,9 +175,9 @@
             <span class="x-right" style="line-height:40px">共有数据：@{{total}} 条</span>
         </xblock>
 
-        <!-- 添加银行的页面 -->
-        <div class="add_activity" style="margin-top: -50px" v-show="showBankForm">
-            <div class="activity-form" style="width: 80%;margin-top: -100px;overflow: scroll;height: 800px;">
+        <!-- 新建商品的页面 -->
+        <div class="add_activity" style="margin-top: -50px;" v-show="showBankForm">
+            <div class="activity-form" id="createGoods" style="width: 80%;margin-top: -100px;overflow: scroll;margin-bottom: 100px">
                 <div class="close-view">
                     <img class="close-button" v-on:click="closeBankForm" src="{{asset('images/close.png')}}" alt="">
                 </div>
@@ -455,6 +455,8 @@
         let token = '';
         const IMAGE_URL = "{{env('QI_NIU_DOMAIN')}}";
         const ZONE = "{{env('QI_NIU_ZONE')}}";
+
+        $("#createGoods").height($(document.body).height()-120);
 
         new Vue({
             el: '#app',
