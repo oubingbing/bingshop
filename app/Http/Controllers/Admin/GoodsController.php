@@ -36,33 +36,36 @@ class GoodsController extends Controller
         return view("admin.goods");
     }
 
-    public function createGoods()
+    public function createGoods(Request $request)
     {
-        $user = request()->input("user");
-        $standardItems = request()->input('standard_items');
-        $skuData = request()->input('sku_data');
-        $goodsName = request()->input('goods_name');
-        $goodsDescribe = request()->input('goods_describe');
-        $goodsShareDescribe = request()->input('goods_share_describe');
-        $attachments = request()->input('attachments');
-        $checkedCategory = request()->input('checked_category');
-        $goodsPrice = request()->input('goods_price');
-        $chalkLinePrice = request()->input('chalk_line_price');
-        $goodsStock = request()->input('goods_stock');
-        $saleStartType = request()->input('sale_start_type');
-        $startSaleTime = request()->input('start_sale_time');
-        $saleStopType = request()->input('sale_stop_type');
-        $stopSaleTime = request()->input('stop_sale_time');
-        $limitSaleModel = request()->input('limit_sale_model');
-        $limitSaleModelValue = request()->input('limit_sale_model_value');
-        $postType = request()->input('post_type');
-        $postCostType = request()->input('post_cost_type');
-        $postCost = request()->input('post_cost');
+        $user = $request->input("user");
+        $standardItems = $request->input('standard_items');
+        $skuData = $request->input('sku_data');
+        $goodsName = $request->input('goods_name');
+        $goodsDescribe = $request->input('goods_describe');
+        $goodsShareDescribe = $request->input('goods_share_describe');
+        $attachments = $request->input('attachments');
+        $checkedCategory = $request->input('checked_category');
+        $goodsPrice = $request->input('goods_price');
+        $chalkLinePrice = $request->input('chalk_line_price');
+        $goodsStock = $request->input('goods_stock');
+        $saleStartType = $request->input('sale_start_type');
+        $startSaleTime = $request->input('start_sale_time');
+        $saleStopType = $request->input('sale_stop_type');
+        $stopSaleTime = $request->input('stop_sale_time');
+        $limitSaleModel = $request->input('limit_sale_model');
+        $limitSaleModelValue = $request->input('limit_sale_model_value');
+        $postType = $request->input('post_type');
+        $postCostType = $request->input('post_cost_type');
+        $postCost = $request->input('post_cost');
 
-
-        if(!$standardItems){
-            throw new ApiException("规格参数不能为空",500);
+        //校验参数
+        $valid = $this->goodsService->validRegister($request,$standardItems,$goodsPrice,$goodsStock);
+        if(!$valid['status']){
+            throw new WebException($valid['message']);
         }
+
+        dd("test");
 
         $Goods = new GoodsModel();
 

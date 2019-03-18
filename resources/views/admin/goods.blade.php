@@ -554,6 +554,12 @@
                         post_cost_type : this.postCostType,
                         post_cost : this.postCost
                     }).then( response=> {
+                        let ResData = response.data;
+                        if(ResData.code == 500){
+                            layer.msg(ResData.message);
+                        }else{
+
+                        }
 
                     }).catch(function (error) {
                         console.log(error);
