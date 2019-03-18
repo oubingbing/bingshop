@@ -11,7 +11,7 @@ use Carbon\Carbon;
  * @author yezi
  */
 if( ! function_exists('webResponse') ){
-    function webResponse($data=null,$msg='success',$code=0){
+    function webResponse($msg='success',$data=null,$code=0){
         $response = array();
 
         $response['code']=$code;

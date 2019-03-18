@@ -58,6 +58,22 @@ class StandardService
         return $result;
     }
 
+    public function storeDefault($adminId)
+    {
+        $default = '默认';
+        $standard = $this->findStandardByName($default);
+        if(!$standard){
+            $standard = $this->storeStandard($default,$adminId);
+        }
+        return $standard;
+    }
+
+    public function findStandardByName($name)
+    {
+        $standard = Model::query()->find(Model::FIELD_NAME,$name);
+        return $standard;
+    }
+
     /**
      * 新增规格值
      *

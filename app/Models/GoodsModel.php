@@ -59,6 +59,10 @@ class GoodsModel extends BaseModel
     /** Field postage_cost 邮费 **/
     const FIELD_POSTAGE_COST = 'postage_cost';
 
+    protected $casts = [
+        self::FIELD_IMAGES_ATTACHMENTS=>'array'
+    ];
+
     protected $fillable = [
         self::FIELD_ID_CATEGORY,
         self::FIELD_NAME,

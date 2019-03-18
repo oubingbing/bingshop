@@ -16,10 +16,9 @@ class CreateGoodsTable extends Migration
         Schema::create('goods', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->integer("category_id")->index()->comment("所属分类");
-            $table->string("name")->default("")->comment("商品名称");
-            $table->string('describe')->default("")->comment("商品描述");
-            $table->string('share_describe')->default("")->comment("分享描述");
+            $table->string("name",128)->default("")->comment("商品名称");
+            $table->string('describe',225)->nullable()->comment("商品描述");
+            $table->string('share_describe',225)->nullable()->comment("分享描述");
             $table->jsonb("images_attachments")->nullable()->comment("商品图片");
             $table->jsonb("video_attachments")->nullable()->comment("商品视频信息");
 
