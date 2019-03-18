@@ -176,7 +176,7 @@
 
         <!-- 添加银行的页面 -->
         <div class="add_activity" style="margin-top: -50px" v-show="showBankForm">
-            <form class="activity-form" style="width: 80%;margin-top: -100px;overflow: scroll;height: 900px">
+            <div class="activity-form" style="width: 80%;margin-top: -100px;overflow: scroll;height: 800px;">
                 <div class="close-view">
                     <img class="close-button" v-on:click="closeBankForm" src="<?php echo e(asset('images/close.png')); ?>" alt="">
                 </div>
@@ -192,7 +192,7 @@
                     </div>
                     <div class="layui-form-item">
                         <label for="phone" class="layui-form-label goods-form-label" style="width: 100px">
-                            <span class="x-red">*</span>商品买点
+                            商品卖点
                         </label>
                         <div class="layui-input-inline">
                             <textarea placeholder="请输入内容" v-model="goodsDescribe" class="layui-textarea"></textarea>
@@ -200,7 +200,7 @@
                     </div>
                     <div class="layui-form-item">
                         <label for="L_email" class="layui-form-label goods-form-label" style="width: 100px">
-                            <span class="x-red">*</span>分享描述
+                            分享描述
                         </label>
                         <div class="layui-input-inline">
                             <textarea placeholder="请输入内容" v-model="goodsShareDescribe" class="layui-textarea"></textarea>
@@ -226,9 +226,7 @@
                     </div>
 
                     <div class="" style="width: 100%;">
-                        <label for="L_pass" class="layui-form-label goods-form-label" style="width: 100px">
-                            <span class="x-red">*</span>商品规格
-                        </label>
+                        <label for="L_pass" class="layui-form-label goods-form-label" style="width: 100px">商品规格</label>
                         <div class="layui-input-inline standard-container">
                             <div class="standard" v-if="showStandardAddButton">
                                 <div class="standard-list" v-for="(standardItem,index) in standardItems">
@@ -340,9 +338,7 @@
                     </div>
 
                     <div class="layui-form-item">
-                        <label for="username" class="layui-form-label goods-form-label" style="width: 100px">
-                            <span class="x-red">*</span>划线价
-                        </label>
+                        <label for="username" class="layui-form-label goods-form-label" style="width: 100px">划线价</label>
                         <div class="layui-input-inline">
                             <input type="text" v-model="chalkLinePrice" required="" lay-verify="required"
                                    autocomplete="off" class="layui-input">
@@ -361,66 +357,66 @@
 
                     <div class="layui-form-item">
                         <label class="layui-form-label goods-form-label" style="width: 100px"><span class="x-red">*</span>上架时间</label>
-                        <div class="layui-input-block layui-form sale-time-model">
-                            <input type="radio" name="saleStartModel" lay-skin="primary" title="立即上架售卖" checked="">
-                            <div class="sale-time-item">
-                                <input type="radio" name="saleStartModel" lay-skin="primary" title="自定义上架时间">
+                        <div class="layui-input-block sale-time-model">
+                            <el-radio v-model="saleStartModel" @change="saleStartModelChange" label="1">立即上架售卖</el-radio>
+                            <div>
+                                <el-radio v-model="saleStartModel" @change="saleStartModelChange" label="2">自定义上架时间</el-radio>
                                 <el-date-picker
-                                        v-model="startSaleDate"
+                                        v-model="startSaleTime"
+                                        @change="startSaleTimeChange"
                                         type="datetime"
                                         value-format="yyyy-MM-dd HH:mm:ss"
                                         placeholder="选择日期时间">
                                 </el-date-picker>
                             </div>
-                            <input type="radio" name="saleStartModel" lay-skin="primary" title="暂不售卖，放入仓库" >
+                            <el-radio v-model="saleStartModel" @change="saleStartModelChange" label="3">暂不售卖，放入仓库</el-radio>
                         </div>
                     </div>
 
                     <div class="layui-form-item">
                         <label class="layui-form-label goods-form-label" style="width: 100px"><span class="x-red">*</span>下架时间</label>
-                        <div class="layui-input-block layui-form sale-time-model">
-                            <input type="radio" name="stopStartModel" lay-skin="primary" title="售完即可下架" checked="">
-                            <div class="sale-time-item">
-                                <input type="radio" name="stopStartModel" lay-skin="primary" title="自定义下架时间">
+                        <div class="layui-input-block sale-time-model">
+                            <el-radio v-model="saleStopModel" @change="saleStopModelChange" label="1">售完即可下架</el-radio>
+                            <div>
+                                <el-radio v-model="saleStopModel" @change="saleStopModelChange" label="2">自定义下架时间</el-radio>
                                 <el-date-picker
-                                        v-model="stopSaleDate"
+                                        v-model="stopSaleTime"
                                         type="datetime"
+                                        @change="stopSaleTimeChange"
                                         value-format="yyyy-MM-dd HH:mm:ss"
                                         placeholder="选择日期时间">
                                 </el-date-picker>
                             </div>
-                            <input type="radio" name="stopStartModel" lay-skin="primary" title="售完不下架" >
+                            <el-radio v-model="saleStopModel" @change="saleStopModelChange" label="3">售完不下架</el-radio>
                         </div>
                     </div>
 
                     <div class="layui-form-item">
                         <label class="layui-form-label goods-form-label" style="width: 100px"><span class="x-red">*</span>限购</label>
-                        <div class="layui-input-block layui-form sale-time-model">
-                            <input type="radio" name="limitSaleModel" lay-skin="primary" title="无限购买" checked="">
-                            <div class="sale-time-item">
-                                <input type="radio" name="limitSaleModel" lay-skin="primary" title="限制数量">
-                                <input type="text" required="" style="width: 100px" lay-verify="required"
-                                       autocomplete="off" class="layui-input">
+                        <div class="layui-input-block sale-time-model">
+                            <el-radio v-model="limitSaleModel" @change="limitSaleModelChange" label="1">无限购买</el-radio>
+                            <div style="display: flex;flex-direction: row;align-items: center;margin-top: 10px">
+                                <el-radio v-model="limitSaleModel" @change="limitSaleModelChange" label="2">限制数量</el-radio>
+                                <input type="text"  v-model="limitSaleModelValue" style="width: 100px" v-if="limitSaleModel==2" class="layui-input">
                             </div>
                         </div>
                     </div>
 
                     <div class="layui-form-item">
                         <label class="layui-form-label goods-form-label" style="width: 100px"><span class="x-red">*</span>配送方式</label>
-                        <div class="layui-input-block layui-form">
-                            <input type="radio" name="postType" lay-skin="primary" title="快递发货" checked="">
-                            <input type="radio" name="postType" lay-skin="primary" title="同城配送" checked="">
-                            <input type="radio" name="postType" lay-skin="primary" title="到点自取" checked="">
+                        <div class="layui-input-block" style="margin-top: 10px">
+                            <el-radio v-model="postType" label="1">快递发货</el-radio>
+                            <el-radio v-model="postType" label="2">同城配送</el-radio>
+                            <el-radio v-model="postType" label="3">到店自取</el-radio>
                         </div>
                     </div>
 
                     <div class="layui-form-item">
                         <label class="layui-form-label goods-form-label" style="width: 100px"><span class="x-red">*</span>快递运费</label>
-                        <div class="layui-input-block layui-form">
-                            <div class="sale-time-item">
-                                <input type="radio" name="postCost" lay-skin="primary" title="统一邮费">
-                                <input type="text" required="" style="width: 100px" value="0" lay-verify="required"
-                                       autocomplete="off" class="layui-input">
+                        <div class="layui-input-block">
+                            <div style="display: flex;flex-direction: row;align-items: center;margin-top: 5px">
+                                <el-radio v-model="postCostType" label="1">统一邮费</el-radio>
+                                <input type="text" v-model="postCost" style="width: 100px" value="0" class="layui-input">
                             </div>
                         </div>
                     </div>
@@ -428,12 +424,12 @@
                     <div class="layui-form-item">
                         <label for="L_repass" class="layui-form-label goods-form-label" style="width: 100px">
                         </label>
-                        <div  class="layui-btn" lay-filter="add" lay-submit="" v-on:click="submitActivityInfo" style="margin-top: 20px">
+                        <div  class="layui-btn" lay-filter="add" lay-submit="" v-on:click="submitGoodsInfo" style="margin-top: 20px">
                             保存
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
 
         </div>
 
@@ -462,46 +458,148 @@
         new Vue({
             el: '#app',
             data: {
+                showStandard:false,
+                showStandardAddButton:false,
+                showBankForm:false,
                 categories:[],
-                checkedCategory: [],
                 total:0,
                 page_size:20,
                 current_page:1,
                 categoryName:'',
-                showBankForm:false,
                 imageUrl:IMAGE_URL,
                 startLimit:start.getTime(),
                 filter:'',
-
-                showStandard:false,
-                showStandardAddButton:false,
                 standardItems:[],
                 tableStandards:[],
+                attachments:[],
+                standardArray:[],
+                standardTable:[],
 
                 goodsName:'',
                 goodsDescribe:'',
                 goodsShareDescribe:'',
-                attachments:[],
-                goodsNumber:0,
-                goodsPrice:0,
-                chalkLinePrice:0,
-                goodsStock:0,
-                startSaleDate:'',
-                saleStartModel:1,
-                stopStartModel:1,
-                stopSaleDate:'',
-                limitSaleModel:1,
-                postType:1,
-                postCost:0,
-
-                standardArray:[],
-                standardTable:[]
+                checkedCategory: [],
+                goodsPrice:'',
+                chalkLinePrice:'',
+                goodsStock:'',
+                saleStartModel:'1',
+                startSaleTime:'',
+                saleStopModel:'1',
+                stopSaleTime:'',
+                limitSaleModel:'1',
+                limitSaleModelValue:'',
+                postType:'1',
+                postCostType:'1',
+                postCost:0
             },
             created:function () {
                 this.getCategories();
                 this.getQiNiuToken();
             },
             methods:{
+                /**
+                 * 新建商品
+                 **/
+                submitGoodsInfo:function () {
+                    if(this.checkedCategory.length <= 0){
+                        layer.msg("商品分类不能为空");
+                        return false;
+                    }
+
+                    let saleStartType = parseInt(this.saleStartModel);
+                    if(saleStartType == 2 && this.startSaleTime == ''){
+                        layer.msg("上架日期不能为空");
+                        return false;
+                    }
+
+                    let saleStopType = parseInt(this.saleStopModel);
+                    if(saleStopType == 2 && this.stopSaleTime == ''){
+                        layer.msg("下架日期不能为空");
+                        return false;
+                    }
+
+                    let limitSaleModel = this.limitSaleModel;
+                    let limitSaleModelValue = this.limitSaleModelValue;
+                    if(parseInt(limitSaleModel) == 2 && (limitSaleModelValue == '' || limitSaleModelValue == 0)){
+                        layer.msg("限购数量不能为空或者为0");
+                        return false;
+                    }
+
+                    let postCostType = this.postCostType;
+                    let postCost = this.postCostType;
+                    if(parseInt(postCostType) == 1 && (postCost == '')){
+                        layer.msg("邮费不能为空");
+                        return false;
+                    }
+
+                    axios.post(`/admin/goods/create`,{
+                        goods_name:this.goodsName,
+                        goods_describe:this.goodsDescribe,
+                        goods_share_describe:this.goodsShareDescribe,
+                        attachments:this.attachments,
+                        checked_category:this.checkedCategory,
+                        standard_items:this.standardItems,
+                        sku_data:this.standardArray,
+                        goods_price:this.goodsPrice,
+                        chalk_line_price:this.chalkLinePrice,
+                        goods_stock:this.goodsStock,
+                        sale_start_type:saleStartType,
+                        start_sale_time:this.startSaleTime,
+                        sale_stop_type:saleStopType,
+                        stop_sale_time:this.stopSaleTime,
+                        limit_sale_model:this.limitSaleModel,
+                        limit_sale_model_value:this.limitSaleModelValue,
+                        post_type:this.postType,
+                        post_cost_type : this.postCostType,
+                        post_cost : this.postCost
+                    }).then( response=> {
+
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                },
+
+                /**
+                 * 监听上架日期的变更
+                 * */
+                startSaleTimeChange:function (value) {
+                    this.saleStartModel = '2';
+                },
+                /**
+                 * 监听上架模式的值变换
+                 * */
+                saleStartModelChange:function (value) {
+                    if(parseInt(value) != 2){
+                        this.startSaleTime = '';
+                    }
+                    this.saleStopModel = value;
+                },
+
+                /**
+                 * 监听下架日期的变更
+                 * */
+                stopSaleTimeChange:function (value) {
+                    this.saleStopModel = '2';
+                },
+                /**
+                 * 监听下架模式的值变换
+                 * */
+                saleStopModelChange:function (value) {
+                    if(parseInt(value) != 2){
+                        this.stopSaleTime = '';
+                    }
+                    this.saleStopModel = value;
+                },
+
+                /**
+                 * 监听限制购买数量的勾选类型
+                 * */
+                limitSaleModelChange:function (value) {
+                    if(parseInt(this.limitSaleModel) != 2){
+                        this.limitSaleModelValue = '';
+                    }
+                },
+
                 watchInputValue:function(value,index,i){
                     this.showStandard = true;
                     this.standardItems.map((itemValue,itemValueIndex)=>{
@@ -871,12 +969,6 @@
                 },
                 closeBankForm:function () {
                     this.showBankForm = false;
-                },
-                submitActivityInfo:function () {
-                    if(true){
-                        layer.msg("标题不能为空");
-                        return false;
-                    }
                 },
                 /**
                  * 获取七牛token

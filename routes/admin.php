@@ -22,19 +22,19 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin','middleware'=>['web']],
         /** 类型视图 **/
         Route::get("/category/index","CategoryController@index");
 
-        /** 新建优惠类型 **/
+        /** 新建商品类目 **/
         Route::post("/category/create","CategoryController@createCategory");
 
-        /** 编辑优惠类型 **/
+        /** 编辑商品类目 **/
         Route::patch("/category/edit","CategoryController@edit");
 
-        /** 删除优惠类型 **/
+        /** 删除商品类目 **/
         Route::delete("/category/{id}/delete","CategoryController@delete");
 
-        /** 新建优惠类型 **/
+        /** 获取全部商品类目数据 **/
         Route::get("/categories","CategoryController@categories");
 
-        /** 获取类型的分页列表 **/
+        /** 获取商品类目的分页列表 **/
         Route::get("/category_list","CategoryController@categoryList");
 
         /** 商品视图 **/
@@ -42,6 +42,9 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin','middleware'=>['web']],
 
         /** 获取七牛token **/
         Route::get("/qiniu/token","QiNiuController@token");
+
+        /** 新建商品 **/
+        Route::post("/goods/create","GoodsController@createGoods");
     });
 });
 
