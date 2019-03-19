@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <div class="x-body layui-anim layui-anim-up" id="app" v-cloak>
-        <blockquote class="layui-elem-quote">你好：{{$user->nickname}}，欢迎使用bing_shop后台管理系统</blockquote>
+        <blockquote class="layui-elem-quote">你好：{{$user->nickname}}，欢迎使用bingshop后台管理系统</blockquote>
         <fieldset class="layui-elem-field">
             <legend>数据统计</legend>
             <div class="layui-field-box">

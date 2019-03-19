@@ -157,6 +157,7 @@
                 },
                 showBankView:function () {
                     this.showBankForm = true;
+                    this.operateType = 'create';
                 },
                 closeBankForm:function () {
                     this.showBankForm = false;

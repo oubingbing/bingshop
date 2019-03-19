@@ -17,6 +17,7 @@ use App\Http\Service\SkuService;
 use App\Http\Service\StandardService;
 use App\Models\GoodsModel;
 use Carbon\Carbon;
+use Illuminate\Contracts\Logging\Log;
 use Illuminate\Http\Request;
 
 class GoodsController extends Controller
@@ -77,55 +78,52 @@ class GoodsController extends Controller
             throw new WebException("商品开售日期不能大于下架日期");
         }
 
+        $Goods = new GoodsModel();
+        $Goods->{GoodsModel::FIELD_NAME} = $goodsName;
+        $Goods->{GoodsModel::FIELD_DESCRIBE} = $goodsDescribe;
+        $Goods->{GoodsModel::FIELD_SHARE_DESCRIBE} = $goodsShareDescribe;
+        $Goods->{GoodsModel::FIELD_IMAGES_ATTACHMENTS} = $attachments;
+        $Goods->{GoodsModel::FIELD_SKU_TYPE} = $skuData?GoodsEnum::SINGLE_SKU:GoodsEnum::BATCH_SKU;
+        $Goods->{GoodsModel::FIELD_STATUS} = GoodsEnum::SALE_STATUS_DOWN;
+        $Goods->{GoodsModel::FIELD_START_SALE_TYPE} = $saleStartType;
+        $Goods->{GoodsModel::FIELD_START_SELLING_AT} = $startSaleTime->toDateTimeString();
+        $Goods->{GoodsModel::FIELD_STOP_SALE_TYPE} = $saleStopType;
+        $Goods->{GoodsModel::FIELD_STOP_SELLING_AT} = $stopSaleTime->toDateTimeString();
+        $Goods->{GoodsModel::FIELD_LIMIT_PURCHASE_NUM} = $limitSaleModel==1?0:$limitSaleModelValue;
+        $Goods->{GoodsModel::FIELD_DISTRIBUTION_MODE} = $postType;
+        $Goods->{GoodsModel::FIELD_POSTAGE_COST} = $postCost;
+
         try {
             \DB::beginTransaction();
-
-            $Goods = new GoodsModel();
-            $Goods->{GoodsModel::FIELD_NAME} = $goodsName;
-            $Goods->{GoodsModel::FIELD_DESCRIBE} = $goodsDescribe;
-            $Goods->{GoodsModel::FIELD_SHARE_DESCRIBE} = $goodsShareDescribe;
-            $Goods->{GoodsModel::FIELD_IMAGES_ATTACHMENTS} = $attachments;
-            $Goods->{GoodsModel::FIELD_SKU_TYPE} = $skuData?GoodsEnum::SINGLE_SKU:GoodsEnum::BATCH_SKU;
-            $Goods->{GoodsModel::FIELD_STATUS} = GoodsEnum::SALE_STATUS_DOWN;
-            $Goods->{GoodsModel::FIELD_START_SALE_TYPE} = $saleStartType;
-            $Goods->{GoodsModel::FIELD_START_SELLING_AT} = $startSaleTime->toDateTimeString();
-            $Goods->{GoodsModel::FIELD_STOP_SALE_TYPE} = $saleStopType;
-            $Goods->{GoodsModel::FIELD_STOP_SELLING_AT} = $stopSaleTime->toDateTimeString();
-            $Goods->{GoodsModel::FIELD_LIMIT_PURCHASE_NUM} = $limitSaleModel==1?0:$limitSaleModelValue;
-            $Goods->{GoodsModel::FIELD_DISTRIBUTION_MODE} = $postType;
-            $Goods->{GoodsModel::FIELD_POSTAGE_COST} = $postCost;
-
-            $result = $this->goodsService->storeGoods($Goods);
-            if(!$result){
-                throw new WebException("保存数据失败");
-            }
-
-            //如果没有sku，那就用默认的规格创建sku,整个系统只有一个默认的规格名称用于没有设置sku的商品
-            if(!$skuData){
-                $standard = $this->standardService->storeDefault($user->id);
-                //创建默认sku
-
-            }
-
-
-            $this->standardService->checkStoreStandardItems($standardItems,$user->id);
 
             $goods = $this->goodsService->storeGoods($Goods);
             if(!$goods){
                 throw new WebException("新建商品失败");
             }
 
+            //关联商品类目
             $attachCategoryResult = $this->goodsService->attachCategory($Goods->id,$checkedCategory);
             if(!$attachCategoryResult){
                 throw new WebException("关联商品类目失败");
             }
 
-            $this->skuService->storeSkuList($goods['id'],$skuData,$standardItems);
+            //如果管理间没有创建sku，那创建默认的sku,默认的sku没有规格数据，只有商品的价格库存相关的数据
+            if(!$skuData){
+                $defaultSkuResult = $this->skuService->storeDefaultSku($Goods->id,$goodsPrice,$goodsPrice,$costPrice=0,$chalkLinePrice,$goodsStock,$attachments);
+                if(!$defaultSkuResult){
+                    throw new WebException("保存数据失败");
+                }
+            }else{
+                //保存商品sku数据
+                $this->standardService->checkStoreStandardItems($standardItems,$user->id);
+                $this->skuService->storeSkuList($Goods->id,$skuData,$standardItems);
+            }
 
 
             \DB::commit();
         } catch (\Exception $e) {
             \DB::rollBack();
+            \Log::error("新建商品错误",collect($e)->toArray());
             throw new WebException($e->getMessage());
         }
 

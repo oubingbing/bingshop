@@ -4,7 +4,7 @@
     <body>
     <!-- 顶部开始 -->
     <div class="container">
-        <div class="logo"><a href="./index.html">bing_shop - 后台管理</a></div>
+        <div class="logo"><a href="./index.html">bingshop - 后台管理</a></div>
         <div class="left_open">
             <i title="展开左侧栏" class="iconfont">&#xe699;</i>
         </div>
@@ -106,7 +106,7 @@
     <!-- 中部结束 -->
     <!-- 底部开始 -->
     <div class="footer">
-        <div class="copyright">@2018-2019 优卡助手 | 粤ICP备16004706号-1</div>
+        <div class="copyright">@2018-2019 bingshop | 粤ICP备16004706号-1</div>
     </div>
     <!-- 底部结束 -->
     </body>

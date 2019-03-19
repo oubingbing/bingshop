@@ -17,7 +17,7 @@ class QiNiuController extends Controller
     public function token()
     {
         $qiNiuToken = app(QiNiuService::class)->getToken();
-        return webResponse($qiNiuToken);
+        return webResponse('success',$qiNiuToken);
     }
 
 }

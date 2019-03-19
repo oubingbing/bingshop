@@ -79,11 +79,11 @@ class CategoryController extends Controller
     {
         $user = request()->get("user");
         $list = $this->service->categoryList();
-        return webResponse($list);
+        return webResponse('success',$list);
     }
 
     /**
-     * 优惠类型分页列表
+     * 类型分页列表
      *
      * @author yezi
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Symfony\Component\HttpFoundation\Response
@@ -102,7 +102,7 @@ class CategoryController extends Controller
             return $item;
         });
 
-        return webResponse($userList);
+        return webResponse('success',$userList);
     }
 
     /**
@@ -146,7 +146,7 @@ class CategoryController extends Controller
             throw new WebException($e->getMessage());
         }
 
-        return webResponse($result,"编辑成功");
+        return webResponse("编辑成功",$result);
     }
 
     public function delete($id)
@@ -177,7 +177,7 @@ class CategoryController extends Controller
             throw new WebException($e->getMessage());
         }
 
-        return webResponse($result,"删除成功");
+        return webResponse("删除成功",$result);
 
     }
 

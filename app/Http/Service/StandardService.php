@@ -34,7 +34,7 @@ class StandardService
             if(!$result){
                 throw new WebException("保存规格出错");
             }
-            $storeValues = $this->storeStandardValues($result,$standard['values']);
+            $storeValues = $this->storeStandardValues($result->id,$standard['values']);
             if(!$storeValues){
                 throw new Exception("保存规格值错误");
             }
@@ -58,16 +58,6 @@ class StandardService
         return $result;
     }
 
-    public function storeDefault($adminId)
-    {
-        $default = '默认';
-        $standard = $this->findStandardByName($default);
-        if(!$standard){
-            $standard = $this->storeStandard($default,$adminId);
-        }
-        return $standard;
-    }
-
     public function findStandardByName($name)
     {
         $standard = Model::query()->find(Model::FIELD_NAME,$name);
@@ -85,7 +75,7 @@ class StandardService
     public function storeStandardValues($standardId,$standardValues)
     {
         $now = Carbon::now()->toDateTimeString();
-        collect($standardValues)->map(function($item)use($standardId,$now){
+        $standardValues = collect($standardValues)->map(function($item)use($standardId,$now){
                 return [
                     StandardValueModel::FIELD_ID_STANDARD=>$standardId,
                     StandardValueModel::FIELD_VALUE=>$item,
@@ -136,7 +126,7 @@ class StandardService
     {
         $names = collect($standardItems)->pluck('name');
         $standards = Model::query()->whereIn(Model::FIELD_NAME,[collect($names)->toArray()])->pluck(Model::FIELD_NAME);
-        if($standards){
+        if(count($standards) > 0){
             //判断哪些规格是新的，需要新增到数据库
             $standards = collect($standards)->toArray();
             $newStandards = [];
@@ -168,12 +158,12 @@ class StandardService
     {
         $standardValueBuilder = StandardValueModel::query()->where(StandardValueModel::FIELD_VALUE,$standardValue);
         if($standardName){
-            $standardValueBuilder->whereHash(StandardValueModel::REL_STANDARD,function ($query)use($standardName){
+            $standardValueBuilder->whereHas(StandardValueModel::REL_STANDARD,function ($query)use($standardName){
                 $query->where(Model::FIELD_NAME,$standardName);
             });
         }
 
-        return $standardValueBuilder->find();
+        return $standardValueBuilder->first();
     }
 
 }

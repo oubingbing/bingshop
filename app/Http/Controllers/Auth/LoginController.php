@@ -100,7 +100,7 @@ class LoginController extends Controller
 
     public function logout()
     {
-        $this->authService->clearCustomer();
+        $this->authService->clearAdmin();
 
         return redirect("/login");
     }

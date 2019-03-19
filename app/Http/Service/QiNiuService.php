@@ -23,7 +23,7 @@ class QiNiuService
     protected $bucket;
     protected $baseUrl;
 
-    const EXPIRED_AT = 3600 * 24;
+    const EXPIRED_AT = 3600 * 20;
 
     public function __construct()
     {

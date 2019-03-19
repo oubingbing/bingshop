@@ -581,7 +581,7 @@
                     if(parseInt(value) != 2){
                         this.startSaleTime = '';
                     }
-                    this.saleStopModel = value;
+                    this.saleStartModel = value;
                 },
 
                 /**

@@ -35,6 +35,10 @@ class SkuModel extends BaseModel
     /** Field attachments 图片等附件 **/
     const FIELD_ATTACHMENTS = 'attachments';
 
+    protected $casts = [
+        self::FIELD_ATTACHMENTS=>'array'
+    ];
+
     protected $fillable = [
         self::FIELD_ID_GOODS,
         self::FIELD_PRICE,
