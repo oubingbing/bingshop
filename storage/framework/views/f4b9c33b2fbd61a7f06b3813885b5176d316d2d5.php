@@ -1,4 +1,3 @@
-@extends('layouts/admin')
 <style>
     [v-cloak] {
         display: none;
@@ -201,9 +200,9 @@
     }
 
 </style>
-@section('content')
+<?php $__env->startSection('content'); ?>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-    <link rel="stylesheet" href="{{asset('css/shop.css')}}">
+    <link rel="stylesheet" href="<?php echo e(asset('css/shop.css')); ?>">
     <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.com/vue-easytable/umd/css/index.css">
     <div class="x-nav">
@@ -227,14 +226,14 @@
 
         <xblock>
             <button class="layui-btn" v-on:click="showBankView"><i class="layui-icon"></i>添加</button>
-            <span class="x-right" style="line-height:40px">共有数据：@{{total}} 条</span>
+            <span class="x-right" style="line-height:40px">共有数据：{{total}} 条</span>
         </xblock>
 
         <!-- 新建商品的页面 -->
         <div class="add_activity" style="margin-top: -50px;" v-show="showBankForm">
             <div class="activity-form" id="createGoods" style="width: 80%;margin-top: -100px;overflow: scroll;margin-bottom: 100px">
                 <div class="close-view">
-                    <img class="close-button" v-on:click="closeBankForm" src="{{asset('images/close.png')}}" alt="">
+                    <img class="close-button" v-on:click="closeBankForm" src="<?php echo e(asset('images/close.png')); ?>" alt="">
                 </div>
                 <div class="activity-form-left">
                     <div class="layui-form-item">
@@ -270,11 +269,11 @@
                             <div class="goods-image-item" v-for="attachment in attachments" @mouseenter="enterImage(attachment.name)" @mouseleave="leaveImage(attachment.name)">
                                 <img class="goods-image" v-bind:src="attachment.url" alt="">
                                <div class="fake-image" v-if="attachment.show==true" v-on:click="removeImage(attachment.name)">
-                                   <img class="delete-image" src="{{ asset('images/remove-img.png') }}">
+                                   <img class="delete-image" src="<?php echo e(asset('images/remove-img.png')); ?>">
                                </div>
                             </div>
                             <div class="goods-image-icon" onclick="javascript:$('#cover-picture').click()" v-if="showAddImageIcon==true">
-                                <img class="bank-image" src="{{asset('images/upload_img.png')}}" alt="">
+                                <img class="bank-image" src="<?php echo e(asset('images/upload_img.png')); ?>" alt="">
                             </div>
                         </div>
                         <input type="file" id="cover-picture" style="display: none" class="layui-input" @change="selectBankImage($event)"/>
@@ -283,7 +282,7 @@
                         <label class="layui-form-label goods-form-label" style="width: 100px"><span class="x-red">*</span>商品类目</label>
                         <div class="layui-input-block">
                             <el-checkbox-group v-model="checkedCategory" @change="handleCheckedCategoryChange">
-                            <el-checkbox v-for="category in categories" :label="category.id" :key="category.id">@{{category.name}}</el-checkbox>
+                            <el-checkbox v-for="category in categories" :label="category.id" :key="category.id">{{category.name}}</el-checkbox>
                             </el-checkbox-group>
                         </div>
                     </div>
@@ -319,13 +318,13 @@
                                                    autocomplete="off"
                                                    class="layui-input">
                                             <div class="standard-value-close">
-                                                <img src="{{asset('/images/cancel.png')}}" alt="" v-on:click="closeStandardValue(index,i)">
+                                                <img src="<?php echo e(asset('/images/cancel.png')); ?>" alt="" v-on:click="closeStandardValue(index,i)">
                                             </div>
                                         </div>
                                         <div class="add-world" style="cursor:pointer" v-on:click="addStandardValue(index)">添加规格值</div>
                                     </div>
                                     <div class="standard-close" v-on:click="closeStandard(index)">
-                                        <img src="{{asset('/images/cancel.png')}}" alt="">
+                                        <img src="<?php echo e(asset('/images/cancel.png')); ?>" alt="">
                                     </div>
                                 </div>
                                 <div class="add-standard-button" style="cursor:pointer" v-on:click="addStandardItem()">添加规格项</div>
@@ -350,16 +349,16 @@
                             <table class="layui-table standard-detail">
                                 <thead>
                                 <tr>
-                                    <th v-for="standardItem in standardItems"><small>@{{ standardItem.name }}</small></th>
+                                    <th v-for="standardItem in standardItems"><small>{{ standardItem.name }}</small></th>
                                     <th><small>售格</small></th>
                                     <th><small>成本格</small></th>
                                     <th><small>库存</small></th>
                                 </thead>
                                 <tbody>
                                 <tr v-for="(standard,index) in standardArray">
-                                    <td :rowspan="Math.ceil(standardArray.length/standardItems[0].values.length)" v-if="(index)%(standardArray.length/standardItems[0].values.length)==0 || index==0">@{{ standard.levels[0].value }}</td>
-                                    <td :rowspan="Math.ceil(standardArray.length/standardItems[1].values.length/standardItems[0].values.length)" v-if="standard.levels[1] && ((index)%(standardArray.length/standardItems[1].values.length/standardItems[0].values.length)==0 || index==0)">@{{ standard.levels[1].value }}</td>
-                                    <td rowspan="1" v-if="standard.levels[2]">@{{ standard.levels[2].value }}</td>
+                                    <td :rowspan="Math.ceil(standardArray.length/standardItems[0].values.length)" v-if="(index)%(standardArray.length/standardItems[0].values.length)==0 || index==0">{{ standard.levels[0].value }}</td>
+                                    <td :rowspan="Math.ceil(standardArray.length/standardItems[1].values.length/standardItems[0].values.length)" v-if="standard.levels[1] && ((index)%(standardArray.length/standardItems[1].values.length/standardItems[0].values.length)==0 || index==0)">{{ standard.levels[1].value }}</td>
+                                    <td rowspan="1" v-if="standard.levels[2]">{{ standard.levels[2].value }}</td>
                                     <td>
                                         <input type="text"
                                                class="standard-input"
@@ -509,15 +508,15 @@
     </div>
     <script src="https://unpkg.com/element-ui/lib/index.js"></script>
     <script type="text/javascript" src="https://unpkg.com/qiniu-js@2.0/dist/qiniu.min.js"></script>
-    <script type="text/javascript" src="{{asset('js/upload.js')}}"></script>
+    <script type="text/javascript" src="<?php echo e(asset('js/upload.js')); ?>"></script>
     <script src="https://unpkg.com/vue-easytable/umd/js/index.js"></script>
     <script>
         "use strict";
         const start = new Date();
         const MAX_UPLOAD_IMAGE = 9;
         let token = '';
-        const IMAGE_URL = "{{env('QI_NIU_DOMAIN')}}";
-        const ZONE = "{{env('QI_NIU_ZONE')}}";
+        const IMAGE_URL = "<?php echo e(env('QI_NIU_DOMAIN')); ?>";
+        const ZONE = "<?php echo e(env('QI_NIU_ZONE')); ?>";
 
         $("#createGoods").height($(document.body).height()-120);
 
@@ -1094,7 +1093,7 @@
                 /**
                  * 选择图片并且上传到七牛
                  *
-                 * @param event
+                 * @param  event
                  */
                 selectBankImage:function (event) {
                     let file = event.target.files[0];
@@ -1122,4 +1121,5 @@
         })
     </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts/admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
