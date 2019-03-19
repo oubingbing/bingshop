@@ -199,6 +199,12 @@
         height:30px;
     }
 
+    .goods-close-button{
+        width: 30px;
+        height:30px;
+        padding: 5px 5px;
+    }
+
 </style>
 <?php $__env->startSection('content'); ?>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
@@ -207,10 +213,10 @@
     <link rel="stylesheet" href="https://unpkg.com/vue-easytable/umd/css/index.css">
     <div class="x-nav">
       <span class="layui-breadcrumb">
-        <a href="">首页</a>
-        <a href="">银行</a>
+        <a >首页</a>
+        <a >商品</a>
         <a>
-          <cite>首页</cite></a>
+          <cite>商品列表</cite></a>
       </span>
         <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
             <i class="layui-icon" style="line-height:30px">ဂ</i></a>
@@ -225,7 +231,7 @@
         </div>
 
         <xblock>
-            <button class="layui-btn" v-on:click="showBankView"><i class="layui-icon"></i>添加</button>
+            <button class="layui-btn" v-on:click="showBankView"><i class="layui-icon"></i>新建</button>
             <span class="x-right" style="line-height:40px">共有数据：{{total}} 条</span>
         </xblock>
 
@@ -233,7 +239,7 @@
         <div class="add_activity" style="margin-top: -50px;" v-show="showBankForm">
             <div class="activity-form" id="createGoods" style="width: 80%;margin-top: -100px;overflow: scroll;margin-bottom: 100px">
                 <div class="close-view">
-                    <img class="close-button" v-on:click="closeBankForm" src="<?php echo e(asset('images/close.png')); ?>" alt="">
+                    <img class="goods-close-button" v-on:click="closeBankForm" src="<?php echo e(asset('images/close.png')); ?>" alt="">
                 </div>
                 <div class="activity-form-left">
                     <div class="layui-form-item">

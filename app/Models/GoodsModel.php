@@ -14,9 +14,6 @@ class GoodsModel extends BaseModel
     const TABLE_NAME = 'goods';
     protected $table = self::TABLE_NAME;
 
-    /** Field category_id 商品分类 **/
-    const FIELD_ID_CATEGORY = 'category_id';
-
     /** Field name 商品名称 **/
     const FIELD_NAME = 'name';
 
@@ -59,12 +56,13 @@ class GoodsModel extends BaseModel
     /** Field postage_cost 邮费 **/
     const FIELD_POSTAGE_COST = 'postage_cost';
 
+    const REL_SKU = 'sku';
+
     protected $casts = [
         self::FIELD_IMAGES_ATTACHMENTS=>'array'
     ];
 
     protected $fillable = [
-        self::FIELD_ID_CATEGORY,
         self::FIELD_NAME,
         self::FIELD_DESCRIBE,
         self::FIELD_SHARE_DESCRIBE,
@@ -81,5 +79,8 @@ class GoodsModel extends BaseModel
         self::FIELD_DISTRIBUTION_MODE
     ];
 
-
+    public function sku()
+    {
+        return $this->hasMany(SkuModel::class,self::FIELD_ID,SkuModel::FIELD_ID_GOODS);
+    }
 }

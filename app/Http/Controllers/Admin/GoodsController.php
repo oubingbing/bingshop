@@ -9,7 +9,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enum\GoodsEnum;
-use App\Exceptions\ApiException;
 use App\Exceptions\WebException;
 use App\Http\Controllers\Controller;
 use App\Http\Service\GoodsService;
@@ -17,7 +16,6 @@ use App\Http\Service\SkuService;
 use App\Http\Service\StandardService;
 use App\Models\GoodsModel;
 use Carbon\Carbon;
-use Illuminate\Contracts\Logging\Log;
 use Illuminate\Http\Request;
 
 class GoodsController extends Controller

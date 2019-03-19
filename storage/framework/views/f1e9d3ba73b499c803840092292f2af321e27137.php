@@ -1,12 +1,11 @@
-@extends('layouts/admin')
 <style>
     [v-cloak] {
         display: none;
     }
 </style>
-@section('content')
+<?php $__env->startSection('content'); ?>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
-    <link rel="stylesheet" href="{{asset('css/shop.css')}}">
+    <link rel="stylesheet" href="<?php echo e(asset('css/shop.css')); ?>">
     <div class="x-nav">
       <span class="layui-breadcrumb">
         <a >首页</a>
@@ -27,7 +26,7 @@
         <div class="add_bank" v-if="showBankForm" style="background: white;width: 30%">
             <form class="layui-form form-bank">
                 <div class="close-view">
-                    <img class="close-button" v-on:click="closeBankForm" src="{{asset('images/close.png')}}" alt="">
+                    <img class="close-button" v-on:click="closeBankForm" src="<?php echo e(asset('images/close.png')); ?>" alt="">
                 </div>
                 <div class="layui-form-item">
                     <label for="username" class="layui-form-label">
@@ -71,10 +70,10 @@
             </thead>
             <tbody>
             <tr v-for="(category,index) in categories">
-                <td>@{{ index+1 }}</td>
-                <td>@{{ category.name }}</td>
-                <td>@{{ category.sort }}</td>
-                <td>@{{ category.created_at }}</td>
+                <td>{{ index+1 }}</td>
+                <td>{{ category.name }}</td>
+                <td>{{ category.sort }}</td>
+                <td>{{ category.created_at }}</td>
                 <td>
                     <a title="编辑" href="javascript:;" v-on:click="editCategory(category.id,category.name,category.sort)">
                         <i class="layui-icon">&#xe642;</i>
@@ -225,7 +224,7 @@
 
                 },
                 getCategories:function () {
-                    var url = "{{ asset("admin/category_list") }}";
+                    var url = "<?php echo e(asset("admin/category_list")); ?>";
                     axios.get(url+"?page_size="+this.page_size+'&page_number='+this.current_page+'&order_by=created_at&sort_by=desc')
                         .then( response=> {
                             var res = response.data;
@@ -251,4 +250,5 @@
         })
     </script>
 
-@endsection
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layouts/admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

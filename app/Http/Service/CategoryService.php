@@ -15,6 +15,13 @@ class CategoryService
 {
     private $builder;
 
+    /**
+     * 新建类目
+     *
+     * @author yezi
+     * @param Model $category
+     * @return mixed
+     */
     public function store(Model $category)
     {
         $result = Model::create([
@@ -62,7 +69,8 @@ class CategoryService
     {
         $categories = Model::query()->select([
             Model::FIELD_ID,
-            Model::FIELD_NAME
+            Model::FIELD_NAME,
+            Model::FIELD_SORT
         ])
             ->orderBy(Model::FIELD_SORT,'desc')->get();
 

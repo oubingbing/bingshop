@@ -12,6 +12,7 @@ namespace App\Http\Service;
 use App\Exceptions\WebException;
 use App\Models\CategoryGoodsModel;
 use App\Models\GoodsModel as Model;
+use App\Models\SkuModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -114,6 +115,47 @@ class GoodsService
         });
 
         $result = DB::table(CategoryGoodsModel::TABLE_NAME)->insert($categories->toArray());
+        return $result;
+    }
+
+    public function findGoodsById($goodsId)
+    {
+        return Model::query()->find($goodsId);
+    }
+
+    public function getGoodsIdsByCategoryId($categoryId)
+    {
+        $goodsIds = CategoryGoodsModel::query()->where(CategoryGoodsModel::FIELD_ID_CATEGORY,$categoryId)->pluck(CategoryGoodsModel::FIELD_ID_GOODS);
+        return $goodsIds;
+    }
+
+    /**
+     * 根据数组IDS查询商品信息
+     *
+     * @author yezi
+     * @param $ids
+     * @param null $fields
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public function getGoodsByIds($ids,$fields=null)
+    {
+        $query = Model::query()
+            ->with([Model::REL_SKU=>function($queryBuilder){
+                $queryBuilder->select([
+                    SkuModel::FIELD_ID,
+                    SkuModel::FIELD_ID_GOODS,
+                    SkuModel::FIELD_PRICE,
+                    SkuModel::FIELD_PRICE,
+                    SkuModel::FIELD_VIP_PRICE,
+                    SkuModel::FIELD_CHALK_LINE_PRICE,
+                    SkuModel::FIELD_STOCK
+                ]);
+            }])
+            ->whereIn(Model::FIELD_ID,$ids);
+        if($fields){
+            $query->select($fields);
+        }
+        $result = $query->get();
         return $result;
     }
 

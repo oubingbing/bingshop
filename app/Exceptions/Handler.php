@@ -72,8 +72,8 @@ class Handler extends ExceptionHandler
         // 只处理自定义的APIException异常
        if($e instanceof ApiException) {
             $result = [
-                "error_code"    => $e->getCode(),
-                "error_message" => $e->getMessage(),
+                "code"    => $e->getCode(),
+                "message" => $e->getMessage(),
                 "data"          => null,
             ];
             return response()->json($result);
