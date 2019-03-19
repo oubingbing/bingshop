@@ -81,6 +81,6 @@ class GoodsModel extends BaseModel
 
     public function sku()
     {
-        return $this->hasMany(SkuModel::class,self::FIELD_ID,SkuModel::FIELD_ID_GOODS);
+        return $this->hasMany(SkuModel::class,SkuModel::FIELD_ID_GOODS,self::FIELD_ID);
     }
 }

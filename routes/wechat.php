@@ -31,8 +31,11 @@ $api->version('v1', function ($api) {
             /** 获取用户信息 **/
             $api->get('/user',UserController::class . '@personal');
 
-            /** 获取文章列表 **/
+            /** 获取商品分类列表 **/
             $api->get("/categories",CategoryController::class . "@categories");
+
+            /** 获取指定商品分类的商品列表 **/
+            $api->get("/category/{id}/goods",CategoryController::class . "@categoryGoods");
         });
 
     });

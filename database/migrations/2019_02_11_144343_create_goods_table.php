@@ -22,7 +22,7 @@ class CreateGoodsTable extends Migration
             $table->jsonb("images_attachments")->nullable()->comment("商品图片");
             $table->jsonb("video_attachments")->nullable()->comment("商品视频信息");
 
-            $table->tinyInteger("sku_type")->default(1)->comment("1=是否是多个sku,如果没有添加sku就是单个且sku表没有规格关联数据，2=多个sku,sku有关联规格数据");
+            $table->tinyInteger("sku_type")->default(1)->comment("1=默认规格(单规格)，2=多个sku(多规格)");
 
             $table->tinyInteger("status")->default(0)->comment("商品状态，0=下架，1=在售");
 

@@ -12,6 +12,7 @@ namespace App\Http\Service;
 use App\Exceptions\WebException;
 use App\Models\CategoryGoodsModel;
 use App\Models\GoodsModel as Model;
+use App\Models\GoodsModel;
 use App\Models\SkuModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -126,6 +127,18 @@ class GoodsService
     public function getGoodsIdsByCategoryId($categoryId)
     {
         $goodsIds = CategoryGoodsModel::query()->where(CategoryGoodsModel::FIELD_ID_CATEGORY,$categoryId)->pluck(CategoryGoodsModel::FIELD_ID_GOODS);
+        if($goodsIds){
+            $fields = [
+                GoodsModel::FIELD_ID,
+                GoodsModel::FIELD_NAME,
+                GoodsModel::FIELD_DESCRIBE,
+                GoodsModel::FIELD_IMAGES_ATTACHMENTS,
+                GoodsModel::FIELD_SKU_TYPE
+            ];
+            $goodsList = app(GoodsService::class)->getGoodsByIds(collect($goodsIds)->toArray(),$fields);
+            return $goodsList;
+        }
+
         return $goodsIds;
     }
 
@@ -157,6 +170,11 @@ class GoodsService
         }
         $result = $query->get();
         return $result;
+    }
+
+    public function format($goods)
+    {
+        return $goods;
     }
 
 }

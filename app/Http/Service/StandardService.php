@@ -60,7 +60,7 @@ class StandardService
 
     public function findStandardByName($name)
     {
-        $standard = Model::query()->find(Model::FIELD_NAME,$name);
+        $standard = Model::query()->where(Model::FIELD_NAME,$name)->first();
         return $standard;
     }
 
@@ -125,21 +125,41 @@ class StandardService
     public function checkStoreStandardItems($standardItems,$adminId)
     {
         $names = collect($standardItems)->pluck('name');
-        $standards = Model::query()->whereIn(Model::FIELD_NAME,[collect($names)->toArray()])->pluck(Model::FIELD_NAME);
+        $standards = Model::query()->whereIn(Model::FIELD_NAME,collect($names)->toArray())->pluck(Model::FIELD_NAME);
         if(count($standards) > 0){
             //判断哪些规格是新的，需要新增到数据库
             $standards = collect($standards)->toArray();
             $newStandards = [];
-            collect($standardItems)->map(function ($item)use($standards){
-                if(in_array($standards,$item['name'])){
-                    array_push($standards,$item);
+            $oldStandards = [];
+            foreach ($standardItems as $standardItem){
+                if(!in_array($standardItem['name'],$standards)){
+                    array_push($newStandards,$standardItem);
+                }else{
+                    array_push($oldStandards,$standardItem);
                 }
-                return $item;
-            });
-            if($newStandards){
-                //新增规格
-                $this->storeBatchStandard($newStandards,$adminId);
             }
+
+            //用户提交的规格中不存在与数据库，所以需要新建规格和规格值
+            if(collect($newStandards)->isNotEmpty()){
+                //新增规格和规格值
+                $this->storeBatchStandard(collect($newStandards)->toArray(),$adminId);
+            }
+
+            //用户提交的规格中数据库已存在，只需保存规格值即可
+            if(collect($oldStandards)->isNotEmpty()){
+                //新增规格值
+                foreach ($oldStandards as $oldItem){
+                    $oldStandard = $this->findStandardByName($oldItem['name']);
+                    if(!$oldStandard){
+                        throw new WebException("规格不存在");
+                    }
+                    $storeOldStandardValue = $this->storeStandardValues($oldStandard->id,$oldItem['values']);
+                    if(!$storeOldStandardValue){
+                        throw new WebException("保存数据失败");
+                    }
+                }
+            }
+
         }else{
             //提交上来的都是新的规格，需要新增到数据库
             $this->storeBatchStandard($standardItems,$adminId);

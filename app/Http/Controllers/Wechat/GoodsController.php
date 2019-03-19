@@ -27,6 +27,6 @@ class GoodsController extends Controller
         $this->skuService = $skuService;
     }
 
-    
+
 
 }

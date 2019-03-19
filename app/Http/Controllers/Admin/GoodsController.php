@@ -121,7 +121,7 @@ class GoodsController extends Controller
             \DB::commit();
         } catch (\Exception $e) {
             \DB::rollBack();
-            \Log::error("新建商品错误",collect($e)->toArray());
+            //\Log::info("新建商品错误",collect($e)->toArray());
             throw new WebException($e->getMessage());
         }
 

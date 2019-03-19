@@ -225,7 +225,7 @@
 
         <div class="layui-row">
             <div class="layui-form layui-col-md12 x-so">
-                <input type="text" v-model="filter" name="username"  placeholder="请输入标题" autocomplete="off" class="layui-input">
+                <input type="text" v-model="filter" name="username"  placeholder="请输入商品名" autocomplete="off" class="layui-input">
                 <button class="layui-btn"  lay-submit="" lay-filter="sreach" v-on:click="search"><i class="layui-icon">&#xe615;</i></button>
             </div>
         </div>

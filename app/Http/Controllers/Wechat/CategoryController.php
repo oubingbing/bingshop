@@ -25,6 +25,12 @@ class CategoryController extends Controller
         $this->goodsService = $goodsService;
     }
 
+    /**
+     * 获取商品分类列表
+     *
+     * @author yezi
+     * @return array
+     */
     public function categories()
     {
         $user = request()->input('user');
@@ -34,19 +40,21 @@ class CategoryController extends Controller
             return ['categories'=>[],'goods'=>[]];
         }
 
-        $goodsIds = $this->goodsService->getGoodsIdsByCategoryId(collect($categories)->first()->id);
-        $goodsList = [];
-        if($goodsIds){
-            $fields = [
-                GoodsModel::FIELD_ID,
-                GoodsModel::FIELD_NAME,
-                GoodsModel::FIELD_DESCRIBE,
-                GoodsModel::FIELD_IMAGES_ATTACHMENTS
-            ];
-            $goodsList = $this->goodsService->getGoodsByIds(collect($goodsIds)->toArray(),$fields);
-        }
+        $goods = $this->goodsService->getGoodsIdsByCategoryId(collect($categories)->first()->id);
 
-        return ['categories'=>$categories,'goods'=>$goodsList];
+        return ['categories'=>$categories,'goods'=>$goods];
+    }
+
+    public function categoryGoods($categoryId)
+    {
+        $user = request()->input('user');
+
+        $goods = $this->goodsService->getGoodsIdsByCategoryId($categoryId);
+        $goods = collect($goods)->map(function ($item){
+           return $this->goodsService->format($item);
+        });
+
+        return $goods;
     }
 
 }
