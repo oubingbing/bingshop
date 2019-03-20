@@ -14,6 +14,7 @@ use App\Models\CategoryGoodsModel;
 use App\Models\GoodsModel as Model;
 use App\Models\GoodsModel;
 use App\Models\SkuModel;
+use App\Models\SkuStandardValueModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -130,6 +131,12 @@ class GoodsService
                     SkuModel::FIELD_VIP_PRICE,
                     SkuModel::FIELD_CHALK_LINE_PRICE,
                     SkuModel::FIELD_STOCK
+                ]);
+            },Model::REL_SKU.'.'.SkuModel::REL_SKU_STANDARD_VALUE_MAP=>function($query){
+                $query->select([
+                    SkuStandardValueModel::FIELD_ID,
+                    SkuStandardValueModel::FIELD_ID_SKU,
+                    SkuStandardValueModel::FIELD_ID_STANDARD_VALUE
                 ]);
             }])
             ->select([
