@@ -121,7 +121,28 @@ class GoodsService
 
     public function findGoodsById($goodsId)
     {
-        return Model::query()->find($goodsId);
+        return Model::query()
+            ->with([Model::REL_SKU=>function($query){
+                $query->select([
+                    SkuModel::FIELD_ID,
+                    SkuModel::FIELD_PRICE,
+                    SkuModel::FIELD_ID_GOODS,
+                    SkuModel::FIELD_VIP_PRICE,
+                    SkuModel::FIELD_CHALK_LINE_PRICE,
+                    SkuModel::FIELD_STOCK
+                ]);
+            }])
+            ->select([
+            GoodsModel::FIELD_ID,
+            GoodsModel::FIELD_NAME,
+            GoodsModel::FIELD_DESCRIBE,
+            GoodsModel::FIELD_IMAGES_ATTACHMENTS,
+            GoodsModel::FIELD_SKU_TYPE,
+            GoodsModel::FIELD_SHARE_DESCRIBE,
+            GoodsModel::FIELD_POSTAGE_COST,
+            GoodsModel::FIELD_LIMIT_PURCHASE_NUM,
+            GoodsModel::FIELD_STATUS
+        ])->find($goodsId);
     }
 
     public function getGoodsIdsByCategoryId($categoryId)

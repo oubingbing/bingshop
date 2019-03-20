@@ -35,6 +35,6 @@ class StandardModel extends BaseModel
      */
     public function standardValues()
     {
-        return $this->hasMany(StandardValueModel::class,self::FIELD_ID,StandardValueModel::FIELD_ID_STANDARD);
+        return $this->hasMany(StandardValueModel::class,StandardValueModel::FIELD_ID_STANDARD,self::FIELD_ID);
     }
 }

@@ -21,6 +21,7 @@ class StandardValueModel extends BaseModel
     const FIELD_VALUE = 'value';
 
     const REL_STANDARD = 'standard';
+    const REL_SKU_STANDARD = 'skuStandards';
 
     protected $fillable = [
         self::FIELD_ID_STANDARD,
@@ -30,5 +31,10 @@ class StandardValueModel extends BaseModel
     public function standard()
     {
         return $this->belongsTo(StandardModel::class,self::FIELD_ID_STANDARD,StandardModel::FIELD_ID);
+    }
+
+    public function skuStandards()
+    {
+        return $this->hasMany(SkuStandardValueModel::class,SkuStandardValueModel::FIELD_ID_STANDARD_VALUE,self::FIELD_ID);
     }
 }

@@ -13,6 +13,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Wechat\CategoryController;
+use App\Http\Wechat\GoodsController;
 use App\Http\Wechat\UserController;
 
 $api = app('Dingo\Api\Routing\Router');
@@ -36,6 +37,9 @@ $api->version('v1', function ($api) {
 
             /** 获取指定商品分类的商品列表 **/
             $api->get("/category/{id}/goods",CategoryController::class . "@categoryGoods");
+
+            /** 获取商品详情 **/
+            $api->get("/goods/{id}",GoodsController::class . "@detail");
         });
 
     });

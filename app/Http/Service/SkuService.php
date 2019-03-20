@@ -12,9 +12,12 @@ namespace App\Http\Service;
 use App\Exceptions\WebException;
 use App\Models\SkuModel as Model;
 use App\Models\SkuStandardValueModel;
+use App\Models\StandardModel;
+use App\Models\StandardValueModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use League\Flysystem\Exception;
+use PhpParser\PrettyPrinter\Standard;
 
 class SkuService
 {
@@ -123,4 +126,50 @@ class SkuService
 
         return $result;
     }
+
+    public function getSkuByGoodsId($goodsId)
+    {
+        $sku = Model::query()
+            ->with([Model::REL_SKU_STANDARD_VALUE_MAP=>function($query){
+                $query->select([
+                    SkuStandardValueModel::FIELD_ID,
+                    SkuStandardValueModel::FIELD_ID_STANDARD_VALUE,
+                    SkuStandardValueModel::FIELD_ID_SKU
+                ]);
+            }])
+            ->where(Model::FIELD_ID_GOODS,$goodsId)
+            ->select([
+                Model::FIELD_ID,
+                Model::FIELD_ID_GOODS,
+                Model::FIELD_PRICE,
+                Model::FIELD_CHALK_LINE_PRICE,
+                Model::FIELD_STOCK,
+                Model::FIELD_ATTACHMENTS,
+                Model::FIELD_VIP_PRICE
+            ])->get();
+
+        $skuIds = collect($sku)->pluck(Model::FIELD_ID);
+        $standardValueIds = SkuStandardValueModel::query()
+            ->whereIn(SkuStandardValueModel::FIELD_ID_SKU,collect($skuIds)->toArray())
+            ->pluck(SkuStandardValueModel::FIELD_ID_STANDARD_VALUE);
+        $standards = StandardModel::query()
+            ->with([
+                StandardModel::REL_STANDARD_VALUE=>function($query)use($standardValueIds){
+                    $query->select([
+                        StandardValueModel::FIELD_ID,
+                        StandardValueModel::FIELD_ID_STANDARD,
+                        StandardValueModel::FIELD_VALUE
+                    ])->whereIn(StandardValueModel::FIELD_ID,collect($standardValueIds)->toArray());
+                }
+            ])
+            ->whereHas(StandardModel::REL_STANDARD_VALUE,function ($query)use($standardValueIds){
+                $query->whereIn(StandardValueModel::FIELD_ID,collect($standardValueIds)->toArray());
+            })
+            ->select([StandardModel::FIELD_ID,StandardModel::FIELD_NAME])
+            ->get();
+
+        return $standards;
+    }
+
+
 }
