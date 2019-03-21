@@ -186,7 +186,8 @@ class SkuService
                 $query->select([
                     GoodsModel::FIELD_ID,
                     GoodsModel::FIELD_NAME,
-                    GoodsModel::FIELD_LIMIT_PURCHASE_NUM
+                    GoodsModel::FIELD_LIMIT_PURCHASE_NUM,
+                    GoodsModel::FIELD_STATUS
                 ]);
             }])
             ->find($skuId);

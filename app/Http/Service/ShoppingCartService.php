@@ -10,7 +10,11 @@ namespace App\Http\Service;
 
 
 use App\Enum\CartEnum;
+use App\Models\GoodsModel;
 use App\Models\ShoppingCartModel as Model;
+use App\Models\SkuModel;
+use App\Models\StandardValueModel;
+use PhpParser\Node\Expr\AssignOp\Mod;
 
 class ShoppingCartService
 {
@@ -78,5 +82,36 @@ class ShoppingCartService
         return $cart;
     }
 
+    public function getUserCart($userId)
+    {
+        $carts = Model::query()
+            ->with([
+                Model::REL_SKU.'.'.SkuModel::REL_GOODS=>function($query){
+                    $query->select([
+                        GoodsModel::FIELD_ID,
+                        GoodsModel::FIELD_NAME,
+                        GoodsModel::FIELD_IMAGES_ATTACHMENTS
+                    ]);
+                },
+                Model::REL_SKU.'.'.SkuModel::REL_STANDARD_VALUES
+            ])
+            ->where(Model::FIELD_STATUS,CartEnum::STATUS_NORMAL)
+            ->where(Model::FIELD_ID_USER,$userId)
+            ->select([\DB::raw('sum(purchase_num) as purchase_num'),Model::FIELD_ID_SKU])
+            ->groupBy([Model::FIELD_ID_SKU,Model::FIELD_PURCHASE_NUM])
+            ->get();
+
+        return $carts;
+    }
+
+    public function deleteUserSku($userId,$skuId)
+    {
+        $result = Model::query()
+            ->where(Model::FIELD_ID_USER,$userId)
+            ->where(Model::FIELD_ID_SKU,$skuId)
+            ->where(Model::FIELD_STATUS,CartEnum::STATUS_NORMAL)
+            ->update([Model::FIELD_STATUS=>CartEnum::STATUS_REMOVED]);
+        return $result;
+    }
 
 }

@@ -9,12 +9,14 @@
 namespace App\Http\Wechat;
 
 
+use App\Enum\GoodsEnum;
 use App\Exceptions\WebException;
 use App\Http\Controllers\Controller;
 use App\Http\Service\ShoppingCartService;
 use App\Http\Service\SkuService;
 use App\Models\GoodsModel;
 use App\Models\SkuModel;
+use League\Flysystem\Exception;
 
 class ShoppingCartController extends Controller
 {
@@ -47,6 +49,10 @@ class ShoppingCartController extends Controller
             throw new WebException("商品库存不足");
         }
 
+        //商品是否在售
+        if($goods->{GoodsModel::FIELD_STATUS} != GoodsEnum::SALE_STATUS_UP){
+            throw new WebException("商品已下架");
+        }
 
         //检测是否有购买数量的限制
         if($goods->{GoodsModel::FIELD_LIMIT_PURCHASE_NUM} != 0){
@@ -65,5 +71,26 @@ class ShoppingCartController extends Controller
         }
 
         return ['message'=>'加入购物车成功','data'=>$cart];
+    }
+
+    public function carts()
+    {
+        $user = request()->input('user');
+
+        $carts = $this->cartService->getUserCart($user->id);
+
+        return $carts;
+    }
+
+    public function delete($id)
+    {
+        $user = request()->input('user');
+
+        $result = $this->cartService->deleteUserSku($user->id,$id);
+        if(!$result){
+            throw new Exception("移出购物车失败");
+        }
+
+        return $result;
     }
 }

@@ -37,6 +37,7 @@ class SkuModel extends BaseModel
 
     const REL_SKU_STANDARD_VALUE_MAP = 'skuStandardMap';
     const REL_GOODS = 'goods';
+    const REL_STANDARD_VALUES = 'standardValues';
 
     protected $casts = [
         self::FIELD_ATTACHMENTS=>'array'
@@ -60,6 +61,11 @@ class SkuModel extends BaseModel
     public function skuStandardMap()
     {
         return $this->hasMany(SkuStandardValueModel::class,SkuStandardValueModel::FIELD_ID_SKU,self::FIELD_ID);
+    }
+
+    public function standardValues(){
+        return $this->belongsToMany(StandardValueModel::class,'sku_standard_values',SkuStandardValueModel::FIELD_ID_SKU,SkuStandardValueModel::FIELD_ID_STANDARD_VALUE);
+
     }
 
 }

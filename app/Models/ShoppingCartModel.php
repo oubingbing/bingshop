@@ -26,10 +26,24 @@ class ShoppingCartModel extends BaseModel
     /** Field status 购物车商品状态 **/
     const FIELD_STATUS = 'status';
 
+    const REL_SKU = 'sku';
+
     protected $fillable = [
         self::FIELD_ID_USER,
         self::FIELD_ID_SKU,
         self::FIELD_PURCHASE_NUM,
         self::FIELD_PURCHASE_NUM
     ];
+
+    public function sku()
+    {
+        return $this->belongsTo(SkuModel::class,self::FIELD_ID_SKU,SkuModel::FIELD_ID)->select([
+            SkuModel::FIELD_ID,
+            SkuModel::FIELD_PRICE,
+            SkuModel::FIELD_PRICE,
+            SkuModel::FIELD_VIP_PRICE,
+            SkuModel::FIELD_ID_GOODS,
+            SkuModel::FIELD_STOCK
+        ]);
+    }
 }

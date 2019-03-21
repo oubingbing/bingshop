@@ -44,6 +44,12 @@ $api->version('v1', function ($api) {
 
             /** 加入购物车 **/
             $api->post("/cart",ShoppingCartController::class . "@addToCart");
+
+            /** 获取用户购物车商品 **/
+            $api->get("/carts",ShoppingCartController::class . "@carts");
+
+            /** 删除购物车中指定的sku商品 **/
+            $api->delete("/cart/{id}/delete",ShoppingCartController::class . "@delete");
         });
 
     });
