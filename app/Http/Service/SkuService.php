@@ -10,6 +10,7 @@ namespace App\Http\Service;
 
 
 use App\Exceptions\WebException;
+use App\Models\GoodsModel;
 use App\Models\SkuModel as Model;
 use App\Models\SkuStandardValueModel;
 use App\Models\StandardModel;
@@ -127,6 +128,13 @@ class SkuService
         return $result;
     }
 
+    /**
+     * 获取商品sku信息
+     *
+     * @author yezi
+     * @param $goodsId
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
     public function getSkuByGoodsId($goodsId)
     {
         $sku = Model::query()
@@ -169,6 +177,20 @@ class SkuService
             ->get();
 
         return $standards;
+    }
+
+    public function findSkuById($skuId)
+    {
+        $sku = Model::query()
+            ->with([Model::REL_GOODS=>function($query){
+                $query->select([
+                    GoodsModel::FIELD_ID,
+                    GoodsModel::FIELD_NAME,
+                    GoodsModel::FIELD_LIMIT_PURCHASE_NUM
+                ]);
+            }])
+            ->find($skuId);
+        return $sku;
     }
 
 

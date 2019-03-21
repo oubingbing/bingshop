@@ -36,6 +36,7 @@ class SkuModel extends BaseModel
     const FIELD_ATTACHMENTS = 'attachments';
 
     const REL_SKU_STANDARD_VALUE_MAP = 'skuStandardMap';
+    const REL_GOODS = 'goods';
 
     protected $casts = [
         self::FIELD_ATTACHMENTS=>'array'
@@ -50,6 +51,11 @@ class SkuModel extends BaseModel
         self::FIELD_STOCK,
         self::FIELD_ATTACHMENTS
     ];
+
+    public function goods()
+    {
+        return $this->belongsTo(GoodsModel::class,self::FIELD_ID_GOODS,GoodsModel::FIELD_ID);
+    }
 
     public function skuStandardMap()
     {
