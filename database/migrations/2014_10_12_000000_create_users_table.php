@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('phone',18)->default('')->comment('手机号码');
             $table->tinyInteger('gender')->default(0)->comment('默认一个性别');
             $table->string('open_id')->unique()->default('')->index();
-            $table->string('union_id')->default('')->index();
+            $table->string('union_id')->unique()->default('')->index();
             $table->string('city')->default('');
             $table->string('country')->default('');
             $table->string('language')->default("zh_CN");

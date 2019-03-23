@@ -43,8 +43,8 @@ class AddPaginationLinksToResponse
         }
         $response['json_api'] = [
             'meta'=>[
-                'name'=>'Json Api 用卡优惠助手',
-                'copyright'=>Carbon::now()->year.' ouzhibing@outlook.com',
+                'name'=>'Json Api bingshop',
+                'copyright'=>Carbon::now()->year.' 875307054@qq.com',
                 'power_by'=>'叶子'
             ]
         ];
