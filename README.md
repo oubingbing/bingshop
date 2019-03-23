@@ -7,3 +7,5 @@
 2、如何发货和确认收货
 
 生成app key //php artisan key:generate
+
+生成 jwt sercrt key: php artisan jwt:secret
