@@ -30,8 +30,8 @@ class CreateOrdersTable extends Migration
             $table->tinyInteger("status")->default(1)->comment("订单状态，1=未支付，2=已支付, 3=支付失败，4=代发货，5=配送中，6=退款中，7=已完成");
             $table->tinyInteger('type')->default(1)->comment("订单类型，1=普通订单，2=优惠券订单，3=vip会员订单");
 
-            $table->string('remark',255)->default("")->comment("订单备注");
-            $table->tinyInteger('user_type')->default("下单用户类型，1=微信小程序");
+            $table->string('remark',255)->nullable()->comment("订单备注");
+            $table->tinyInteger('user_type')->default(1)->comment("下单用户类型，1=微信小程序");
 
             $table->timestamp('ordered_at')->nullable()->comment("下单时间");
             $table->timestamp('created_at')->nullable();

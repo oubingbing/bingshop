@@ -22,7 +22,7 @@ class CreateRefundConsultLogsTable extends Migration
             $table->tinyInteger('type')->default(1)->comment('1=商家，2=买家');
             $table->tinyInteger('status')->default(1)->comment("1=申请退款，2=统一退款，3=拒绝退款，4=协商完成");
 
-            $table->string('refund_remark',225)->default("")->comment("退款备注");
+            $table->string('refund_remark',225)->nullable()->comment("退款备注");
             $table->jsonb('attachments')->nullable()->comment("上传凭证");
 
             $table->timestamp('created_at')->nullable();

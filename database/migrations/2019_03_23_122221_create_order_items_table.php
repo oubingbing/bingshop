@@ -22,7 +22,7 @@ class CreateOrderItemsTable extends Migration
 
             $table->decimal('amount',10,4)->default(0)->comment("商品总金额");
             $table->decimal('actual_amount',10,4)->default(0)->comment('商品实际总金额');
-            $table->float("quantity",2)->default(0)->comment("商品数量");
+            $table->float("quantity",10,4)->default(0)->comment("商品数量");
 
             $table->tinyInteger('status')->default(0)->comment("状态，1=正常状态，2=发起退款(退款中)，3=同意退款，4=拒绝退款，5=退款完成");
 

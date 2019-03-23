@@ -23,7 +23,7 @@ class CreateRefundInfosAble extends Migration
             $table->string('phone',18)->comment("退款联系人手机号码");
 
             $table->tinyInteger("refund_reason")->default(1)->comment("1=未按时发货，1=拍错了、多拍，不喜欢，3=协商不一致退款，4其他");
-            $table->string('refund_remark',225)->default("")->comment("退款备注");
+            $table->string('refund_remark',225)->nullable()->comment("退款备注");
             $table->jsonb('attachments')->nullable()->comment("上传凭证");
 
             $table->tinyInteger('refund_type')->default(0)->comment("退款类型，1=买家发起的退款，2=商家发起的退款");
