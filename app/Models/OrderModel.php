@@ -44,7 +44,7 @@ class OrderModel extends BaseModel
     /** Field payment_type支付方式,1=微信支付，2=支付宝支付 **/
     const FIELD_PAYMENT_TYPE = 'payment_type';
 
-    /** Field status 订单状态,1=未支付，2=支付中，3=已支付，4=代发货，5=配送中，6=退款中，7=已完成 **/
+    /** Field status 订单状态,1=未支付，2=已支付, 3=支付失败，4=代发货，5=配送中，6=退款中，7=已完成 **/
     const FIELD_STATUS = 'status';
 
     /** Field type 订单类型 **/

@@ -21,13 +21,13 @@ class CreateOrdersTable extends Migration
             $table->decimal('actual_amount',10,4)->default(0)->comment('订单实际支付金额');
 
             $table->string('order_number',32)->unique()->index()->default("")->comment("订单号");
-            $table->string('wx_order_number',32)->index()->default("")->comment("订单号");
+            $table->string('wx_order_number',32)->nullable()->default("")->comment("订单号");
             $table->integer('user_address_id')->index()->comment("用户收货地址");
 
             $table->decimal('freight',10,4)->default(0)->comment("运费");
             $table->tinyInteger('free_shipping')->default(1)->comment('是否包邮，1=是，2=否');
             $table->tinyInteger('payment_type')->default(1)->comment("支付方式，1=微信支付，2=支付宝支付");
-            $table->tinyInteger("status")->default(1)->comment("订单状态，1=未支付，2=支付中，3=已支付，4=代发货，5=配送中，6=退款中，7=已完成");
+            $table->tinyInteger("status")->default(1)->comment("订单状态，1=未支付，2=已支付, 3=支付失败，4=代发货，5=配送中，6=退款中，7=已完成");
             $table->tinyInteger('type')->default(1)->comment("订单类型，1=普通订单，2=优惠券订单，3=vip会员订单");
 
             $table->string('remark',255)->default("")->comment("订单备注");

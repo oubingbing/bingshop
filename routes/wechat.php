@@ -14,6 +14,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Wechat\CategoryController;
 use App\Http\Wechat\GoodsController;
+use App\Http\Wechat\OrderController;
 use App\Http\Wechat\ShoppingCartController;
 use App\Http\Wechat\UserController;
 
@@ -50,6 +51,9 @@ $api->version('v1', function ($api) {
 
             /** 删除购物车中指定的sku商品 **/
             $api->delete("/cart/{id}/delete",ShoppingCartController::class . "@delete");
+
+            /** 创建商品订单 **/
+            $api->post('/order',OrderController::class . '@createOrder');
         });
 
     });

@@ -11,7 +11,18 @@ namespace App\Http\Wechat;
 
 use App\Http\Controllers\Controller;
 
-class OrderController extends Controller 
+class OrderController extends Controller
 {
+    public function createOrder()
+    {
+        $user = request()->input('user');
+        $addressId = request()->input('address_id');
+        $sku = request()->input('sku');
+
+        //确认商品库存
+
+        return $sku;
+
+    }
 
 }

@@ -194,5 +194,21 @@ class SkuService
         return $sku;
     }
 
+    public function getSkuByIds($skuIds)
+    {
+        $sku = Model::query()
+            ->with([Model::REL_GOODS=>function($query){
+                $query->select([
+                    GoodsModel::FIELD_ID,
+                    GoodsModel::FIELD_NAME,
+                    GoodsModel::FIELD_LIMIT_PURCHASE_NUM,
+                    GoodsModel::FIELD_STATUS
+                ]);
+            }])
+            ->whereIn(Model::FIELD_ID,collect($skuIds)->toArray())
+            ->get();
+        return $sku;
+    }
+
 
 }
