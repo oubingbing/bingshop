@@ -12,6 +12,8 @@ namespace App\Http\Wechat;
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Service\OrderService;
+use App\Models\OrderModel;
+use App\Models\User;
 
 class OrderController extends Controller
 {
@@ -34,6 +36,17 @@ class OrderController extends Controller
             \DB::beginTransaction();
 
             $order = $this->orderService->createOrder($user->id,$sku,$addressId);
+            if($order){
+                $app = app('wechat.payment');
+                $result = $app->order->unify([
+                    'body' => '腾讯充值中心-QQ会员充值',
+                    'out_trade_no' => $order->{OrderModel::FIELD_ORDER_NUMBER},
+                    'total_fee' => 0.01,
+                    //'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
+                    'trade_type' => 'JSAPI',
+                    'openid' => $user->{User::FIELD_ID_OPENID},
+                ]);
+            }
 
             \DB::commit();
         } catch (\Exception $e) {
@@ -41,7 +54,7 @@ class OrderController extends Controller
             throw new ApiException($e->getMessage());
         }
 
-        return '创建成功';
+        return $result;
     }
 
 }
