@@ -52,9 +52,9 @@ class OrderController extends Controller
             if($order){
                 $app = app('wechat.payment');
                 $result = $app->order->unify([
-                    'body' => '腾讯充值中心-QQ会员充值',
+                    'body' => "测试下单",
                     'out_trade_no' => $order->{OrderModel::FIELD_ORDER_NUMBER},
-                    'total_fee' => 0.01,
+                    'total_fee' => 1,
                     //'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
                     'trade_type' => 'JSAPI',
                     'openid' => $user->{User::FIELD_ID_OPENID},
