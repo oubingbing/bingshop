@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Wechat\OrderController;
 use Illuminate\Http\Request;
 
 /*

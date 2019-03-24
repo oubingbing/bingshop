@@ -58,8 +58,8 @@ $api->version('v1', function ($api) {
 
     });
 
-});
+    $api->post('/pay/callback', OrderController::class . '@payCallback');
 
-$api->post('/pay/callback', OrderController::class . '@payCallback');
+});
 
 
