@@ -24,6 +24,19 @@ class OrderController extends Controller
         $this->orderService = $orderService;
     }
 
+    public function payCallback()
+    {
+        $app = app('wechat.payment');
+        $response = $app->handlePaidNotify(function ($message, $fail) {
+            // 你的逻辑
+            return true;
+            // 或者错误消息
+           // $fail('Order not exists.');
+        });
+
+        return $response;
+    }
+
     public function createOrder()
     {
         $user = request()->input('user');

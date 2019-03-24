@@ -60,4 +60,6 @@ $api->version('v1', function ($api) {
 
 });
 
+$api->any('/pay/callback', OrderController::class . '@payCallback');
+
 
