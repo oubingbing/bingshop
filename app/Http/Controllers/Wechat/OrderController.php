@@ -54,7 +54,7 @@ class OrderController extends Controller
                 $result = $app->order->unify([
                     'body' => "测试下单",
                     'out_trade_no' => $order->{OrderModel::FIELD_ORDER_NUMBER},
-                    'total_fee' => 100,
+                    'total_fee' => $order->{OrderModel::FIELD_ACTUAL_AMOUNT}*100,
                     'spbill_create_ip' => '139.159.243.207',
                     'notify_url'=>env('WECHAT_PAY_CALLBACK_URL'),
                     'trade_type' => 'JSAPI',
