@@ -61,7 +61,7 @@ class OrderController extends Controller
                     'openid' => $user->{User::FIELD_ID_OPENID},
                 ]);
 
-                $config = $app->jssdk->bridgeConfig($result->prepay_id, false); // 返回数组
+                $config = $app->jssdk->bridgeConfig($result['prepay_id'], false); // 返回数组
             }
 
             \DB::commit();
