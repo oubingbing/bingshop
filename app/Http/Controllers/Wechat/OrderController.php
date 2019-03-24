@@ -55,10 +55,13 @@ class OrderController extends Controller
                     'body' => "测试下单",
                     'out_trade_no' => $order->{OrderModel::FIELD_ORDER_NUMBER},
                     'total_fee' => 1,
-                    //'spbill_create_ip' => '123.12.12.123', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
+                    'spbill_create_ip' => '139.159.243.207',
+                    'notify_url'=>env('WECHAT_PAY_CALLBACK_URL'),
                     'trade_type' => 'JSAPI',
                     'openid' => $user->{User::FIELD_ID_OPENID},
                 ]);
+
+                $config = $app->jssdk->bridgeConfig($result->prepay_id, false); // 返回数组
             }
 
             \DB::commit();
@@ -67,7 +70,7 @@ class OrderController extends Controller
             throw new ApiException($e->getMessage());
         }
 
-        return $result;
+        return $config;
     }
 
 }
