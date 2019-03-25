@@ -24,6 +24,12 @@ class OrderController extends Controller
         $this->orderService = $orderService;
     }
 
+    /**
+     * 微信支付回调
+     *
+     * @author yezi
+     * @return mixed
+     */
     public function payCallback()
     {
         $app = app('wechat.payment');
@@ -37,6 +43,13 @@ class OrderController extends Controller
         return $response;
     }
 
+    /**
+     * 创建订单
+     *
+     * @author yezi
+     * @return mixed
+     * @throws ApiException
+     */
     public function createOrder()
     {
         $user = request()->input('user');

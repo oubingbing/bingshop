@@ -43,6 +43,9 @@ $api->version('v1', function ($api) {
             /** 获取商品详情 **/
             $api->get("/goods/{id}",GoodsController::class . "@detail");
 
+            /** 商品分页数据 **/
+            $api->get("/goods",GoodsController::class . '@goodsList');
+
             /** 加入购物车 **/
             $api->post("/cart",ShoppingCartController::class . "@addToCart");
 

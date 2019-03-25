@@ -9,6 +9,7 @@
 namespace App\Http\Service;
 
 
+use App\Enum\GoodsEnum;
 use App\Exceptions\WebException;
 use App\Models\CategoryGoodsModel;
 use App\Models\GoodsModel as Model;
@@ -120,9 +121,16 @@ class GoodsService
         return $result;
     }
 
+    /**
+     * 根据主键获取商品数据
+     *
+     * @author yezi
+     * @param $goodsId
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null|static|static[]
+     */
     public function findGoodsById($goodsId)
     {
-        return Model::query()
+        $goods = Model::query()
             ->with([Model::REL_SKU=>function($query){
                 $query->select([
                     SkuModel::FIELD_ID,
@@ -150,8 +158,17 @@ class GoodsService
             GoodsModel::FIELD_LIMIT_PURCHASE_NUM,
             GoodsModel::FIELD_STATUS
         ])->find($goodsId);
+
+        return $goods;
     }
 
+    /**
+     * 根据商品类目获取商品ID数据
+     *
+     * @author yezi
+     * @param $categoryId
+     * @return \Illuminate\Support\Collection
+     */
     public function getGoodsIdsByCategoryId($categoryId)
     {
         $goodsIds = CategoryGoodsModel::query()->where(CategoryGoodsModel::FIELD_ID_CATEGORY,$categoryId)->pluck(CategoryGoodsModel::FIELD_ID_GOODS);
@@ -200,9 +217,51 @@ class GoodsService
         return $result;
     }
 
+    /**
+     * 格式化返回数据
+     *
+     * @author yezi
+     * @param $goods
+     * @return mixed
+     */
     public function format($goods)
     {
         return $goods;
+    }
+
+    public function queryBuilder()
+    {
+        $this->builder = Model::query()
+            ->with([Model::REL_SKU=>function($query){
+                $query->select([
+                    SkuModel::FIELD_ID,
+                    SkuModel::FIELD_PRICE,
+                    SkuModel::FIELD_VIP_PRICE,
+                    SkuModel::FIELD_CHALK_LINE_PRICE,
+                    SkuModel::FIELD_ID_GOODS
+                ]);
+            }])
+            ->where(Model::FIELD_STATUS,GoodsEnum::SALE_STATUS_UP);
+        return $this;
+    }
+
+    public function filter($name)
+    {
+        if($name){
+            $this->builder->where(Model::FIELD_NAME,'like','%'.$name.'$');
+        }
+        return $this;
+    }
+
+    public function sort($orderBy,$sort)
+    {
+        $this->builder->orderBy($orderBy,$sort);
+        return $this;
+    }
+
+    public function done()
+    {
+        return $this->builder;
     }
 
 }

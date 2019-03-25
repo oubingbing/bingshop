@@ -42,6 +42,31 @@ class GoodsController extends Controller
         return ['goods'=>$goods,'standards'=>$standards];
     }
 
+    public function goodsList()
+    {
+        $pageSize = request()->input('page_size', 20);
+        $pageNumber = request()->input('page_number', 1);
+        $orderBy = request()->input('order_by', 'created_at');
+        $sortBy = request()->input('sort_by', 'desc');
+        $filter = request()->input('filter');
+
+        $pageParams = ['page_size' => $pageSize, 'page_number' => $pageNumber];
+        $query = $this->goodsService->queryBuilder()->filter($filter)->sort($orderBy, $sortBy)->done();
+
+        $field = [
+            GoodsModel::FIELD_ID,
+            GoodsModel::FIELD_NAME,
+            GoodsModel::FIELD_DESCRIBE,
+            GoodsModel::FIELD_IMAGES_ATTACHMENTS,
+            GoodsModel::FIELD_STATUS
+        ];
+        $goodsData = paginate($query, $pageParams, $field, function ($item) {
+
+            return $item;
+        });
+
+        return $goodsData;
+    }
 
 
 }
