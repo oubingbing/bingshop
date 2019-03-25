@@ -93,4 +93,11 @@ class ShoppingCartController extends Controller
 
         return $result;
     }
+
+    public function getCartNum()
+    {
+        $user = request()->input('user');
+        $num = $this->cartService->sumCartNum($user->id);
+        return $num;
+    }
 }

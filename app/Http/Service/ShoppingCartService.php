@@ -114,4 +114,13 @@ class ShoppingCartService
         return $result;
     }
 
+    public function sumCartNum($userId)
+    {
+        $num = Model::query()
+            ->where(Model::FIELD_STATUS,CartEnum::STATUS_NORMAL)
+            ->where(Model::FIELD_ID_USER,$userId)
+            ->sum(Model::FIELD_PURCHASE_NUM);
+        return $num;
+    }
+
 }

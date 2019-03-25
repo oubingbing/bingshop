@@ -42,6 +42,12 @@ class GoodsController extends Controller
         return ['goods'=>$goods,'standards'=>$standards];
     }
 
+    /**
+     * 获取商品列表信息
+     *
+     * @author yezi
+     * @return array
+     */
     public function goodsList()
     {
         $pageSize = request()->input('page_size', 20);

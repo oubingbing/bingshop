@@ -55,6 +55,9 @@ $api->version('v1', function ($api) {
             /** 删除购物车中指定的sku商品 **/
             $api->delete("/cart/{id}/delete",ShoppingCartController::class . "@delete");
 
+            /** 获取用户购物车商品数量 **/
+            $api->get("/cart/num",ShoppingCartController::class . "@getCartNum");
+
             /** 创建商品订单 **/
             $api->post('/order',OrderController::class . '@createOrder');
         });
