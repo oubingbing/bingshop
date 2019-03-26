@@ -52,9 +52,9 @@ class OrderController extends Controller
      */
     public function createOrder()
     {
-        $user = request()->input('user');
+        $user      = request()->input('user');
         $addressId = request()->input('address_id');
-        $sku = request()->input('sku');
+        $sku       = request()->input('sku');
 
         //确认商品库存
 
@@ -63,15 +63,15 @@ class OrderController extends Controller
 
             $order = $this->orderService->createOrder($user->id,$sku,$addressId);
             if($order){
-                $app = app('wechat.payment');
+                $app    = app('wechat.payment');
                 $result = $app->order->unify([
-                    'body' => "测试下单",
-                    'out_trade_no' => $order->{OrderModel::FIELD_ORDER_NUMBER},
-                    'total_fee' => $order->{OrderModel::FIELD_ACTUAL_AMOUNT}*100,
+                    'body'             => "测试下单",
+                    'out_trade_no'     => $order->{OrderModel::FIELD_ORDER_NUMBER},
+                    'total_fee'        => $order->{OrderModel::FIELD_ACTUAL_AMOUNT}*100,
                     'spbill_create_ip' => '139.159.243.207',
-                    'notify_url'=>env('WECHAT_PAY_CALLBACK_URL'),
-                    'trade_type' => 'JSAPI',
-                    'openid' => $user->{User::FIELD_ID_OPENID},
+                    'notify_url'       => env('WECHAT_PAY_CALLBACK_URL'),
+                    'trade_type'       => 'JSAPI',
+                    'openid'           => $user->{User::FIELD_ID_OPENID},
                 ]);
 
                 $config = $app->jssdk->bridgeConfig($result['prepay_id'], false); // 返回数组

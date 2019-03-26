@@ -13,8 +13,6 @@ use App\Enum\CartEnum;
 use App\Models\GoodsModel;
 use App\Models\ShoppingCartModel as Model;
 use App\Models\SkuModel;
-use App\Models\StandardValueModel;
-use PhpParser\Node\Expr\AssignOp\Mod;
 
 class ShoppingCartService
 {
@@ -74,14 +72,21 @@ class ShoppingCartService
     public function addToCart($userId,$skuId,$purchaseNum)
     {
         $cart = Model::create([
-            Model::FIELD_ID_USER=>$userId,
-            Model::FIELD_ID_SKU=>$skuId,
-            Model::FIELD_PURCHASE_NUM=>$purchaseNum,
-            Model::FIELD_STATUS=>CartEnum::STATUS_NORMAL
+            Model::FIELD_ID_USER      => $userId,
+            Model::FIELD_ID_SKU       => $skuId,
+            Model::FIELD_PURCHASE_NUM => $purchaseNum,
+            Model::FIELD_STATUS       => CartEnum::STATUS_NORMAL
         ]);
         return $cart;
     }
 
+    /**
+     * 获取用户购物车商品数据
+     *
+     * @author yezi
+     * @param $userId
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
     public function getUserCart($userId)
     {
         $carts = Model::query()
@@ -104,6 +109,14 @@ class ShoppingCartService
         return $carts;
     }
 
+    /**
+     * 删除用户的购物车商品
+     *
+     * @author yezi
+     * @param $userId
+     * @param $skuId
+     * @return int
+     */
     public function deleteUserSku($userId,$skuId)
     {
         $result = Model::query()
@@ -114,6 +127,13 @@ class ShoppingCartService
         return $result;
     }
 
+    /**
+     * 统计用户购物车商品数量
+     *
+     * @author yezi
+     * @param $userId
+     * @return mixed
+     */
     public function sumCartNum($userId)
     {
         $num = Model::query()

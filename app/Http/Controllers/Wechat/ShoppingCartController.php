@@ -26,13 +26,13 @@ class ShoppingCartController extends Controller
     public function __construct(ShoppingCartService $cartService,SkuService $skuService)
     {
         $this->cartService = $cartService;
-        $this->skuService = $skuService;
+        $this->skuService  = $skuService;
     }
 
     public function addToCart()
     {
-        $user = request()->input('user');
-        $skuId = request()->input('sku_id');
+        $user        = request()->input('user');
+        $skuId       = request()->input('sku_id');
         $purchaseNum = request()->input('purchase_num');
 
         if(!$skuId){
@@ -43,7 +43,7 @@ class ShoppingCartController extends Controller
             throw new WebException("购买数量不能为空");
         }
 
-        $sku = $this->skuService->findSkuById($skuId);
+        $sku   = $this->skuService->findSkuById($skuId);
         $goods = $sku['goods'];
         if($purchaseNum > $sku->{SkuModel::FIELD_STOCK}){
             throw new WebException("商品库存不足");
@@ -97,7 +97,7 @@ class ShoppingCartController extends Controller
     public function getCartNum()
     {
         $user = request()->input('user');
-        $num = $this->cartService->sumCartNum($user->id);
+        $num  = $this->cartService->sumCartNum($user->id);
         return $num;
     }
 }

@@ -51,8 +51,8 @@ class CategoryController extends Controller
         }
 
         $category = new CategoryModel();
-        $category->{CategoryModel::FIELD_NAME} = $name;
-        $category->{CategoryModel::FIELD_SORT} = $sort;
+        $category->{CategoryModel::FIELD_NAME}     = $name;
+        $category->{CategoryModel::FIELD_SORT}     = $sort;
         $category->{CategoryModel::FIELD_ID_ADMIN} = $user->id;
 
         try {
@@ -90,11 +90,11 @@ class CategoryController extends Controller
      */
     public function categoryList()
     {
-        $user = request()->input('user');
-        $pageSize = request()->input('page_size', 20);
+        $user       = request()->input('user');
+        $pageSize   = request()->input('page_size', 20);
         $pageNumber = request()->input('page_number', 1);
-        $orderBy = request()->input('order_by', 'created_at');
-        $sortBy = request()->input('sort_by', 'desc');
+        $orderBy    = request()->input('order_by', 'created_at');
+        $sortBy     = request()->input('sort_by', 'desc');
 
         $pageParams = ['page_size' => $pageSize, 'page_number' => $pageNumber];
         $query = $this->service->queryBuilder()->sort($orderBy, $sortBy)->done();
@@ -115,7 +115,7 @@ class CategoryController extends Controller
     public function edit()
     {
         $user = request()->input("user");
-        $id = request()->input('id');
+        $id   = request()->input('id');
         $name = request()->input("name");
         $sort = request()->input("sort");
 

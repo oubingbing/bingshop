@@ -22,7 +22,7 @@ class CategoryController extends Controller
     function __construct(CategoryService $categoryService,GoodsService $goodsService)
     {
         $this->categoryService = $categoryService;
-        $this->goodsService = $goodsService;
+        $this->goodsService    = $goodsService;
     }
 
     /**
@@ -45,9 +45,16 @@ class CategoryController extends Controller
         return ['categories'=>$categories,'goods'=>$goods];
     }
 
+    /**
+     * 获取分类商品
+     *
+     * @author yezi
+     * @param $categoryId
+     * @return \Illuminate\Support\Collection|static
+     */
     public function categoryGoods($categoryId)
     {
-        $user = request()->input('user');
+        $user  = request()->input('user');
 
         $goods = $this->goodsService->getGoodsIdsByCategoryId($categoryId);
         $goods = collect($goods)->map(function ($item){

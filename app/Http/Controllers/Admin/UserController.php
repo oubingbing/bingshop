@@ -43,13 +43,13 @@ class UserController extends Controller
      */
     public function userList()
     {
-        $user = request()->input('user');
-        $pageSize = request()->input('page_size', 20);
+        $user       = request()->input('user');
+        $pageSize   = request()->input('page_size', 20);
         $pageNumber = request()->input('page_number', 1);
-        $orderBy = request()->input('order_by', 'created_at');
-        $sortBy = request()->input('sort_by', 'desc');
-        $filter = request()->input('filter');
-        $username = request()->input("username",'');
+        $orderBy    = request()->input('order_by', 'created_at');
+        $sortBy     = request()->input('sort_by', 'desc');
+        $filter     = request()->input('filter');
+        $username   = request()->input("username",'');
 
         $pageParams = ['page_size' => $pageSize, 'page_number' => $pageNumber];
         $query = $this->userService->queryBuilder()->filter($username)->sort($orderBy, $sortBy)->done();

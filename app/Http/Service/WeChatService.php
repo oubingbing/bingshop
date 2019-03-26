@@ -30,9 +30,8 @@ class WeChatService
     }
 
     public function getSessionInfo($code,$iv,$encryptedData){
-        $url = $this->weChatLoginUrl."?appid={$this->appKey}&secret={$this->secretKey}&js_code=$code&grant_type=authorization_code";
-
-        $http = new Client;
+        $url      = $this->weChatLoginUrl."?appid={$this->appKey}&secret={$this->secretKey}&js_code=$code&grant_type=authorization_code";
+        $http     = new Client;
         $response = $http->get($url);
 
         $result = json_decode((string) $response->getBody(), true);
@@ -41,8 +40,8 @@ class WeChatService
         }
 
         $sessionKey = $result["session_key"];
-        $userInfo = $this->decryptData($encryptedData,$iv,$sessionKey);
-        $userInfo = json_decode($userInfo,true);
+        $userInfo   = $this->decryptData($encryptedData,$iv,$sessionKey);
+        $userInfo   = json_decode($userInfo,true);
 
         return $userInfo;
     }

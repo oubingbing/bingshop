@@ -26,9 +26,9 @@ class GoodsController extends Controller
 
     function __construct(GoodsService $activityService,StandardService $standardService,SkuService $skuService)
     {
-        $this->goodsService = $activityService;
+        $this->goodsService    = $activityService;
         $this->standardService = $standardService;
-        $this->skuService = $skuService;
+        $this->skuService      = $skuService;
     }
 
     public function index()
@@ -36,28 +36,36 @@ class GoodsController extends Controller
         return view("admin.goods");
     }
 
+    /**
+     * 新建商品
+     *
+     * @author yezi
+     * @param Request $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @throws WebException
+     */
     public function createGoods(Request $request)
     {
-        $user = $request->input("user");
-        $standardItems = $request->input('standard_items');
-        $skuData = $request->input('sku_data');
-        $goodsName = $request->input('goods_name');
-        $goodsDescribe = $request->input('goods_describe');
-        $goodsShareDescribe = $request->input('goods_share_describe');
-        $attachments = $request->input('attachments');
-        $checkedCategory = $request->input('checked_category');
-        $goodsPrice = $request->input('goods_price');
-        $chalkLinePrice = $request->input('chalk_line_price');
-        $goodsStock = $request->input('goods_stock');
-        $saleStartType = $request->input('sale_start_type');
-        $startSaleTime = $request->input('start_sale_time');
-        $saleStopType = $request->input('sale_stop_type');
-        $stopSaleTime = $request->input('stop_sale_time');
-        $limitSaleModel = $request->input('limit_sale_model');
+        $user                = $request->input("user");
+        $standardItems       = $request->input('standard_items');
+        $skuData             = $request->input('sku_data');
+        $goodsName           = $request->input('goods_name');
+        $goodsDescribe       = $request->input('goods_describe');
+        $goodsShareDescribe  = $request->input('goods_share_describe');
+        $attachments         = $request->input('attachments');
+        $checkedCategory     = $request->input('checked_category');
+        $goodsPrice          = $request->input('goods_price');
+        $chalkLinePrice      = $request->input('chalk_line_price');
+        $goodsStock          = $request->input('goods_stock');
+        $saleStartType       = $request->input('sale_start_type');
+        $startSaleTime       = $request->input('start_sale_time');
+        $saleStopType        = $request->input('sale_stop_type');
+        $stopSaleTime        = $request->input('stop_sale_time');
+        $limitSaleModel      = $request->input('limit_sale_model');
         $limitSaleModelValue = $request->input('limit_sale_model_value');
-        $postType = $request->input('post_type');
-        $postCostType = $request->input('post_cost_type');
-        $postCost = $request->input('post_cost');
+        $postType            = $request->input('post_type');
+        $postCostType        = $request->input('post_cost_type');
+        $postCost            = $request->input('post_cost');
 
         //校验参数
         $valid = $this->goodsService->validRegister($request,$standardItems,$goodsPrice,$goodsStock);
@@ -77,19 +85,19 @@ class GoodsController extends Controller
         }
 
         $Goods = new GoodsModel();
-        $Goods->{GoodsModel::FIELD_NAME} = $goodsName;
-        $Goods->{GoodsModel::FIELD_DESCRIBE} = $goodsDescribe;
-        $Goods->{GoodsModel::FIELD_SHARE_DESCRIBE} = $goodsShareDescribe;
+        $Goods->{GoodsModel::FIELD_NAME}               = $goodsName;
+        $Goods->{GoodsModel::FIELD_DESCRIBE}           = $goodsDescribe;
+        $Goods->{GoodsModel::FIELD_SHARE_DESCRIBE}     = $goodsShareDescribe;
         $Goods->{GoodsModel::FIELD_IMAGES_ATTACHMENTS} = $attachments;
-        $Goods->{GoodsModel::FIELD_SKU_TYPE} = $skuData?GoodsEnum::SINGLE_SKU:GoodsEnum::BATCH_SKU;
-        $Goods->{GoodsModel::FIELD_STATUS} = GoodsEnum::SALE_STATUS_DOWN;
-        $Goods->{GoodsModel::FIELD_START_SALE_TYPE} = $saleStartType;
-        $Goods->{GoodsModel::FIELD_START_SELLING_AT} = $startSaleTime->toDateTimeString();
-        $Goods->{GoodsModel::FIELD_STOP_SALE_TYPE} = $saleStopType;
-        $Goods->{GoodsModel::FIELD_STOP_SELLING_AT} = $stopSaleTime->toDateTimeString();
+        $Goods->{GoodsModel::FIELD_SKU_TYPE}           = $skuData?GoodsEnum::SINGLE_SKU:GoodsEnum::BATCH_SKU;
+        $Goods->{GoodsModel::FIELD_STATUS}             = GoodsEnum::SALE_STATUS_DOWN;
+        $Goods->{GoodsModel::FIELD_START_SALE_TYPE}    = $saleStartType;
+        $Goods->{GoodsModel::FIELD_START_SELLING_AT}   = $startSaleTime->toDateTimeString();
+        $Goods->{GoodsModel::FIELD_STOP_SALE_TYPE}     = $saleStopType;
+        $Goods->{GoodsModel::FIELD_STOP_SELLING_AT}    = $stopSaleTime->toDateTimeString();
         $Goods->{GoodsModel::FIELD_LIMIT_PURCHASE_NUM} = $limitSaleModel==1?0:$limitSaleModelValue;
-        $Goods->{GoodsModel::FIELD_DISTRIBUTION_MODE} = $postType;
-        $Goods->{GoodsModel::FIELD_POSTAGE_COST} = $postCost;
+        $Goods->{GoodsModel::FIELD_DISTRIBUTION_MODE}  = $postType;
+        $Goods->{GoodsModel::FIELD_POSTAGE_COST}       = $postCost;
 
         try {
             \DB::beginTransaction();
@@ -121,7 +129,6 @@ class GoodsController extends Controller
             \DB::commit();
         } catch (\Exception $e) {
             \DB::rollBack();
-            //\Log::info("新建商品错误",collect($e)->toArray());
             throw new WebException($e->getMessage());
         }
 

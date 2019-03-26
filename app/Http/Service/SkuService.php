@@ -17,8 +17,6 @@ use App\Models\StandardModel;
 use App\Models\StandardValueModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
-use League\Flysystem\Exception;
-use PhpParser\PrettyPrinter\Standard;
 
 class SkuService
 {
@@ -40,14 +38,14 @@ class SkuService
      */
     public function storeSkuList($goodsId,$skuData,$standardItems)
     {
-        $standardNames = $names = collect($standardItems)->pluck('name');
-        $standardData = $this->standardService->getStandardInfo($standardNames);
+        $standardNames = collect($standardItems)->pluck('name');
+        $standardData  = $this->standardService->getStandardInfo($standardNames);
         if(!$standardData){
             throw new WebException("获取规格数据错误");
         }
 
         $skuStandardValues = [];
-        $now = Carbon::now()->toDateTimeString();
+        $now               = Carbon::now()->toDateTimeString();
         foreach ($skuData as $sku){
             $skuStoreResult = $this->storeSku($sku,$goodsId);
             if(!$skuStoreResult){
@@ -61,10 +59,10 @@ class SkuService
                     throw new WebException("规格数据获取失败");
                 }
                 array_push($skuStandardValues,[
-                    SkuStandardValueModel::FIELD_ID_SKU=>$skuStoreResult['id'],
-                    SkuStandardValueModel::FIELD_ID_STANDARD_VALUE=>$standardValue['id'],
-                    SkuStandardValueModel::FIELD_CREATED_AT=>$now,
-                    SkuStandardValueModel::FIELD_UPDATED_AT=>$now
+                    SkuStandardValueModel::FIELD_ID_SKU            => $skuStoreResult['id'],
+                    SkuStandardValueModel::FIELD_ID_STANDARD_VALUE => $standardValue['id'],
+                    SkuStandardValueModel::FIELD_CREATED_AT        => $now,
+                    SkuStandardValueModel::FIELD_UPDATED_AT        => $now
                 ]);
             }
         }
@@ -85,13 +83,13 @@ class SkuService
     public function storeSku($sku,$goodsId)
     {
         $result = Model::create([
-            Model::FIELD_ID_GOODS=>$goodsId,
-            Model::FIELD_PRICE=>$sku['price'],
-            Model::FIELD_VIP_PRICE=>isset($sku['vip_price'])?$sku['vip_price']:$sku['price'],
-            Model::FIELD_COST_PRICE=>$sku['cost_price'],
-            Model::FIELD_CHALK_LINE_PRICE=>isset($sku['chalk_line_price'])?$sku['chalk_line_price']:0,
-            Model::FIELD_STOCK=>$sku['stock'],
-            Model::FIELD_ATTACHMENTS=>isset($sku['attachments'])?$sku['attachments']:[]
+            Model::FIELD_ID_GOODS         => $goodsId,
+            Model::FIELD_PRICE            => $sku['price'],
+            Model::FIELD_VIP_PRICE        => isset($sku['vip_price'])?$sku['vip_price']:$sku['price'],
+            Model::FIELD_COST_PRICE       =>$sku['cost_price'],
+            Model::FIELD_CHALK_LINE_PRICE => isset($sku['chalk_line_price'])?$sku['chalk_line_price']:0,
+            Model::FIELD_STOCK            => $sku['stock'],
+            Model::FIELD_ATTACHMENTS      => isset($sku['attachments'])?$sku['attachments']:[]
         ]);
         return $result;
     }
@@ -113,12 +111,12 @@ class SkuService
     public function storeDefaultSku($goodsId,$price,$vipPrice,$costPrice,$chalkLinePrice,$stock,$attachments)
     {
         $sku = [
-            Model::FIELD_PRICE=>$price,
-            Model::FIELD_VIP_PRICE=>$vipPrice,
-            Model::FIELD_COST_PRICE=>$costPrice,
-            Model::FIELD_CHALK_LINE_PRICE=>$chalkLinePrice,
-            Model::FIELD_STOCK=>$stock,
-            Model::FIELD_ATTACHMENTS=>$attachments
+            Model::FIELD_PRICE            => $price,
+            Model::FIELD_VIP_PRICE        => $vipPrice,
+            Model::FIELD_COST_PRICE       => $costPrice,
+            Model::FIELD_CHALK_LINE_PRICE => $chalkLinePrice,
+            Model::FIELD_STOCK            => $stock,
+            Model::FIELD_ATTACHMENTS      => $attachments
         ];
         $result = $this->storeSku($sku,$goodsId);
         if(!$result){
@@ -160,6 +158,7 @@ class SkuService
         $standardValueIds = SkuStandardValueModel::query()
             ->whereIn(SkuStandardValueModel::FIELD_ID_SKU,collect($skuIds)->toArray())
             ->pluck(SkuStandardValueModel::FIELD_ID_STANDARD_VALUE);
+
         $standards = StandardModel::query()
             ->with([
                 StandardModel::REL_STANDARD_VALUE=>function($query)use($standardValueIds){

@@ -25,10 +25,10 @@ class CategoryService
     public function store(Model $category)
     {
         $result = Model::create([
-            Model::FIELD_NAME=>$category->{Model::FIELD_NAME},
-            Model::FIELD_ATTACHMENTS=>$category->{Model::FIELD_ATTACHMENTS},
-            Model::FIELD_ID_ADMIN=>$category->{Model::FIELD_ID_ADMIN},
-            Model::FIELD_SORT=>$category->{Model::FIELD_SORT}
+            Model::FIELD_NAME        => $category->{Model::FIELD_NAME},
+            Model::FIELD_ATTACHMENTS => $category->{Model::FIELD_ATTACHMENTS},
+            Model::FIELD_ID_ADMIN    => $category->{Model::FIELD_ID_ADMIN},
+            Model::FIELD_SORT        => $category->{Model::FIELD_SORT}
         ]);
         return $result;
     }
@@ -137,10 +137,10 @@ class CategoryService
      */
     public function edit($id,$name,$sort)
     {
-        $category = $this->getCategoryById($id);
+        $category                      = $this->getCategoryById($id);
         $category->{Model::FIELD_NAME} = $name;
         $category->{Model::FIELD_SORT} = $sort;
-        $result = $category->save();
+        $result                        = $category->save();
         return $result;
     }
 

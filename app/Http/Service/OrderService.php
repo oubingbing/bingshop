@@ -39,16 +39,16 @@ class OrderService
 
         //计算商品总金额,看看是否使用了优惠券，或者是VIP折扣价
 
-        $needToPayAmount = 0;
+        $needToPayAmount       = 0;
         $needToPayActualAmount = 0;
-        $orderItems = [];
-        $nowDateTimeString = Carbon::now()->toDateTimeString();
+        $orderItems            = [];
+        $nowDateTimeString     = Carbon::now()->toDateTimeString();
         foreach ($skuData as $skuItem){
             $sku = $skuService->findSkuById($skuItem['sku_id']);
             if(!$sku){
                 throw new ApiException("商品不存在");
             }
-            $goods = $sku->{SkuModel::REL_GOODS};
+            $goods     = $sku->{SkuModel::REL_GOODS};
             $goodsName = $goods->{GoodsModel::FIELD_NAME};
             if($goods->{GoodsModel::FIELD_STATUS} != GoodsEnum::SALE_STATUS_UP){
                 throw new ApiException("{$goodsName}：该商品已下架，不可下单购买");
@@ -63,14 +63,14 @@ class OrderService
             $needToPayActualAmount += $sku->{SkuModel::FIELD_PRICE};
 
             array_push($orderItems,[
-                OrderItemModel::FIELD_ID_SKU=>$skuItem['sku_id'],
-                OrderItemModel::FIELD_AMOUNT=>($sku->{SkuModel::FIELD_PRICE}*$skuItem['purchase_num']),
-                OrderItemModel::FIELD_ACTUAL_AMOUNT=>($sku->{SkuModel::FIELD_PRICE}*$skuItem['purchase_num']),
-                OrderItemModel::FIELD_QUANTITY=>$skuItem['purchase_num'],
-                OrderItemModel::FIELD_STATUS=>OrderItemEnum::STATUS_NORMAL,
-                OrderItemModel::FIELD_SKU_SNAPSHOT=>collect($sku)->toJson(),
-                OrderItemModel::FIELD_CREATED_AT=>$nowDateTimeString,
-                OrderItemModel::FIELD_UPDATED_AT=>$nowDateTimeString
+                OrderItemModel::FIELD_ID_SKU        => $skuItem['sku_id'],
+                OrderItemModel::FIELD_AMOUNT        => ($sku->{SkuModel::FIELD_PRICE}*$skuItem['purchase_num']),
+                OrderItemModel::FIELD_ACTUAL_AMOUNT => ($sku->{SkuModel::FIELD_PRICE}*$skuItem['purchase_num']),
+                OrderItemModel::FIELD_QUANTITY      => $skuItem['purchase_num'],
+                OrderItemModel::FIELD_STATUS        => OrderItemEnum::STATUS_NORMAL,
+                OrderItemModel::FIELD_SKU_SNAPSHOT  => collect($sku)->toJson(),
+                OrderItemModel::FIELD_CREATED_AT    => $nowDateTimeString,
+                OrderItemModel::FIELD_UPDATED_AT    => $nowDateTimeString
             ]);
         }
 
@@ -107,19 +107,19 @@ class OrderService
     public function storeOrder($userId,$needToPayAmount,$needToPayActualAmount,$addressId,$payment,$remark)
     {
         $order = Model::create([
-            Model::FIELD_ID_USER=>$userId,
-            Model::FIELD_AMOUNT=>$needToPayAmount,
-            Model::FIELD_ACTUAL_AMOUNT=>$needToPayActualAmount,
-            Model::FIELD_ORDER_NUMBER=>$this->generateOrderNumber(),
-            Model::FIELD_ID_USER_ADDRESS=>$addressId,
-            Model::FIELD_FREIGHT=>1,
-            Model::FIELD_FREE_SHIPPING=>1,
-            Model::FIELD_PAYMENT_TYPE=>$payment,
-            Model::FIELD_STATUS=>OrderEnum::STATUS_NOT_PAY,
-            Model::FIELD_TYPE=>OrderEnum::TYPE_NORMAL,
-            Model::FIELD_REMARK=>$remark,
-            Model::FIELD_USER_TYPE=>OrderEnum::USER_TYPE_MINI_PROGRAM,
-            Model::FIELD_ORDERED_AT=>Carbon::now()->toDateTimeString()
+            Model::FIELD_ID_USER         => $userId,
+            Model::FIELD_AMOUNT          => $needToPayAmount,
+            Model::FIELD_ACTUAL_AMOUNT   => $needToPayActualAmount,
+            Model::FIELD_ORDER_NUMBER    => $this->generateOrderNumber(),
+            Model::FIELD_ID_USER_ADDRESS => $addressId,
+            Model::FIELD_FREIGHT         => 1,
+            Model::FIELD_FREE_SHIPPING   => 1,
+            Model::FIELD_PAYMENT_TYPE    => $payment,
+            Model::FIELD_STATUS          => OrderEnum::STATUS_NOT_PAY,
+            Model::FIELD_TYPE            => OrderEnum::TYPE_NORMAL,
+            Model::FIELD_REMARK          => $remark,
+            Model::FIELD_USER_TYPE       => OrderEnum::USER_TYPE_MINI_PROGRAM,
+            Model::FIELD_ORDERED_AT      => Carbon::now()->toDateTimeString()
         ]);
         return $order;
     }

@@ -14,6 +14,12 @@ use App\Http\Service\QiNiuService;
 
 class QiNiuController extends Controller
 {
+    /**
+     * 获取七牛token，不存在就新建
+     *
+     * @author yezi
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function token()
     {
         $qiNiuToken = app(QiNiuService::class)->getToken();

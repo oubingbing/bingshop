@@ -34,31 +34,30 @@ class GoodsService
     public function validRegister($request,$standardItems,$goodsPrice,$goodsStock)
     {
         $rules = [
-            'goods_name' => 'required',
-            //'attachments' => 'required|array',
+            'goods_name'       => 'required',
             'checked_category' => 'required',
-            'sale_start_type' => 'required | in:1,2,3',
-            'sale_stop_type' => 'required | in:1,2,3',
+            'sale_start_type'  => 'required | in:1,2,3',
+            'sale_stop_type'   => 'required | in:1,2,3',
             'limit_sale_model' => 'required | in:1,2',
-            'post_type' => 'required | in:1,2,3',
-            'post_cost_type' => 'required | in:1',
-            'post_cost' => 'required'
+            'post_type'        => 'required | in:1,2,3',
+            'post_cost_type'   => 'required | in:1',
+            'post_cost'        => 'required'
         ];
         $message = [
-            'goods_name.required' => '商品名不能为空',
-            'attachments.required' => '图片不能为空',
+            'goods_name.required'       => '商品名不能为空',
+            'attachments.required'      => '图片不能为空',
             'checked_category.required' => '商品类目不能为空',
-            'sale_start_type.required' => '商品上架类型不能为空',
-            'sale_stop_type.required' => '商品下架类型不能为空',
+            'sale_start_type.required'  => '商品上架类型不能为空',
+            'sale_stop_type.required'   => '商品下架类型不能为空',
             'limit_sale_model.required' => '商品限购类型不能为空',
-            'post_type.required' => '商品发货类型不能为空',
-            'post_cost_type.required' => '商品邮费类型不能为空',
-            'post_cost.required' => '商品邮费不能为空',
-            'sale_start_type.in' => '商品上架类型参数错误',
-            'sale_stop_type.in' => '商品下架类型参数错误',
-            'limit_sale_model.in' => '商品限购类型参数错误',
-            'post_type.in' => '商品配送方式类型参数错误',
-            'post_cost_type.in' => '运费类型参数错误',
+            'post_type.required'        => '商品发货类型不能为空',
+            'post_cost_type.required'   => '商品邮费类型不能为空',
+            'post_cost.required'        => '商品邮费不能为空',
+            'sale_start_type.in'        => '商品上架类型参数错误',
+            'sale_stop_type.in'         => '商品下架类型参数错误',
+            'limit_sale_model.in'       => '商品限购类型参数错误',
+            'post_type.in'              => '商品配送方式类型参数错误',
+            'post_cost_type.in'         => '运费类型参数错误',
         ];
         $validator = \Validator::make($request->all(),$rules,$message);
 
@@ -110,10 +109,10 @@ class GoodsService
     {
         $categories = collect($categories)->map(function ($item)use($goodsId){
            return [
-               CategoryGoodsModel::FIELD_ID_CATEGORY=>$item,
-               CategoryGoodsModel::FIELD_ID_GOODS=>$goodsId,
-               CategoryGoodsModel::FIELD_CREATED_AT=>Carbon::now()->toDateTimeString(),
-               CategoryGoodsModel::FIELD_UPDATED_AT=>Carbon::now()->toDateTimeString()
+               CategoryGoodsModel::FIELD_ID_CATEGORY => $item,
+               CategoryGoodsModel::FIELD_ID_GOODS    => $goodsId,
+               CategoryGoodsModel::FIELD_CREATED_AT  => Carbon::now()->toDateTimeString(),
+               CategoryGoodsModel::FIELD_UPDATED_AT  => Carbon::now()->toDateTimeString()
            ];
         });
 

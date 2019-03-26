@@ -41,7 +41,7 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         $nickname = request()->input("nickname");
-        $email = request()->input("email");
+        $email    = request()->input("email");
         $password = request()->input("password");
 
         $valid = $this->authService->validRegister($request);

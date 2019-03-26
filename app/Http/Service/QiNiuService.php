@@ -46,7 +46,7 @@ class QiNiuService
                 if(!$token){
                     throw new ApiException("获取七牛token出错",500);
                 }
-                $qiNiuToken->{QiNiuTokenModel::FIELD_TOKEN} = $token;
+                $qiNiuToken->{QiNiuTokenModel::FIELD_TOKEN}      = $token;
                 $qiNiuToken->{QiNiuTokenModel::FIELD_EXPIRED_AT} = Carbon::now()->addSecond(self::EXPIRED_AT);
                 $updateResult = $qiNiuToken->save();
                 if(!$updateResult){

@@ -24,19 +24,19 @@ class AuthService
     public function validRegister($request)
     {
         $rules = [
-            'nickname' => 'required | between:2,16 | unique:admins,nickname',
-            'email' => 'required | unique:admins,email',
-            'password' => 'required | between:6,16',
+            'nickname'              => 'required | between:2,16 | unique:admins,nickname',
+            'email'                 => 'required | unique:admins,email',
+            'password'              => 'required | between:6,16',
             'password_confirmation' => 'required',
         ];
         $message = [
-            'nickname.required' => '昵称不能为空',
-            'nickname.between' => '昵称必须是2~16个字符',
-            'nickname.unique' => '昵称已存在',
-            'email.required' => '邮箱不能为空',
-            'email.unique' => '邮箱已存在',
-            'password.required' => '密码不能为空',
-            'password.between' => '密码必须是6~16个字符',
+            'nickname.required'              => '昵称不能为空',
+            'nickname.between'               => '昵称必须是2~16个字符',
+            'nickname.unique'                => '昵称已存在',
+            'email.required'                 => '邮箱不能为空',
+            'email.unique'                   => '邮箱已存在',
+            'password.required'              => '密码不能为空',
+            'password.between'               => '密码必须是6~16个字符',
             'password_confirmation.required' => '确认密码不能为空',
         ];
         $validator = \Validator::make($request->all(),$rules,$message);
@@ -60,7 +60,7 @@ class AuthService
      */
     public function createAdmin($nickname,$email,$password)
     {
-        $salt = randomKeys(8);
+        $salt          = randomKeys(8);
         $rememberToken = randomKeys(64);
 
         $result = Model::create([
@@ -87,12 +87,28 @@ class AuthService
         return md5(md5($password.$salt).$salt);
     }
 
+    /**
+     * 根据邮箱获取用户
+     *
+     * @author yezi
+     * @param $email
+     * @return \Illuminate\Database\Eloquent\Model|null|object|static
+     */
     public function getAdminByEmail($email)
     {
         $result = Model::query()->where(Model::FIELD_EMAIL,$email)->first();
         return $result;
     }
 
+    /**
+     * 登录验证
+     *
+     * @author yezi
+     * @param $email
+     * @param $password
+     * @return bool
+     * @throws WebException
+     */
     public function attempt($email,$password)
     {
         $admin = $this->getAdminByEmail($email);
@@ -145,11 +161,23 @@ class AuthService
         session()->forget('admin_id');
     }
 
+    /**
+     * 微信用户登录
+     *
+     * @author yezi
+     * @param $unionId
+     */
     public static function weChatAttempt($unionId)
     {
         session(['union_id'=>$unionId]);
     }
 
+    /**
+     * 获取微信用户信息
+     *
+     * @author yezi
+     * @return \Illuminate\Session\SessionManager|\Illuminate\Session\Store|mixed
+     */
     public static function weChatAuthUser()
     {
         return session('union_id');

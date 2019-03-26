@@ -32,10 +32,10 @@ class SendMessageService
     public function saveSendMessageLog($mobile,$code,$status,$expire)
     {
         $result = Model::create([
-            Model::FIELD_CODE=>$code,
-            Model::FIELD_MOBILE=>$mobile,
-            Model::FIELD_STATUS=>$status,
-            Model::FIELD_EXPIRED_AT=>$expire
+            Model::FIELD_CODE       => $code,
+            Model::FIELD_MOBILE     => $mobile,
+            Model::FIELD_STATUS     => $status,
+            Model::FIELD_EXPIRED_AT => $expire
         ]);
 
         return $result;

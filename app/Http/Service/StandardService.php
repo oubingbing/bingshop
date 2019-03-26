@@ -52,8 +52,8 @@ class StandardService
     public function storeStandard($standard,$adminId)
     {
         $result = Model::create([
-            Model::FIELD_NAME=>$standard['name'],
-            Model::FIELD_ID_ADMIN=>$adminId
+            Model::FIELD_NAME      => $standard['name'],
+            Model::FIELD_ID_ADMIN  => $adminId
         ]);
         return $result;
     }
@@ -77,10 +77,10 @@ class StandardService
         $now = Carbon::now()->toDateTimeString();
         $standardValues = collect($standardValues)->map(function($item)use($standardId,$now){
                 return [
-                    StandardValueModel::FIELD_ID_STANDARD=>$standardId,
-                    StandardValueModel::FIELD_VALUE=>$item,
-                    StandardValueModel::FIELD_CREATED_AT=>$now,
-                    StandardValueModel::FIELD_UPDATED_AT=>$now
+                    StandardValueModel::FIELD_ID_STANDARD => $standardId,
+                    StandardValueModel::FIELD_VALUE       => $item,
+                    StandardValueModel::FIELD_CREATED_AT  => $now,
+                    StandardValueModel::FIELD_UPDATED_AT  => $now
                 ];
         });
         $insertResult = DB::table(StandardValueModel::TABLE_NAME)->insert($standardValues->toArray());
