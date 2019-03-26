@@ -69,6 +69,7 @@ class GoodsController extends Controller
         $goodsData = paginate($query, $pageParams, $field, function ($item) {
 
             return $item;
+
         });
 
         return $goodsData;
