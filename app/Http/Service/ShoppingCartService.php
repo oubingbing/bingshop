@@ -95,7 +95,8 @@ class ShoppingCartService
                     $query->select([
                         GoodsModel::FIELD_ID,
                         GoodsModel::FIELD_NAME,
-                        GoodsModel::FIELD_IMAGES_ATTACHMENTS
+                        GoodsModel::FIELD_IMAGES_ATTACHMENTS,
+                        GoodsModel::FIELD_LIMIT_PURCHASE_NUM
                     ]);
                 },
                 Model::REL_SKU.'.'.SkuModel::REL_STANDARD_VALUES
@@ -141,6 +142,17 @@ class ShoppingCartService
             ->where(Model::FIELD_ID_USER,$userId)
             ->sum(Model::FIELD_PURCHASE_NUM);
         return $num;
+    }
+
+    public function findUserCartBySku($userId,$skuId)
+    {
+        $cart = Model::query()
+            ->where(Model::FIELD_ID_USER,$userId)
+            ->where(Model::FIELD_ID_SKU,$skuId)
+            ->where(Model::FIELD_STATUS,CartEnum::STATUS_NORMAL)
+            ->first();
+
+        return $cart;
     }
 
 }

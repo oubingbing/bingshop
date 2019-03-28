@@ -58,6 +58,9 @@ $api->version('v1', function ($api) {
             /** 获取用户购物车商品数量 **/
             $api->get("/cart/num",ShoppingCartController::class . "@getCartNum");
 
+            /** 商品购物车数量减一 **/
+            $api->put("/cart/{id}/reduce",ShoppingCartController::class . '@reduceCartNum');
+
             /** 创建商品订单 **/
             $api->post('/order',OrderController::class . '@createOrder');
         });

@@ -10,11 +10,13 @@ namespace App\Http\Wechat;
 
 
 use App\Enum\GoodsEnum;
+use App\Exceptions\ApiException;
 use App\Exceptions\WebException;
 use App\Http\Controllers\Controller;
 use App\Http\Service\ShoppingCartService;
 use App\Http\Service\SkuService;
 use App\Models\GoodsModel;
+use App\Models\ShoppingCartModel;
 use App\Models\SkuModel;
 use League\Flysystem\Exception;
 
@@ -29,6 +31,13 @@ class ShoppingCartController extends Controller
         $this->skuService  = $skuService;
     }
 
+    /**
+     * 加入购物车
+     *
+     * @author yezi
+     * @return array
+     * @throws WebException
+     */
     public function addToCart()
     {
         $user        = request()->input('user');
@@ -73,6 +82,12 @@ class ShoppingCartController extends Controller
         return ['message'=>'加入购物车成功','data'=>$cart];
     }
 
+    /**
+     * 获取用户购物车数据
+     *
+     * @author yezi
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
     public function carts()
     {
         $user = request()->input('user');
@@ -82,22 +97,68 @@ class ShoppingCartController extends Controller
         return $carts;
     }
 
+    /**
+     * 移除购物车
+     *
+     * @author yezi
+     * @param $id
+     * @return int
+     * @throws Exception
+     */
     public function delete($id)
     {
         $user = request()->input('user');
 
         $result = $this->cartService->deleteUserSku($user->id,$id);
         if(!$result){
-            throw new Exception("移出购物车失败");
+            throw new ApiException("移出购物车失败");
         }
 
         return $result;
     }
 
+    /**
+     * 获取购物车统计数据
+     *
+     * @author yezi
+     * @return mixed
+     */
     public function getCartNum()
     {
         $user = request()->input('user');
         $num  = $this->cartService->sumCartNum($user->id);
         return $num;
+    }
+
+    /**
+     * 商品购物车减一
+     *
+     * @author yezi
+     * @param $skuId
+     * @return string
+     * @throws ApiException
+     */
+    public function reduceCartNum($skuId)
+    {
+        $user = request()->input('user');
+        $cart = $this->cartService->findUserCartBySku($user->id,$skuId);
+        if(!$cart){
+            throw new ApiException("购物车不存在");
+        }
+
+        if($cart->{ShoppingCartModel::FIELD_PURCHASE_NUM} > 1){
+            //更新
+            $cart->{ShoppingCartModel::FIELD_PURCHASE_NUM} -= 1;
+            $result = $cart->save();
+        }else{
+            //删除
+            $result = $cart->delete();
+        }
+
+        if(!$result){
+            throw new ApiException("操作失败");
+        }
+
+        return '操作成功';
     }
 }
