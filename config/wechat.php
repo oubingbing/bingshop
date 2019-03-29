@@ -32,8 +32,21 @@ return [
          * file：日志文件位置(绝对路径!!!)，要求可写权限
          */
         'log' => [
-            'level' => env('WECHAT_LOG_LEVEL', 'debug'),
-            'file' => env('WECHAT_LOG_FILE', storage_path('logs/wechat.log')),
+            'default' => 'prod', // 默认使用的 channel，生产环境可以改为下面的 prod
+            'channels' => [
+                // 测试环境
+                'dev' => [
+                    'driver' => 'single',
+                    'path' => env('WECHAT_LOG_FILE', storage_path('logs/wechat.log')),
+                    'level' => 'debug',
+                ],
+                // 生产环境
+                'prod' => [
+                    'driver' => 'daily',
+                    'path' => env('WECHAT_LOG_FILE', storage_path('logs/wechat.log')),
+                    'level' => 'info',
+                ],
+            ],
         ],
     ],
 

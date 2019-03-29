@@ -164,6 +164,7 @@ class OrderService
     {
         $queryResult = $app->order->queryByTransactionId($message['transaction_id']);
         $status      = true;
+        Log::info("查询结果：",$queryResult);
         if ($queryResult['return_code'] === 'SUCCESS') {
             if (array_get($message, 'result_code') === 'FAIL') {
                 $status = false;

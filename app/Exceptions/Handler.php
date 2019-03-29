@@ -10,6 +10,7 @@ use Illuminate\Contracts\Logging\Log;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
+use Lndj\Supports\Log;
 
 class Handler extends ExceptionHandler
 {
@@ -69,6 +70,7 @@ class Handler extends ExceptionHandler
     }
 
     public function handle($request, Exception $e){
+        \Log::info("查询结果：",$e);
         // 只处理自定义的APIException异常
        if($e instanceof ApiException) {
             $result = [
