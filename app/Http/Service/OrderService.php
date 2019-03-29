@@ -164,7 +164,7 @@ class OrderService
     {
         $queryResult = $app->order->queryByTransactionId($message['transaction_id']);
         $status      = true;
-        Log::info("查询结果：",collect($queryResult)->toArray());
+        Log::info(['message'=>'查询结果','data'=>$queryResult]);
         if ($queryResult['return_code'] === 'SUCCESS') {
             if (array_get($message, 'result_code') === 'FAIL') {
                 $status = false;
@@ -188,7 +188,7 @@ class OrderService
     public function handlePayFail($order,$result)
     {
         //处理查询订单后确认未支付的逻辑处理
-        Log::notice("确认订单，用户支付失败：",$result);
+        Log::info(['message'=>'确认订单，用户支付失败','data'=>$result]);
         $order->{Model::FIELD_STATUS} = OrderEnum::STATUS_PAY_FAIL;
         $order->{Model::FIELD_TRADE_STATUS} = $result['trade_state'];
         $order->{Model::FIELD_ID_TRANSACTION} = $result['transaction_id'];
@@ -221,7 +221,7 @@ class OrderService
             $order->{Model::FIELD_TRADE_STATUS} = $tradeState;
             $saveResult = $order->save();
             if(!$saveResult){
-                Log::error("处理支付保存订单失败：",collect($message)->toArray());
+                Log::error(['message'=>'处理支付保存订单失败','data'=>$message]);
                 $status = false;
             }
 

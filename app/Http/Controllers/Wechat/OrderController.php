@@ -38,7 +38,7 @@ class OrderController extends Controller
             $order = $this->orderService->findOrderByNumber($message['out_trade_no']);
 
             if (!$order || $order->paid_at) {
-                Log::notice("订单不存在或订单已支付：",collect($message)->toArray());
+                Log::notice(['message'=>'订单不存在或订单已支付','data'=>$message]);
                 return true;
             }
 
@@ -48,7 +48,7 @@ class OrderController extends Controller
                 //确认支付未完成
                 $savePayFail = $this->orderService->handlePayFail($order,$checkResult['result']);
                 if(!$savePayFail){
-                    Log::error("更新确认未支付订单失败：",collect($checkResult)->toArray());
+                    Log::notice(['message'=>'更新确认未支付订单失败','data'=>$checkResult]);
                 }
                 return true;
             }
