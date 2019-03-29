@@ -9,6 +9,7 @@
 namespace App\Http\Service;
 
 
+use App\Enum\CartEnum;
 use App\Enum\GoodsEnum;
 use App\Enum\OrderEnum;
 use App\Enum\OrderItemEnum;
@@ -19,6 +20,7 @@ use App\Models\OrderModel as Model;
 use App\Models\SkuModel;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class OrderService
 {
@@ -119,7 +121,7 @@ class OrderService
             Model::FIELD_TYPE            => OrderEnum::TYPE_NORMAL,
             Model::FIELD_REMARK          => $remark,
             Model::FIELD_USER_TYPE       => OrderEnum::USER_TYPE_MINI_PROGRAM,
-            Model::FIELD_ORDERED_AT      => Carbon::now()->toDateTimeString()
+            Model::FIELD_TRADE_STATUS    => OrderEnum::TRADE_STATE_WAIT
         ]);
         return $order;
     }
@@ -137,4 +139,95 @@ class OrderService
         return $result;
     }
 
+    /**
+     * 根据订单号查询订单
+     *
+     * @author yezi
+     * @param $orderNumber
+     * @return \Illuminate\Database\Eloquent\Model|null|object|static
+     */
+    public function findOrderByNumber($orderNumber)
+    {
+        $order = Model::query()->where(Model::FIELD_ORDER_NUMBER,$orderNumber)->first();
+        return $order;
+    }
+
+    /**
+     * 再次确认订单是否支付成功
+     * 
+     * @author yezi
+     * @param $app
+     * @param $message
+     * @return array
+     */
+    public function queryOrderPayStatus($app,$message)
+    {
+        $queryResult = $app->order->queryByTransactionId($message['transaction_id']);
+        $status      = true;
+        if ($queryResult['return_code'] === 'SUCCESS') {
+            if (array_get($message, 'result_code') === 'FAIL') {
+                $status = false;
+            }
+        } else {
+            //订单查询失败
+            $status = false;
+        }
+        
+        return ['result'=>$queryResult,'status'=>$status];
+    }
+
+    /**
+     * 处理确认订单的支付失败
+     *
+     * @author yezi
+     * @param $order
+     * @param $result
+     * @return mixed
+     */
+    public function handlePayFail($order,$result)
+    {
+        //处理查询订单后确认未支付的逻辑处理
+        Log::notice("确认订单，用户支付失败：",$result);
+        $order->{Model::FIELD_STATUS} = OrderEnum::STATUS_PAY_FAIL;
+        $order->{Model::FIELD_TRADE_STATUS} = $result['trade_state'];
+        $order->{Model::FIELD_ID_TRANSACTION} = $result['transaction_id'];
+        $ret = $order->save();
+        return $ret;
+    }
+
+    /**
+     * 处理支出回调
+     *
+     * @author yezi
+     * @param $order
+     * @param $message
+     * @param $tradeState
+     * @return bool
+     */
+    public function handlePay($order,$message,$tradeState)
+    {
+        $status = true;
+        if ($message['return_code'] === 'SUCCESS') {
+            if (array_get($message, 'result_code') === 'SUCCESS') {// 用户是否支付成功
+                $order->{Model::FIELD_STATUS} = OrderEnum::STATUS_PAID;
+                $order->{Model::FIELD_ID_TRANSACTION} = $message['transaction_id'];
+                $order->{Model::FIELD_PAID_AT} = Carbon::now()->toDateTimeString();
+
+            } elseif (array_get($message, 'result_code') === 'FAIL') {// 用户支付失败
+                $order->{Model::FIELD_STATUS} = OrderEnum::STATUS_PAY_FAIL;
+            }
+
+            $order->{Model::FIELD_TRADE_STATUS} = $tradeState;
+            $saveResult = $order->save();
+            if(!$saveResult){
+                Log::error("处理支付保存订单失败：",$message);
+                $status = false;
+            }
+
+        } else {
+            $status = false;
+        }
+
+        return $status;
+    }
 }

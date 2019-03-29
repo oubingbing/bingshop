@@ -14,6 +14,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Service\OrderService;
 use App\Models\OrderModel;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -32,12 +33,33 @@ class OrderController extends Controller
      */
     public function payCallback()
     {
-        $app = app('wechat.payment');
-        $response = $app->handlePaidNotify(function ($message, $fail) {
-            // 你的逻辑
+        $app       = app('wechat.payment');
+        $response  = $app->handlePaidNotify(function ($message, $fail)use($app){
+            $order = $this->orderService->findOrderByNumber($message['out_trade_no']);
+
+            if (!$order || $order->paid_at) {
+                Log::notice("订单不存在或订单已支付：",$message);
+                return true;
+            }
+
+            //再次确认订单是否已经支付
+            $checkResult = $this->orderService->queryOrderPayStatus($app,$message);
+            if($checkResult['status' == false]){
+                //确认支付未完成
+                $savePayFail = $this->orderService->handlePayFail($order,$checkResult['result']);
+                if(!$savePayFail){
+                    Log::error("更新确认未支付订单失败：",$checkResult);
+                }
+                return true;
+            }
+
+            $tradeState      = $checkResult['result']['trade_state'];
+            $handlePayResult = $this->orderService->handlePay($order,$message,$tradeState);
+            if(!$handlePayResult){
+                return $fail('通信失败，请稍后再通知我');
+            }
+
             return true;
-            // 或者错误消息
-           // $fail('Order not exists.');
         });
 
         return $response;
