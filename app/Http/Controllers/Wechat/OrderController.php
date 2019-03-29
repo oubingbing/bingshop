@@ -77,37 +77,34 @@ class OrderController extends Controller
      */
     public function createOrder()
     {
-        $user      = request()->input('user');
-        $addressId = request()->input('address_id');
-        $skuData       = request()->input('sku');
+        $user        = request()->input('user');
+        $addressId   = request()->input('address_id');
+        $skuData     = request()->input('sku');
+        $orderNumber = request()->input('order_number');
 
         //确认商品库存
 
         try {
             \DB::beginTransaction();
 
-            $order = $this->orderService->createOrder($user->id,$skuData,$addressId);
-            if($order){
-                //更新用户购物车状态
-                $skuIds = collect($skuData)->pluck('sku_id');
-                $updateResult = $this->cartService->removeUserSkuToOrder($user->id,collect($skuIds)->toArray());
-                if(!$updateResult){
-                    throw new ApiException("更新购物车信息失败");
-                }
-
-                $app    = app('wechat.payment');
-                $result = $app->order->unify([
-                    'body'             => "测试下单",
-                    'out_trade_no'     => $order->{OrderModel::FIELD_ORDER_NUMBER},
-                    'total_fee'        => $order->{OrderModel::FIELD_ACTUAL_AMOUNT}*100,
-                    'spbill_create_ip' => '139.159.243.207',
-                    'notify_url'       => env('WECHAT_PAY_CALLBACK_URL'),
-                    'trade_type'       => 'JSAPI',
-                    'openid'           => $user->{User::FIELD_ID_OPENID},
-                ]);
-
-                $config = $app->jssdk->bridgeConfig($result['prepay_id'], false); // 返回数组
+            if($orderNumber){
+                //未支付订单，重新支付
+                $order = $this->orderService->repayOrder($user->id,$orderNumber);
+            }else{
+                //新建订单
+                $order = $this->orderService->buildOrder($user->id,$skuData,$addressId);
             }
+
+            $app    = app('wechat.payment');
+            $result = $app->order->unify([
+                'body'             => "测试下单",
+                'out_trade_no'     => $order->{OrderModel::FIELD_ORDER_NUMBER},
+                'total_fee'        => $order->{OrderModel::FIELD_ACTUAL_AMOUNT}*100,
+                'notify_url'       => env('WECHAT_PAY_CALLBACK_URL'),
+                'trade_type'       => 'JSAPI',
+                'openid'           => $user->{User::FIELD_ID_OPENID},
+            ]);
+            $config = $app->jssdk->bridgeConfig($result['prepay_id'], false); // 返回数组
 
             \DB::commit();
         } catch (\Exception $e) {
@@ -115,7 +112,7 @@ class OrderController extends Controller
             throw new ApiException($e->getMessage());
         }
 
-        return $config;
+        return ['order_number'=>$order->{OrderModel::FIELD_ORDER_NUMBER},'config'=>$config];
     }
 
 }

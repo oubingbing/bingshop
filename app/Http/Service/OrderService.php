@@ -17,6 +17,7 @@ use App\Models\GoodsModel;
 use App\Models\OrderItemModel;
 use App\Models\OrderModel as Model;
 use App\Models\SkuModel;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -34,6 +35,18 @@ class OrderService
         return "E".date("YmdHis").rand(10000,100000);
     }
 
+    /**
+     * 创建订单
+     *
+     * @author yezi
+     * @param $userId
+     * @param $skuData
+     * @param $addressId
+     * @param int $payment
+     * @param null $remark
+     * @return mixed
+     * @throws ApiException
+     */
     public function createOrder($userId,$skuData,$addressId,$payment=1,$remark=null)
     {
         $skuService = app(SkuService::class);
@@ -229,5 +242,39 @@ class OrderService
         }
 
         return $status;
+    }
+
+    public function buildOrder($userId,$skuData,$addressId)
+    {
+        $order = $this->createOrder($userId,$skuData,$addressId);
+        if(!$order){
+            throw new ApiException("创建订单失败");
+        }
+        //更新用户购物车状态
+        $skuIds = collect($skuData)->pluck('sku_id');
+        $updateResult = app(ShoppingCartService::class)->removeUserSkuToOrder($userId,collect($skuIds)->toArray());
+        if(!$updateResult){
+            throw new ApiException("更新购物车信息失败");
+        }
+
+        return $order;
+    }
+
+    public function repayOrder($userId,$orderNumber)
+    {
+        $order = $this->findOrderByNumber($orderNumber);
+        if(!$order){
+            throw new ApiException("订单不存在");
+        }
+
+        if($order->{Model::FIELD_ID_USER} != $userId){
+            throw new ApiException("订单不存在");
+        }
+
+        if($order->{Model::FIELD_STATUS} == OrderEnum::STATUS_PAID){
+            throw new ApiException("订单已支付，无需重复支付");
+        }
+
+        return $order;
     }
 }
