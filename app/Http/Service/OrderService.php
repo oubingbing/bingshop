@@ -9,7 +9,6 @@
 namespace App\Http\Service;
 
 
-use App\Enum\CartEnum;
 use App\Enum\GoodsEnum;
 use App\Enum\OrderEnum;
 use App\Enum\OrderItemEnum;
