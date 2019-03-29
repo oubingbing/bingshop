@@ -15,6 +15,7 @@ use App\Http\Service\OrderService;
 use App\Http\Service\ShoppingCartService;
 use App\Models\OrderModel;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
@@ -87,6 +88,10 @@ class OrderController extends Controller
         try {
             \DB::beginTransaction();
 
+            //锁住订单中的sku，可读不可写
+            $skuIds = collect($skuData)->pluck('sku_id');
+            DB::table(OrderModel::TABLE_NAME)->whereIn(OrderModel::FIELD_ID,collect($skuIds)->toArray())->sharedLock()->get();
+
             if($orderNumber){
                 //未支付订单，重新支付
                 $order = $this->orderService->repayOrder($user->id,$orderNumber);
@@ -95,22 +100,22 @@ class OrderController extends Controller
                 $order = $this->orderService->buildOrder($user->id,$skuData,$addressId);
             }
 
-            $app    = app('wechat.payment');
-            $result = $app->order->unify([
-                'body'             => "测试下单",
-                'out_trade_no'     => $order->{OrderModel::FIELD_ORDER_NUMBER},
-                'total_fee'        => $order->{OrderModel::FIELD_ACTUAL_AMOUNT}*100,
-                'notify_url'       => env('WECHAT_PAY_CALLBACK_URL'),
-                'trade_type'       => 'JSAPI',
-                'openid'           => $user->{User::FIELD_ID_OPENID},
-            ]);
-            $config = $app->jssdk->bridgeConfig($result['prepay_id'], false); // 返回数组
-
             \DB::commit();
         } catch (\Exception $e) {
             \DB::rollBack();
             throw new ApiException($e->getMessage());
         }
+
+        $app    = app('wechat.payment');
+        $result = $app->order->unify([
+            'body'             => "测试下单",
+            'out_trade_no'     => $order->{OrderModel::FIELD_ORDER_NUMBER},
+            'total_fee'        => $order->{OrderModel::FIELD_ACTUAL_AMOUNT}*100,
+            'notify_url'       => env('WECHAT_PAY_CALLBACK_URL'),
+            'trade_type'       => 'JSAPI',
+            'openid'           => $user->{User::FIELD_ID_OPENID},
+        ]);
+        $config = $app->jssdk->bridgeConfig($result['prepay_id'], false); // 返回数组
 
         return ['order_number'=>$order->{OrderModel::FIELD_ORDER_NUMBER},'config'=>$config];
     }

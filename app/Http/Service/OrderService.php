@@ -244,14 +244,25 @@ class OrderService
         return $status;
     }
 
+    /**
+     * 创建订单
+     *
+     * @author yezi
+     * @param $userId
+     * @param $skuData
+     * @param $addressId
+     * @return mixed
+     * @throws ApiException
+     */
     public function buildOrder($userId,$skuData,$addressId)
     {
+        $skuIds = collect($skuData)->pluck('sku_id');
+
         $order = $this->createOrder($userId,$skuData,$addressId);
         if(!$order){
             throw new ApiException("创建订单失败");
         }
         //更新用户购物车状态
-        $skuIds = collect($skuData)->pluck('sku_id');
         $updateResult = app(ShoppingCartService::class)->removeUserSkuToOrder($userId,collect($skuIds)->toArray());
         if(!$updateResult){
             throw new ApiException("更新购物车信息失败");
@@ -260,8 +271,19 @@ class OrderService
         return $order;
     }
 
+    /**
+     * 重新支付订单
+     *
+     * @author yezi
+     * @param $userId
+     * @param $orderNumber
+     * @return OrderService|\Illuminate\Database\Eloquent\Model|null|object
+     * @throws ApiException
+     */
     public function repayOrder($userId,$orderNumber)
     {
+        //记录日志
+
         $order = $this->findOrderByNumber($orderNumber);
         if(!$order){
             throw new ApiException("订单不存在");
