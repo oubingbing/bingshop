@@ -60,8 +60,8 @@ class OrderService
             }
 
             //计算总的商品价格
-            $needToPayAmount += $sku->{SkuModel::FIELD_PRICE};
-            $needToPayActualAmount += $sku->{SkuModel::FIELD_PRICE};
+            $needToPayAmount += ($sku->{SkuModel::FIELD_PRICE}*$skuItem['purchase_num']);
+            $needToPayActualAmount += ($sku->{SkuModel::FIELD_PRICE}*$skuItem['purchase_num']);
 
             array_push($orderItems,[
                 OrderItemModel::FIELD_ID_SKU        => $skuItem['sku_id'],

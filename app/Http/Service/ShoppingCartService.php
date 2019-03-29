@@ -144,6 +144,14 @@ class ShoppingCartService
         return $num;
     }
 
+    /**
+     * 根据sku查找用户的购物车
+     *
+     * @author yezi
+     * @param $userId
+     * @param $skuId
+     * @return \Illuminate\Database\Eloquent\Model|null|object|static
+     */
     public function findUserCartBySku($userId,$skuId)
     {
         $cart = Model::query()
@@ -153,6 +161,23 @@ class ShoppingCartService
             ->first();
 
         return $cart;
+    }
+
+    /**
+     * 将商品设置为已加入购物车状态
+     *
+     * @param $userId
+     * @param $skuIds
+     * @return int
+     */
+    public function removeUserSkuToOrder($userId,$skuIds)
+    {
+        $result = Model::query()
+            ->where(Model::FIELD_ID_USER,$userId)
+            ->where(Model::FIELD_STATUS,CartEnum::STATUS_NORMAL)
+            ->whereIn(Model::FIELD_ID_SKU,collect($skuIds)->toArray())
+            ->update([Model::FIELD_STATUS=>CartEnum::STATUS_ADDED_ORDER]);
+        return $result;
     }
 
 }

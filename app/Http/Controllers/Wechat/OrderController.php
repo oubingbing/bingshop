@@ -12,6 +12,7 @@ namespace App\Http\Wechat;
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Service\OrderService;
+use App\Http\Service\ShoppingCartService;
 use App\Models\OrderModel;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
@@ -19,10 +20,12 @@ use Illuminate\Support\Facades\Log;
 class OrderController extends Controller
 {
     private $orderService;
+    private $cartService;
 
-    public function __construct(OrderService $orderService)
+    public function __construct(OrderService $orderService,ShoppingCartService $cartService)
     {
         $this->orderService = $orderService;
+        $this->cartService  = $cartService;
     }
 
     /**
@@ -76,15 +79,22 @@ class OrderController extends Controller
     {
         $user      = request()->input('user');
         $addressId = request()->input('address_id');
-        $sku       = request()->input('sku');
+        $skuData       = request()->input('sku');
 
         //确认商品库存
 
         try {
             \DB::beginTransaction();
 
-            $order = $this->orderService->createOrder($user->id,$sku,$addressId);
+            $order = $this->orderService->createOrder($user->id,$skuData,$addressId);
             if($order){
+                //更新用户购物车状态
+                $skuIds = collect($skuData)->pluck('sku_id');
+                $updateResult = $this->cartService->removeUserSkuToOrder($user->id,collect($skuIds)->toArray());
+                if(!$updateResult){
+                    throw new ApiException("更新购物车信息失败");
+                }
+
                 $app    = app('wechat.payment');
                 $result = $app->order->unify([
                     'body'             => "测试下单",
