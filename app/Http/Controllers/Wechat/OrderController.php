@@ -44,7 +44,7 @@ class OrderController extends Controller
 
             //再次确认订单是否已经支付
             $checkResult = $this->orderService->queryOrderPayStatus($app,$message);
-            if($checkResult['status' == false]){
+            if($checkResult['status'] == false){
                 //确认支付未完成
                 $savePayFail = $this->orderService->handlePayFail($order,$checkResult['result']);
                 if(!$savePayFail){
