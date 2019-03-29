@@ -67,7 +67,7 @@ class Handler extends ExceptionHandler
     }
 
     public function handle($request, Exception $e){
-        \Log::info("查询结果：",$e);
+        \Log::info("查询结果：",collect($e)->toArray());
         // 只处理自定义的APIException异常
        if($e instanceof ApiException) {
             $result = [

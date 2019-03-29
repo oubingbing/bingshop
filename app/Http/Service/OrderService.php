@@ -164,7 +164,7 @@ class OrderService
     {
         $queryResult = $app->order->queryByTransactionId($message['transaction_id']);
         $status      = true;
-        Log::info("查询结果：",$queryResult);
+        Log::info("查询结果：",collect($queryResult)->toArray());
         if ($queryResult['return_code'] === 'SUCCESS') {
             if (array_get($message, 'result_code') === 'FAIL') {
                 $status = false;
@@ -221,7 +221,7 @@ class OrderService
             $order->{Model::FIELD_TRADE_STATUS} = $tradeState;
             $saveResult = $order->save();
             if(!$saveResult){
-                Log::error("处理支付保存订单失败：",$message);
+                Log::error("处理支付保存订单失败：",collect($message)->toArray());
                 $status = false;
             }
 
