@@ -201,8 +201,8 @@ class OrderService
     {
         //处理查询订单后确认未支付的逻辑处理
         Log::info(['message'=>'确认订单，用户支付失败','data'=>$result]);
-        $order->{Model::FIELD_STATUS} = OrderEnum::STATUS_PAY_FAIL;
-        $order->{Model::FIELD_TRADE_STATUS} = $result['trade_state'];
+        $order->{Model::FIELD_STATUS}         = OrderEnum::STATUS_PAY_FAIL;
+        $order->{Model::FIELD_TRADE_STATUS}   = $result['trade_state'];
         $order->{Model::FIELD_ID_TRANSACTION} = $result['transaction_id'];
         $ret = $order->save();
         return $ret;
@@ -298,5 +298,45 @@ class OrderService
         }
 
         return $order;
+    }
+
+    public function countStatus($userId)
+    {
+        $result = Model::query()
+            ->where(Model::FIELD_ID_USER,$userId)
+            ->groupBy(Model::FIELD_STATUS)
+            ->select([\DB::raw('count(id) as num'),Model::FIELD_STATUS])
+            ->get();
+
+        $retData = [];
+        foreach ($result as $item){
+            $key = '';
+            switch ($item['status']){
+                case OrderEnum::STATUS_NOT_PAY:
+                    $key = 'wait';
+                    break;
+                case OrderEnum::STATUS_PAID:
+                    $key = 'paid';
+                    break;
+                case OrderEnum::STATUS_PAY_FAIL:
+                    $key = 'pay_fail';
+                    break;
+                case OrderEnum::STATUS_WAIT_DISPATCH:
+                    $key = 'wait_dispatch';
+                    break;
+                case OrderEnum::STATUS_DISPATCHING:
+                    $key = 'dispatch';
+                    break;
+                case OrderEnum::STATUS_REFUNDING:
+                    $key = 'refunding';
+                    break;
+                case OrderEnum::STATUS_FINISH:
+                    $key = 'finish';
+                    break;
+            }
+            $retData[$key] = $item['num'];
+        }
+
+        return $retData;
     }
 }

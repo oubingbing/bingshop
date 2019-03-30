@@ -30,6 +30,14 @@ class GoodsController extends Controller
         $this->skuService = $skuService;
     }
 
+    /**
+     * 获取商品详情
+     *
+     * @author yezi
+     * @param $goodsId
+     * @return array
+     * @throws ApiException
+     */
     public function detail($goodsId)
     {
         $user = request()->input('user');

@@ -120,4 +120,24 @@ class OrderController extends Controller
         return ['order_number'=>$order->{OrderModel::FIELD_ORDER_NUMBER},'config'=>$config];
     }
 
+    /**
+     * 统计用户订单数量状态
+     *
+     * @author 叶子
+     * @return array
+     */
+    public function countOrderStatus()
+    {
+        $user = request()->input('user');
+
+        $result = $this->orderService->countStatus($user->id);
+
+        return $result;
+    }
+
+    public function detail($id)
+    {
+        $user = request()->input('user');
+
+    }
 }

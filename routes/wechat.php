@@ -63,6 +63,9 @@ $api->version('v1', function ($api) {
 
             /** 创建商品订单 **/
             $api->post('/order',OrderController::class . '@createOrder');
+
+            /** 统计商品状态 **/
+            $api->get('/order/status',OrderController::class . '@countOrderStatus');
         });
 
     });

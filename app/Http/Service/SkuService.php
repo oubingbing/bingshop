@@ -188,7 +188,7 @@ class SkuService
                     GoodsModel::FIELD_LIMIT_PURCHASE_NUM,
                     GoodsModel::FIELD_STATUS
                 ]);
-            }])
+            },Model::REL_STANDARD_VALUES])
             ->find($skuId);
         return $sku;
     }
