@@ -35,6 +35,10 @@ class OrderItemModel extends BaseModel
     /** Field sku_snapshot 商品快照 **/
     const FIELD_SKU_SNAPSHOT = 'sku_snapshot';
 
+    protected $casts = [
+        self::FIELD_SKU_SNAPSHOT=>'array'
+    ];
+
     protected $fillable = [
         self::FIELD_ID,
         self::FIELD_ID_SKU,
@@ -44,4 +48,6 @@ class OrderItemModel extends BaseModel
         self::FIELD_STATUS,
         self::FIELD_SKU_SNAPSHOT
     ];
+
+
 }

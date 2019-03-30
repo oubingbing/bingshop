@@ -21,6 +21,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use PhpParser\Node\Expr\AssignOp\Mod;
 
 class OrderService
 {
@@ -338,5 +339,40 @@ class OrderService
         }
 
         return $retData;
+    }
+
+    public function getUserOrdersByStatus($userId,$status=[])
+    {
+        $builder = Model::query()
+            ->with([
+                Model::REL_ORDER_ITEMS=>function($query){
+                    $query->select([
+                        OrderItemModel::FIELD_ID,
+                        OrderItemModel::FIELD_ID_ORDER,
+                        OrderItemModel::FIELD_SKU_SNAPSHOT,
+                        OrderItemModel::FIELD_ACTUAL_AMOUNT,
+                        OrderItemModel::FIELD_AMOUNT,
+                        OrderItemModel::FIELD_QUANTITY
+                    ]);
+                }
+            ])
+            ->select([
+                Model::FIELD_ID,
+                Model::FIELD_ID_USER,
+                Model::FIELD_ORDER_NUMBER,
+                Model::FIELD_AMOUNT,
+                Model::FIELD_ACTUAL_AMOUNT,
+                Model::FIELD_ID_USER_ADDRESS,
+                Model::FIELD_STATUS
+            ])
+            ->where(Model::FIELD_ID_USER,$userId);
+
+        if(!empty($status)){
+            $builder->whereIn(Model::FIELD_STATUS,$status);
+        }
+
+        $orders = $builder->get();
+
+        return $orders;
     }
 }

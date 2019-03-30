@@ -66,6 +66,9 @@ $api->version('v1', function ($api) {
 
             /** 统计商品状态 **/
             $api->get('/order/status',OrderController::class . '@countOrderStatus');
+
+            /** 获取用户的所有订单 **/
+            $api->get('/orders',OrderController::class . '@orderList');
         });
 
     });

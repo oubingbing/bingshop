@@ -186,9 +186,20 @@ class SkuService
                     GoodsModel::FIELD_ID,
                     GoodsModel::FIELD_NAME,
                     GoodsModel::FIELD_LIMIT_PURCHASE_NUM,
-                    GoodsModel::FIELD_STATUS
+                    GoodsModel::FIELD_STATUS,
+                    GoodsModel::FIELD_IMAGES_ATTACHMENTS,
+                    GoodsModel::FIELD_VIDEO_ATTACHMENTS
                 ]);
             },Model::REL_STANDARD_VALUES])
+            ->select([
+                Model::FIELD_ID,
+                Model::FIELD_PRICE,
+                Model::FIELD_ATTACHMENTS,
+                Model::FIELD_ID_GOODS,
+                Model::FIELD_VIP_PRICE,
+                Model::FIELD_CHALK_LINE_PRICE,
+                Model::FIELD_STOCK
+            ])
             ->find($skuId);
         return $sku;
     }

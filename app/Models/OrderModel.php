@@ -9,6 +9,8 @@
 namespace App\Models;
 
 
+use Illuminate\Database\Eloquent\Model;
+
 class OrderModel extends BaseModel
 {
     const TABLE_NAME = 'orders';
@@ -59,6 +61,8 @@ class OrderModel extends BaseModel
     /** field paid_at，下单时间 */
     const FIELD_PAID_AT = 'paid_at';
 
+    const REL_ORDER_ITEMS = 'orderItems';
+
     protected $fillable = [
         self::FIELD_ID_USER,
         self::FIELD_USER_TYPE,
@@ -76,4 +80,9 @@ class OrderModel extends BaseModel
         self::FIELD_PAID_AT,
         self::FIELD_TRADE_STATUS
     ];
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItemModel::class,OrderItemModel::FIELD_ID_ORDER,self::FIELD_ID);
+    }
 }

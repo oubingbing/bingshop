@@ -140,4 +140,18 @@ class OrderController extends Controller
         $user = request()->input('user');
 
     }
+
+    public function orderList()
+    {
+        $user   = request()->input('user');
+        $status = request()->input('status');
+
+        if($status == 0){
+            $status = [];
+        }
+
+        $orders = $this->orderService->getUserOrdersByStatus($user->id,$status=[]);
+
+        return $orders;
+    }
 }
