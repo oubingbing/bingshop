@@ -25,6 +25,8 @@ use PhpParser\Node\Expr\AssignOp\Mod;
 
 class OrderService
 {
+    private $builder;
+
     /**
      * 生成订单号
      *
@@ -301,6 +303,13 @@ class OrderService
         return $order;
     }
 
+    /**
+     * 统计用户订单状态数据
+     *
+     * @author yezi
+     * @param $userId
+     * @return array
+     */
     public function countStatus($userId)
     {
         $result = Model::query()
@@ -341,9 +350,9 @@ class OrderService
         return $retData;
     }
 
-    public function getUserOrdersByStatus($userId,$status=[])
+    public function queryBuilder($userId,$status=[])
     {
-        $builder = Model::query()
+        $this->builder = Model::query()
             ->with([
                 Model::REL_ORDER_ITEMS=>function($query){
                     $query->select([
@@ -356,23 +365,23 @@ class OrderService
                     ]);
                 }
             ])
-            ->select([
-                Model::FIELD_ID,
-                Model::FIELD_ID_USER,
-                Model::FIELD_ORDER_NUMBER,
-                Model::FIELD_AMOUNT,
-                Model::FIELD_ACTUAL_AMOUNT,
-                Model::FIELD_ID_USER_ADDRESS,
-                Model::FIELD_STATUS
-            ])
             ->where(Model::FIELD_ID_USER,$userId);
 
         if(!empty($status)){
-            $builder->whereIn(Model::FIELD_STATUS,$status);
+            $this->builder->whereIn(Model::FIELD_STATUS,$status);
         }
 
-        $orders = $builder->get();
+        return $this;
+    }
 
-        return $orders;
+    public function orderBy($orderBy,$sort)
+    {
+        $this->builder->orderBy($orderBy,$sort);
+        return $this;
+    }
+
+    public function done()
+    {
+        return $this->builder;
     }
 }

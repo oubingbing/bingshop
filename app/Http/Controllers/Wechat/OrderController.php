@@ -9,6 +9,7 @@
 namespace App\Http\Wechat;
 
 
+use App\Enum\OrderEnum;
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Service\OrderService;
@@ -141,16 +142,47 @@ class OrderController extends Controller
 
     }
 
+    /**
+     * 获取用户订单列表
+     *
+     * @author yezi
+     * @return array
+     */
     public function orderList()
     {
-        $user   = request()->input('user');
-        $status = request()->input('status');
+        $user       = request()->input('user');
+        $status     = request()->input('filter');
+        $pageSize   = request()->input('page_size', 20);
+        $pageNumber = request()->input('page_number', 1);
+        $orderBy    = request()->input('order_by', 'created_at');
+        $sortBy     = request()->input('sort_by', 'desc');
 
         if($status == 0){
-            $status = [];
+            $filter = [];
+        }else{
+            if($status == 2){
+                $filter = [OrderEnum::STATUS_PAID,OrderEnum::STATUS_WAIT_DISPATCH];
+            }elseif ($status == 1){
+                $filter = [OrderEnum::STATUS_NOT_PAY,OrderEnum::STATUS_PAY_FAIL];
+            }else{
+                $filter = [$status];
+            }
         }
 
-        $orders = $this->orderService->getUserOrdersByStatus($user->id,$status=[]);
+        $pageParams = ['page_size' => $pageSize, 'page_number' => $pageNumber];
+        $field      = [
+            OrderModel::FIELD_ID,
+            OrderModel::FIELD_ID_USER,
+            OrderModel::FIELD_ORDER_NUMBER,
+            OrderModel::FIELD_AMOUNT,
+            OrderModel::FIELD_ACTUAL_AMOUNT,
+            OrderModel::FIELD_ID_USER_ADDRESS,
+            OrderModel::FIELD_STATUS
+        ];
+        $query  = $this->orderService->queryBuilder($user->id,$filter)->orderBy($orderBy,$sortBy)->done();
+        $orders = paginate($query, $pageParams, $field, function ($item) {
+            return $item;
+        });
 
         return $orders;
     }
