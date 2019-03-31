@@ -82,7 +82,7 @@ class OrderController extends Controller
         $user        = request()->input('user');
         $addressId   = request()->input('address_id');
         $skuData     = request()->input('sku');
-        $orderNumber = request()->input('order_number');
+        $orderId = request()->input('order_id');
 
         //确认商品库存
 
@@ -93,9 +93,9 @@ class OrderController extends Controller
             $skuIds = collect($skuData)->pluck('sku_id');
             DB::table(OrderModel::TABLE_NAME)->whereIn(OrderModel::FIELD_ID,collect($skuIds)->toArray())->sharedLock()->get();
 
-            if($orderNumber){
+            if($orderId){
                 //未支付订单，重新支付
-                $order = $this->orderService->repayOrder($user->id,$orderNumber);
+                $order = $this->orderService->repayOrder($user->id,$orderId);
             }else{
                 //新建订单
                 $order = $this->orderService->buildOrder($user->id,$skuData,$addressId);
@@ -118,7 +118,7 @@ class OrderController extends Controller
         ]);
         $config = $app->jssdk->bridgeConfig($result['prepay_id'], false); // 返回数组
 
-        return ['order_number'=>$order->{OrderModel::FIELD_ORDER_NUMBER},'config'=>$config];
+        return ['id'=>$order->{OrderModel::FIELD_ID},'config'=>$config];
     }
 
     /**
@@ -136,6 +136,14 @@ class OrderController extends Controller
         return $result;
     }
 
+    /**
+     * 获取订单详情
+     *
+     * @author yezi
+     * @param $id
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null|static|static[]
+     * @throws ApiException
+     */
     public function detail($id)
     {
         $user = request()->input('user');

@@ -279,15 +279,15 @@ class OrderService
      *
      * @author yezi
      * @param $userId
-     * @param $orderNumber
+     * @param $orderId
      * @return OrderService|\Illuminate\Database\Eloquent\Model|null|object
      * @throws ApiException
      */
-    public function repayOrder($userId,$orderNumber)
+    public function repayOrder($userId,$orderId)
     {
         //记录日志
 
-        $order = $this->findOrderByNumber($orderNumber);
+        $order = $this->findById($orderId);
         if(!$order){
             throw new ApiException("订单不存在");
         }
