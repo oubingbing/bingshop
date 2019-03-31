@@ -140,6 +140,16 @@ class OrderController extends Controller
     {
         $user = request()->input('user');
 
+        $order = $this->orderService->findById($id);
+        if(!$order){
+            throw new ApiException("订单不存在");
+        }
+
+        if($order->{OrderModel::FIELD_ID_USER} != $user->id){
+            throw new ApiException("订单不存在");
+        }
+
+        return $order;
     }
 
     /**

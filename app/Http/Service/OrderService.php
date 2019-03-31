@@ -350,6 +350,14 @@ class OrderService
         return $retData;
     }
 
+    /**
+     * 构建分页查询构造器
+     *
+     * @author yezi
+     * @param $userId
+     * @param array $status
+     * @return $this
+     */
     public function queryBuilder($userId,$status=[])
     {
         $this->builder = Model::query()
@@ -374,14 +382,60 @@ class OrderService
         return $this;
     }
 
+    /**
+     * 排序
+     *
+     * @author yezi
+     * @param $orderBy
+     * @param $sort
+     * @return $this
+     */
     public function orderBy($orderBy,$sort)
     {
         $this->builder->orderBy($orderBy,$sort);
         return $this;
     }
 
+    /**
+     * 返回查询构造器
+     *
+     * @author yezi
+     * @return mixed
+     */
     public function done()
     {
         return $this->builder;
+    }
+
+    public function findById($id)
+    {
+        $order = Model::query()
+            ->with([
+                Model::REL_ORDER_ITEMS=>function($query){
+                    $query->select([
+                        OrderItemModel::FIELD_ID,
+                        OrderItemModel::FIELD_ID_ORDER,
+                        OrderItemModel::FIELD_SKU_SNAPSHOT,
+                        OrderItemModel::FIELD_ACTUAL_AMOUNT,
+                        OrderItemModel::FIELD_AMOUNT,
+                        OrderItemModel::FIELD_QUANTITY
+                    ]);
+                }
+            ])
+            ->select([
+                Model::FIELD_ID,
+                Model::FIELD_ACTUAL_AMOUNT,
+                Model::FIELD_AMOUNT,
+                Model::FIELD_ORDER_NUMBER,
+                Model::FIELD_ID_USER_ADDRESS,
+                Model::FIELD_ID_USER,
+                Model::FIELD_FREE_SHIPPING,
+                Model::FIELD_FREIGHT,
+                Model::FIELD_REMARK,
+                Model::FIELD_STATUS,
+                Model::FIELD_PAID_AT
+            ])
+            ->find($id);
+        return $order;
     }
 }

@@ -69,6 +69,9 @@ $api->version('v1', function ($api) {
 
             /** 获取用户的所有订单 **/
             $api->get('/orders',OrderController::class . '@orderList');
+
+            /** 获取用户的订单详情**/
+            $api->get('/order/{id}',OrderController::class . '@detail');
         });
 
     });
