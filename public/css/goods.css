@@ -1,0 +1,104 @@
+.goods-list{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.goods-list .list-content{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.list-item{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    background: #F2F2F2;
+    height: 130px;
+    margin-bottom: 20px;
+}
+
+.list-item .item-left{
+    width: 10%;
+    display: flex;
+    flex-direction: column;
+}
+
+.item-left img{
+    height: 130px;
+    width: 130px;
+}
+
+.item-middle{
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    padding: 5px 0px;
+}
+
+.item-right{
+    width: 10%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.operate-button{
+    padding: 3px 0px;
+    color: orangered;
+    cursor: pointer;
+}
+
+.middle-goods-info{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    height: 130px;
+}
+
+.goodsname{
+    color: #009688;
+}
+
+.middle-goods-stock{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    color: darkgray;
+}
+
+.price-info{
+    color: #FF6347;
+}
+
+.middle-goods-other{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.goods-up{
+    color: #29cb97;
+}
+
+.goods-down{
+    color: red;
+}
+
+.goods-eidt{
+    color: deepskyblue;
+}
+
+.goods-delete,.other-color{
+    color: darkgray;
+}
+
+.selling{
+    color: #29cb97;
+}

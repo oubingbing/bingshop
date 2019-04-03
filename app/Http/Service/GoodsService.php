@@ -239,16 +239,20 @@ class GoodsService
                     SkuModel::FIELD_CHALK_LINE_PRICE,
                     SkuModel::FIELD_ID_GOODS
                 ]);
-            }])
-            ->where(Model::FIELD_STATUS,GoodsEnum::SALE_STATUS_UP);
+            }]);
         return $this;
     }
 
-    public function filter($name)
+    public function filter($name,$status=null)
     {
         if($name){
             $this->builder->where(Model::FIELD_NAME,'like','%'.$name.'$');
         }
+
+        if($status){
+            $this->builder->where(Model::FIELD_STATUS,$status);
+        }
+
         return $this;
     }
 

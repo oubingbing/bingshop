@@ -37,14 +37,17 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin','middleware'=>['web']],
         /** 获取商品类目的分页列表 **/
         Route::get("/category_list","CategoryController@categoryList");
 
-        /** 商品视图 **/
-        Route::get("/goods/index","GoodsController@index");
-
         /** 获取七牛token **/
         Route::get("/qiniu/token","QiNiuController@token");
 
+        /** 商品视图 **/
+        Route::get("/goods/index","GoodsController@index");
+
         /** 新建商品 **/
         Route::post("/goods/create","GoodsController@createGoods");
+
+        /** 商品列表 **/
+        Route::get("/goods","GoodsController@goodsList");
     });
 });
 

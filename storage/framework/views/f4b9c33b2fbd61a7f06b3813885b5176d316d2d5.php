@@ -209,6 +209,7 @@
 <?php $__env->startSection('content'); ?>
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
     <link rel="stylesheet" href="<?php echo e(asset('css/shop.css')); ?>">
+    <link rel="stylesheet" href="<?php echo e(asset('css/goods.css')); ?>">
     <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.com/vue-easytable/umd/css/index.css">
     <div class="x-nav">
@@ -498,7 +499,43 @@
                     </div>
                 </div>
             </div>
+        </div>
 
+        <div class="goods-list">
+            <div class="list-content">
+
+                <div class="list-item" v-for="goods in goodsList">
+                    <div class="item-left">
+                        <img v-bind:src="goods.images_attachments[0]" alt="">
+                    </div>
+                    <div class="item-middle">
+                        <div class="middle-goods-info">
+                            <h2 class="goodsname">{{ goods.name }}</h2>
+                            <span class="price-info">￥{{ goods.sku[0].price }}</span>
+                            <span>{{ goods.describe }}</span>
+                        </div>
+                        <div class="middle-goods-other">
+                            <span class="selling">状态：在售</span>
+                            <span class="other-color">限购：{{ goods.limit_purchase_num }}</span>
+                            <span class="other-color">邮费：{{ goods.postage_cost }}</span>
+                            <span class="other-color">发布日期：{{ goods.created_at }}</span>
+                        </div>
+                        <div class="middle-goods-stock">
+                            <span>库存：100</span>
+                            <span>总销量：88</span>
+                            <span>访客数：88</span>
+                            <span>浏览量：88</span>
+                        </div>
+                    </div>
+                    <div class="item-right">
+                        <div class="operate-button goods-up">上架</div>
+                        <div class="operate-button goods-down">下架</div>
+                        <div class="operate-button goods-eidt">编辑</div>
+                        <div class="operate-button goods-delete">删除</div>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
         <div class="page">
@@ -529,12 +566,15 @@
         new Vue({
             el: '#app',
             data: {
+                goodsList:[],
+
                 showStandard:false,
                 showStandardAddButton:false,
                 showBankForm:false,
                 categories:[],
                 total:0,
-                page_size:20,
+                page_size:10,
+                page_number:1,
                 current_page:1,
                 categoryName:'',
                 imageUrl:IMAGE_URL,
@@ -565,10 +605,36 @@
                 showAddImageIcon:true
             },
             created:function () {
+                this.getGoods();
                 this.getCategories();
                 this.getQiNiuToken();
             },
             methods:{
+                /**
+                 * 获取商品列表
+                 **/
+                getGoods:function () {
+                    axios.get(`/admin/goods?page_size=${this.page_size}&page_number=${this.page_number}`,{}).then( response=> {
+                        let resData = response.data;
+                        if(resData.code == 0){
+                            console.log(resData.data.page_data);
+                            let goodsList = [];
+                            resData.data.page_data.map(goods=>{
+                                goodsList.push(goods);
+                            });
+                            this.goodsList = goodsList;
+                            this.page_number += 1;
+                            this.total = resData.data.page.total_items;
+                        }
+
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                },
+
+                /**
+                 * 进入图片
+                 **/
                 enterImage:function (value) {
                     this.attachments.map(item=>{
                         if(item.name == value){
@@ -577,14 +643,21 @@
                         return item;
                     });
                 },
+
+                /**
+                 * 鼠标移除图片
+                 **/
                 leaveImage:function (value) {
                     this.attachments.map(item=>{
                         item.show = false;
                         return item;
                     });
                 },
+
+                /**
+                 * 删除图片
+                 **/
                 removeImage:function (value) {
-                    console.log(value);
                     this.attachments = this.attachments.filter(item=>{
                         if(item.name != value){
                             return item;
@@ -664,6 +737,8 @@
                             layer.msg(ResData.message);
                         }else{
                             //清空表单
+                            this.page_number = 1;
+                            this.getGoods();
                         }
 
                     }).catch(function (error) {
@@ -677,6 +752,7 @@
                 startSaleTimeChange:function (value) {
                     this.saleStartModel = '2';
                 },
+
                 /**
                  * 监听上架模式的值变换
                  * */
@@ -693,6 +769,7 @@
                 stopSaleTimeChange:function (value) {
                     this.saleStopModel = '2';
                 },
+
                 /**
                  * 监听下架模式的值变换
                  * */
@@ -712,6 +789,9 @@
                     }
                 },
 
+                /**
+                 * 监听数据输入
+                 **/
                 watchInputValue:function(value,index,i){
                     this.showStandard = true;
                     this.standardItems.map((itemValue,itemValueIndex)=>{
@@ -1121,11 +1201,11 @@
                 handleCurrentChange:function (e) {
                     console.log(e);
                     this.current_page = e;
-                    this.getPosts();
+                    this.getGoods();
                 }
             }
         })
     </script>
 
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('layouts/admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('layouts/admin', \Illuminate\Support\Arr::except(get_defined_vars(), array('__data', '__path')))->render(); ?>

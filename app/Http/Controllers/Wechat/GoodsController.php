@@ -9,6 +9,7 @@
 namespace App\Http\Wechat;
 
 
+use App\Enum\GoodsEnum;
 use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Service\GoodsService;
@@ -65,7 +66,7 @@ class GoodsController extends Controller
         $filter     = request()->input('filter');
 
         $pageParams = ['page_size' => $pageSize, 'page_number' => $pageNumber];
-        $query      = $this->goodsService->queryBuilder()->filter($filter)->sort($orderBy, $sortBy)->done();
+        $query      = $this->goodsService->queryBuilder()->filter($filter,GoodsEnum::SALE_STATUS_UP)->sort($orderBy, $sortBy)->done();
 
         $field = [
             GoodsModel::FIELD_ID,

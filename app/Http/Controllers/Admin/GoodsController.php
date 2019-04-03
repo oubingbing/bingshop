@@ -135,4 +135,34 @@ class GoodsController extends Controller
         return webResponse("新建商品成功",$Goods);
     }
 
+    public function goodsList()
+    {
+        $user = request()->input("user");
+        $pageSize   = request()->input('page_size', 20);
+        $pageNumber = request()->input('page_number', 1);
+        $orderBy    = request()->input('order_by', 'created_at');
+        $sortBy     = request()->input('sort_by', 'desc');
+        $filter     = request()->input('filter');
+
+        $pageParams = ['page_size' => $pageSize, 'page_number' => $pageNumber];
+        $query      = $this->goodsService->queryBuilder()->filter($filter)->sort($orderBy, $sortBy)->done();
+
+        $field = [
+            GoodsModel::FIELD_ID,
+            GoodsModel::FIELD_NAME,
+            GoodsModel::FIELD_DESCRIBE,
+            GoodsModel::FIELD_IMAGES_ATTACHMENTS,
+            GoodsModel::FIELD_STATUS,
+            GoodsModel::FIELD_POSTAGE_COST,
+            GoodsModel::FIELD_LIMIT_PURCHASE_NUM,
+            GoodsModel::FIELD_CREATED_AT
+        ];
+        $goodsData = paginate($query, $pageParams, $field, function ($item) {
+
+            return $item;
+
+        });
+
+        return webResponse('success',$goodsData);
+    }
 }
