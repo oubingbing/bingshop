@@ -57,12 +57,6 @@
                                 <cite>商品列表</cite>
                             </a>
                         </li >
-                        <li>
-                            <a _href="<?php echo e(asset('admin/activity/share')); ?>">
-                                <i class="iconfont">&#xe6a7;</i>
-                                <cite>共享活动</cite>
-                            </a>
-                        </li >
                     </ul>
                 </li>
                 <li>
@@ -73,10 +67,9 @@
                     </a>
                     <ul class="sub-menu">
                         <li>
-                            <a _href="<?php echo e(asset('admin/strategy/official')); ?>">
+                            <a _href="<?php echo e(asset('admin/order/index')); ?>">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>订单列表</cite>
-
                             </a>
                         </li >
                     </ul>
@@ -112,4 +105,4 @@
         "use strict";
     </script>
 <?php $__env->stopSection(); ?>
-<?php echo $__env->make('layouts/admin', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo $__env->make('layouts/admin', \Illuminate\Support\Arr::except(get_defined_vars(), array('__data', '__path')))->render(); ?>

@@ -48,6 +48,12 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin','middleware'=>['web']],
 
         /** 商品列表 **/
         Route::get("/goods","GoodsController@goodsList");
+
+        /** 订单页面 **/
+        Route::get("/order/index","OrderController@index");
+
+        /** 订单列表 **/
+        Route::get("/orders","OrderController@orderList");
     });
 });
 

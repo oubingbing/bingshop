@@ -358,7 +358,7 @@ class OrderService
      * @param array $status
      * @return $this
      */
-    public function queryBuilder($userId,$status=[])
+    public function queryBuilder($status=[],$userId=null)
     {
         $this->builder = Model::query()
             ->with([
@@ -372,8 +372,10 @@ class OrderService
                         OrderItemModel::FIELD_QUANTITY
                     ]);
                 }
-            ])
-            ->where(Model::FIELD_ID_USER,$userId);
+            ]);
+        if($userId){
+            $this->builder->where(Model::FIELD_ID_USER,$userId);
+        }
 
         if(!empty($status)){
             $this->builder->whereIn(Model::FIELD_STATUS,$status);

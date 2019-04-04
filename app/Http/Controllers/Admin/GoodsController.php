@@ -137,7 +137,7 @@ class GoodsController extends Controller
 
     public function goodsList()
     {
-        $user = request()->input("user");
+        $user       = request()->input("user");
         $pageSize   = request()->input('page_size', 20);
         $pageNumber = request()->input('page_number', 1);
         $orderBy    = request()->input('order_by', 'created_at');

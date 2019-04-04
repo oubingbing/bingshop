@@ -59,12 +59,6 @@
                                 <cite>商品列表</cite>
                             </a>
                         </li >
-                        <li>
-                            <a _href="{{ asset('admin/activity/share') }}">
-                                <i class="iconfont">&#xe6a7;</i>
-                                <cite>共享活动</cite>
-                            </a>
-                        </li >
                     </ul>
                 </li>
                 <li>
@@ -75,10 +69,9 @@
                     </a>
                     <ul class="sub-menu">
                         <li>
-                            <a _href="{{ asset('admin/strategy/official') }}">
+                            <a _href="{{ asset('admin/order/index') }}">
                                 <i class="iconfont">&#xe6a7;</i>
                                 <cite>订单列表</cite>
-
                             </a>
                         </li >
                     </ul>

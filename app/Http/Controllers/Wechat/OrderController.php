@@ -197,7 +197,7 @@ class OrderController extends Controller
             OrderModel::FIELD_ID_USER_ADDRESS,
             OrderModel::FIELD_STATUS
         ];
-        $query  = $this->orderService->queryBuilder($user->id,$filter)->orderBy($orderBy,$sortBy)->done();
+        $query  = $this->orderService->queryBuilder($filter,$user->id)->orderBy($orderBy,$sortBy)->done();
         $orders = paginate($query, $pageParams, $field, function ($item) {
             return $item;
         });

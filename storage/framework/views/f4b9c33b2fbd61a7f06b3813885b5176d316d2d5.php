@@ -222,7 +222,7 @@
         <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
             <i class="layui-icon" style="line-height:30px">ဂ</i></a>
     </div>
-    <div class="x-body" id="app" v-cloak>
+    <div class="x-body" id="app" v-cloak v-loading.fullscreen.lock="fullscreenLoading">
 
         <div class="layui-row">
             <div class="layui-form layui-col-md12 x-so">
@@ -571,6 +571,7 @@
                 showStandard:false,
                 showStandardAddButton:false,
                 showBankForm:false,
+                fullscreenLoading:true,
                 categories:[],
                 total:0,
                 page_size:10,
@@ -625,6 +626,7 @@
                             this.goodsList = goodsList;
                             this.page_number += 1;
                             this.total = resData.data.page.total_items;
+                            this.fullscreenLoading = false;
                         }
 
                     }).catch(function (error) {

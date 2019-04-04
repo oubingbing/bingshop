@@ -20,7 +20,7 @@
         <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
             <i class="layui-icon" style="line-height:30px">ဂ</i></a>
     </div>
-    <div class="x-body" id="app" v-cloak>
+    <div class="x-body" id="app" v-cloak v-loading.fullscreen.lock="fullscreenLoading">
         <div class="layui-row">
             <div class="layui-form layui-col-md12 x-so">
                 <input type="text" v-model="username" name="username"  placeholder="请输入用户名" autocomplete="off" class="layui-input">
@@ -72,7 +72,8 @@
                 total:0,
                 page_size:20,
                 current_page:1,
-                username:''
+                username:'',
+                fullscreenLoading:true
             },
             created:function () {
                 this.getUsers();
@@ -91,13 +92,12 @@
                     var url = "{{ asset("admin/users") }}";
                     axios.get(url+"?page_size="+this.page_size+'&page_number='+this.current_page+'&order_by=created_at&sort_by=desc&username='+this.username)
                         .then( response=> {
+                            this.fullscreenLoading = false;
                             var res = response.data;
                             if(res.code === 0){
                                 this.users = res.data.page_data;
                                 this.total = res.data.page.total_items;
                                 this.page_number += 1;
-                                console.log('数据'+this.users);
-                                console.log('总数'+this.total);
                             }else{
                                 console.log('error:'+res);
                             }
