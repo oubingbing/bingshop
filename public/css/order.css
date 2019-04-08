@@ -107,7 +107,14 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+.status-paid{
     color: #29cb97;
+}
+
+.status-wait{
+    color: darkgray;
 }
 
 .order-operate{

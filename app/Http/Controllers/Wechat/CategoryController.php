@@ -12,7 +12,6 @@ namespace App\Http\Wechat;
 use App\Http\Controllers\Controller;
 use App\Http\Service\CategoryService;
 use App\Http\Service\GoodsService;
-use App\Models\GoodsModel;
 
 class CategoryController extends Controller
 {

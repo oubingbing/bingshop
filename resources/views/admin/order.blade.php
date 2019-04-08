@@ -69,7 +69,13 @@
                             <span class="express">配送方式：顺丰快递</span>
                         </div>
                         <div class="other-info">
-                            <div>状态：已支付</div>
+                            <div v-if="order.status==1" class="status-wait">状态：待支付</div>
+                            <div v-if="order.status==2" class="status-paid">状态：已支付</div>
+                            <div v-if="order.status==3">状态：支付失败</div>
+                            <div v-if="order.status==4">状态：待发货</div>
+                            <div v-if="order.status==5">状态：配送中</div>
+                            <div v-if="order.status==6">状态：退款中</div>
+                            <div v-if="order.status==7">状态：已完成</div>
                         </div>
                         <div class="order-operate">
                             <div class="dispatch-button">发货</div>
@@ -184,6 +190,7 @@
                         layer.msg("添加图片失败");
                     },ZONE);
                 },
+                
                 /**
                  * 监听分页
                  */

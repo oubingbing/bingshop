@@ -17,7 +17,7 @@ class OrderEnum
     const STATUS_PAID          = 2;
     /** 订单状态 - 支付失败 **/
     const STATUS_PAY_FAIL      = 3;
-    /** 订单状态 - 代发货 **/
+    /** 订单状态 - 待发货 **/
     const STATUS_WAIT_DISPATCH = 4;
     /** 订单状态 - 配送中 **/
     const STATUS_DISPATCHING   = 5;
