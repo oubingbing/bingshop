@@ -12,6 +12,7 @@
 */
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Wechat\AddressController;
 use App\Http\Wechat\CategoryController;
 use App\Http\Wechat\GoodsController;
 use App\Http\Wechat\OrderController;
@@ -72,6 +73,18 @@ $api->version('v1', function ($api) {
 
             /** 获取用户的订单详情**/
             $api->get('/order/{id}',OrderController::class . '@detail');
+
+            /** 新建收货地址 **/
+            $api->post('/address',AddressController::class . '@createAddress');
+
+            /** 获取用户收货地址 **/
+            $api->get('/address',AddressController::class . '@getAddress');
+
+            /** 删除用户收货地址 **/
+            $api->delete('/address/{id}',AddressController::class . '@deleteAddress');
+
+            /** 获取地址详情 **/
+            $api->get('/address/{id}',AddressController::class . '@addressDetail');
         });
 
     });

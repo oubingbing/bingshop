@@ -52,4 +52,9 @@ class OrderEnum
 
     /** 下单用户类型 - 微信小程序 **/
     const USER_TYPE_MINI_PROGRAM = 1;
+
+    /** 收货地址 - 默认 **/
+    const ADDRESS_TYPE_DEFAULT = 1;
+    /** 收货地址 - 非默认 **/
+    const ADDRESS_TYPE_NOT_DEFAULT = 2;
 }
