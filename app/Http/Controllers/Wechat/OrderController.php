@@ -204,4 +204,18 @@ class OrderController extends Controller
 
         return $orders;
     }
+
+    public function receipt()
+    {
+        $user = request()->input('user');
+        $orderId = request()->input('order_id');
+
+        if(!$orderId){
+            throw new ApiException("参数错误");
+        }
+
+        $result = $this->orderService->receipt($user->id,$orderId);
+
+        return (string)$result;
+    }
 }

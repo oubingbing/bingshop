@@ -54,6 +54,9 @@ Route::group(['prefix' => 'admin','namespace' => 'Admin','middleware'=>['web']],
 
         /** 订单列表 **/
         Route::get("/orders","OrderController@orderList");
+
+        /** 订单发货 **/
+        Route::post("/order/deliver","OrderController@deliver");
     });
 });
 

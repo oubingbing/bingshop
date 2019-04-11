@@ -409,6 +409,13 @@ class OrderService
         return $this->builder;
     }
 
+    /**
+     * 获取商品详情
+     * 
+     * @author yezi
+     * @param $id
+     * @return \Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null|static|static[]
+     */
     public function findById($id)
     {
         $order = Model::query()
@@ -439,5 +446,66 @@ class OrderService
             ])
             ->find($id);
         return $order;
+    }
+
+    /**
+     * 订单发货
+     *
+     * @author yezi
+     * @param $orderId
+     * @return bool
+     * @throws ApiException
+     */
+    public function deliverOrder($orderId)
+    {
+        $order = $this->findById($orderId);
+        if(!$order){
+            throw new ApiException("订单不存在");
+        }
+
+        if(!in_array($order->{Model::FIELD_STATUS},[OrderEnum::STATUS_PAID,OrderEnum::STATUS_WAIT_DISPATCH])){
+            throw new ApiException("订单状错误");
+        }
+
+        $order->{Model::FIELD_STATUS} = OrderEnum::STATUS_DISPATCHING;
+        $result = $order->save();
+        if(!$result){
+            throw new ApiException("发货失败");
+        }
+
+        return $order->{Model::FIELD_STATUS};
+    }
+
+    /**
+     * 确认订单
+     *
+     * @author yezi
+     * @param $userId
+     * @param $orderId
+     * @return mixed
+     * @throws ApiException
+     */
+    public function receipt($userId,$orderId)
+    {
+        $order = $this->findById($orderId);
+        if(!$order){
+            throw new ApiException("订单不存在");
+        }
+
+        if($order->{Model::FIELD_ID_USER} != $userId){
+            throw new ApiException("订单不存在");
+        }
+
+        if(!in_array($order->{Model::FIELD_STATUS},[OrderEnum::STATUS_DISPATCHING])){
+            throw new ApiException("订单状错误");
+        }
+
+        $order->{Model::FIELD_STATUS} = OrderEnum::STATUS_FINISH;
+        $result = $order->save();
+        if(!$result){
+            throw new ApiException("确认订单失败");
+        }
+
+        return $order->{Model::FIELD_STATUS};
     }
 }

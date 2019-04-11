@@ -22,6 +22,15 @@
     </div>
     <div class="x-body" id="app" v-cloak v-loading.fullscreen.lock="fullscreenLoading">
 
+        <!-- 订单详情 -->
+        <div class="order-detail-wall">
+            <div class="detail-wall">
+                <div class="detail-header">
+                    <div class=""></div>
+                </div>
+            </div>
+        </div>
+
         <div class="layui-row">
             <div class="layui-form layui-col-md12 x-so">
                 <input type="text" name="username"  placeholder="请输入商品名" autocomplete="off" class="layui-input">
@@ -34,9 +43,9 @@
             <span class="x-right" style="line-height:40px">共有数据：@{{total}} 条</span>
         </xblock>
 
+        <!-- 订单列表 -->
         <div class="order-container">
             <div class="order-content">
-
                 <div class="content-item" v-for="order in orderList">
                     <div class="order-header">
                         <div class="header-item order_number">
@@ -73,20 +82,22 @@
                             <div v-if="order.status==2" class="status-paid">状态：已支付</div>
                             <div v-if="order.status==3">状态：支付失败</div>
                             <div v-if="order.status==4">状态：待发货</div>
-                            <div v-if="order.status==5">状态：配送中</div>
+                            <div v-if="order.status==5" class="status-dispatch">状态：配送中</div>
                             <div v-if="order.status==6">状态：退款中</div>
-                            <div v-if="order.status==7">状态：已完成</div>
+                            <div v-if="order.status==7" class="status-finish">状态：已完成</div>
                         </div>
                         <div class="order-operate">
-                            <div class="dispatch-button">发货</div>
+                            <div class="dispatch-button"
+                                 v-if="order.status==2 || order.status==4"
+                                 v-on:click="deliver(order.id)">发货</div>
                             <div class="detail-button">详情</div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 
+        <!-- 分页 -->
         <div class="page">
             <el-pagination
                     background
@@ -125,6 +136,27 @@
                 this.getQiNiuToken();
             },
             methods:{
+                /**
+                 * 发货
+                 **/
+                deliver:function (id) {
+                    axios.post(`/admin/order/deliver`,{order_id:id}).then( response=> {
+                        let resData = response.data;
+                        if(resData.code == 0){
+                            let orderList = this.orderList;
+                            orderList.map(item=>{
+                                if(item.id == id){
+                                    item.status = resData.data;
+                                }
+                                return item;
+                            })
+                            this.orderList = orderList;
+                        }
+
+                    }).catch(function (error) {
+                        layer.msg(error);
+                    });
+                },
                 /**
                  * 获取商品列表
                  **/
@@ -168,7 +200,7 @@
                         }
 
                     }).catch(function (error) {
-                        console.log(error);
+                        layer.msg("添加图片失败");
                     });
                 },
                 /**

@@ -74,6 +74,9 @@ $api->version('v1', function ($api) {
             /** 获取用户的订单详情**/
             $api->get('/order/{id}',OrderController::class . '@detail');
 
+            /** 用户确认订单 **/
+            $api->put('/order/receipt',OrderController::class . '@receipt');
+
             /** 新建收货地址 **/
             $api->post('/address',AddressController::class . '@createAddress');
 

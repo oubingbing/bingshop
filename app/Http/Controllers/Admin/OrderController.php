@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Admin;
 
 
 use App\Enum\OrderEnum;
+use App\Exceptions\ApiException;
 use App\Http\Controllers\Controller;
 use App\Http\Service\OrderService;
 use App\Http\Service\ShoppingCartService;
@@ -26,11 +27,23 @@ class OrderController extends Controller
         $this->cartService  = $cartService;
     }
 
+    /**
+     * 订单表视图
+     *
+     * @author yezi
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index()
     {
         return view("admin.order");
     }
 
+    /**
+     * 获取订单列表
+     *
+     * @author yezi
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function orderList()
     {
         $user       = request()->input('user');
@@ -69,6 +82,27 @@ class OrderController extends Controller
         });
 
         return webResponse('ok',$orders);
+    }
+
+    /**
+     * 订单发货
+     *
+     * @author yezi
+     * @return string
+     */
+    public function deliver()
+    {
+        $user    = request()->input('user');
+        $orderId = request()->input('order_id');
+
+        if(!$orderId){
+            throw new ApiException("参数不能为空");
+        }
+
+        //需要记录订单变更日志
+
+        $result  = $this->orderService->deliverOrder($orderId);
+        return webResponse("发货成功",$result);
     }
 
 }
